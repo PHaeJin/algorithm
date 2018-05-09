@@ -1,0 +1,250 @@
+// ConsoleApplication8.cpp: 콘솔 응용 프로그램의 진입점을 정의합니다.
+//
+
+#include "stdafx.h"
+#include<iostream>
+#include<math.h>
+#include<algorithm>
+#include<utility>
+#include<queue>
+using namespace std;
+
+int switch0[16];
+int switch1[16];
+int switch2[16];
+int switch3[16];
+int switch4[16];
+int switch5[16];
+int switch6[16];
+int switch7[16];
+int switch8[16];
+int switch9[16];
+int result = -1;
+void go(int *arr,int switch_n,int *arr_n)
+{
+	if (switch_n == 10)
+	{
+		bool check_e = true;
+
+		for (int i = 0; i < 16; i++)
+		{
+			if (arr[i] != 12)
+				check_e = false;
+		}
+		if (check_e)
+		{
+			int re = 0;
+			for (int i = 0; i < 10; i++)
+				re += arr_n[i];
+			result = re;
+		}
+		return;
+	}	
+
+	bool check_e = true;
+
+	for (int i = 0; i < 16; i++)
+	{
+		if (arr[i] != 12)
+			check_e = false;
+	}
+	if (check_e)
+	{
+		int re = 0;
+		for (int i = 0; i < 10; i++)
+			re += arr_n[i];
+		result = re;
+		return;
+	}
+
+
+	for (int i = 0; i < 4; i++)
+	{
+
+		go(arr,switch_n+1,arr_n);
+
+		if (switch_n == 0)
+		{
+			for (int i = 0; i < 16; i++)
+			{
+				arr[i] += switch0[i];
+				if (arr[i] == 15)
+					arr[i] = 3;
+			}
+			arr_n[0]++;
+			if (arr_n[0] == 4)
+				arr_n[0] = 0;
+
+		}
+		if (switch_n == 1)
+		{
+			for (int i = 0; i < 16; i++)
+			{
+				arr[i] += switch1[i];
+				if (arr[i] == 15)
+					arr[i] = 3;
+			}
+			arr_n[1]++;
+			if (arr_n[1] == 4)
+				arr_n[1] = 0;
+
+		}
+		if (switch_n == 2)
+		{
+			for (int i = 0; i < 16; i++)
+			{
+				arr[i] += switch2[i];
+				if (arr[i] == 15)
+					arr[i] = 3;
+			}
+			arr_n[2]++;
+			if (arr_n[2] == 4)
+				arr_n[2] = 0;
+
+		}
+		if (switch_n == 3)
+		{
+			for (int i = 0; i < 16; i++)
+			{
+				arr[i] += switch3[i];
+				if (arr[i] == 15)
+					arr[i] = 3;
+			}
+			arr_n[3]++;
+			if (arr_n[3] == 4)
+				arr_n[3] = 0;
+
+		}
+		if (switch_n == 4)
+		{
+			for (int i = 0; i < 16; i++)
+			{
+				arr[i] += switch4[i];
+				if (arr[i] == 15)
+					arr[i] = 3;
+			}
+			arr_n[4]++;
+			if (arr_n[4] == 4)
+				arr_n[4] = 0;
+
+		}
+		if (switch_n == 5)
+		{
+			for (int i = 0; i < 16; i++)
+			{
+				arr[i] += switch5[i];
+				if (arr[i] == 15)
+					arr[i] = 3;
+			}
+			arr_n[5]++;
+			if (arr_n[5] == 4)
+				arr_n[5] = 0;
+
+		}
+		if (switch_n == 6)
+		{
+			for (int i = 0; i < 16; i++)
+			{
+				arr[i] += switch6[i];
+				if (arr[i] == 15)
+					arr[i] = 3;
+			}
+			arr_n[6]++;
+			if (arr_n[6] == 4)
+				arr_n[6] = 0;
+
+		}
+		if (switch_n == 7)
+		{
+			for (int i = 0; i < 16; i++)
+			{
+				arr[i] += switch7[i];
+				if (arr[i] == 15)
+					arr[i] = 3;
+			}
+			arr_n[7]++;
+			if (arr_n[7] == 4)
+				arr_n[7] = 0;
+
+		}
+		if (switch_n == 8)
+		{
+			for (int i = 0; i < 16; i++)
+			{
+				arr[i] += switch8[i];
+				if (arr[i] == 15)
+					arr[i] = 3;
+			}
+			arr_n[8]++;
+			if (arr_n[8] == 4)
+				arr_n[8] = 0;
+
+		}
+		if (switch_n == 9)
+		{
+			for (int i = 0; i < 16; i++)
+			{
+				arr[i] += switch9[i];
+				if (arr[i] == 15)
+					arr[i] = 3;
+			}
+			arr_n[9]++;
+			if (arr_n[9] == 4)
+				arr_n[9] = 0;
+
+		}
+
+		
+
+		//push
+	}
+
+}
+int main()
+{
+	for (int i = 0; i < 16; i++)
+	{
+		switch0[i] = 0;
+		switch1[i] = 0;
+		switch2[i] = 0;
+		switch3[i] = 0;
+		switch4[i] = 0;
+		switch5[i] = 0;
+		switch6[i] = 0;
+		switch7[i] = 0;
+		switch8[i] = 0;
+		switch9[i] = 0;
+	}
+
+	switch0[0] = switch0[1] = switch0[2] = 3;
+	switch1[3] = switch1[7] = switch1[9] = switch1[11] = 3;
+	switch2[4] = switch2[10] = switch2[14] = switch2[15] = 3;
+	switch3[0] = switch3[4] = switch3[5] = switch3[6] = switch3[7] = 3;
+	switch4[6] = switch4[7] = switch4[8] = switch4[10] = switch4[12] = 3;
+	switch5[0] = switch5[2] = switch5[14] = switch5[15] = 3;
+	switch6[3] = switch6[14] = switch6[15] = 3;
+	switch7[4] = switch7[5] = switch7[7] = switch7[14] = switch7[15] = 3;
+	switch8[1] = switch8[2] = switch8[3] = switch8[4] = switch8[5] = 3;
+	switch9[3] = switch9[4] = switch9[5] = switch9[9] = switch9[13] = 3;
+	
+	int T;
+	cin >> T;
+	while (T != 0)
+	{
+		result = -1;
+		int arr[16];
+		int arr_n[10];
+
+		for (int i = 0; i < 16; i++)
+			cin >> arr[i];
+		
+		for (int i = 0; i < 10; i++)
+			arr_n[i] = 0;
+		go(arr, 0,arr_n);
+			
+		cout << result << endl;
+		T--;
+	}
+	return 0;
+}
+
