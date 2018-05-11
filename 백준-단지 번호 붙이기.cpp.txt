@@ -1,0 +1,73 @@
+// ConsoleApplication5.cpp: 콘솔 응용 프로그램의 진입점을 정의합니다.
+//
+
+#include<iostream>
+#include <queue>
+#include <cstdio>
+#include<algorithm>
+using namespace std;
+int N;
+int arr[26][26];
+bool visit[26][26];
+int count_c = 0;
+int Dangi = 0;
+int sol[1000];
+void dfs(int x, int y)
+{
+	visit[x][y] = true;
+	count_c++;
+
+	if (x + 1 < N&&visit[x + 1][y] == false && arr[x + 1][y] == 1)
+	{
+		dfs(x + 1, y);
+	}
+	if (y + 1 < N&&visit[x][y+1] == false && arr[x][y+1] == 1)
+	{
+		dfs(x , y+1);
+	}
+	if (x - 1 >=0&&visit[x - 1][y] == false && arr[x - 1][y] == 1)
+	{
+
+		dfs(x - 1, y);
+	}
+	if (y - 1 >=0&&visit[x][y-1] == false && arr[x][y-1] == 1)
+	{
+
+		dfs(x, y-1);
+	}
+}
+int main()
+{
+	scanf("%d", &N);
+
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			scanf("%1d", &arr[i][j]);
+			visit[i][j] = false;
+		}
+	}
+
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			if (visit[i][j] == false&&arr[i][j]==1)
+			{
+				dfs(i, j);
+				sol[Dangi] = count_c;
+				count_c = 0;
+				Dangi++;
+			}
+		}
+	}
+	sort(sol, sol + Dangi);
+	cout << Dangi << endl;
+	for (int i = 0; i < Dangi; i++)
+	{
+		cout << sol[i] << endl;
+	}
+    return 0;
+}
+

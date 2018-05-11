@@ -1,0 +1,91 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+int** bat_arr;
+int** check;
+int result = 0;
+int GA;
+int SE;
+int* store;
+int dx[4] = { 1,0,-1,0 };
+int dy[4] = { 0,1,0,-1 };
+void func(int ga_size, int se_size)
+{
+	if (ga_size >= GA || se_size >= SE || ga_size < 0 || se_size<0 || bat_arr[ga_size][se_size] != 1)
+		return;
+
+	bat_arr[ga_size][se_size] = 0;
+	
+	for (int i = 0; i < 4; i++)
+	{
+		func(ga_size + dx[i], se_size + dy[i]);
+	}
+}
+
+int main()
+{
+	int Testcase;
+	cin >> Testcase;
+	store = new int[Testcase];
+	for (int s = 0; s < Testcase; s++)
+	{
+		result = 0;
+
+		int bat_count;
+		int total_count = 0;
+		cin >> GA >> SE >> bat_count;
+
+		bat_arr = new int*[GA];
+		check = new int*[GA];
+
+		for (int i = 0; i < GA; i++)
+		{
+			bat_arr[i] = new int[SE];
+			check[i] = new int[SE];
+		}
+		for (int i = 0; i < GA; i++)
+		{
+			for (int j = 0; j < SE; j++)
+			{
+				bat_arr[i][j] = 0;
+				check[i][j] = 0;
+			}
+		}
+
+		for (int i = 0; i < bat_count; i++)
+		{
+			int num1, num2;
+			cin >> num1 >> num2;
+			bat_arr[num1][num2] = 1;
+		}
+			for (int i = 0; i < GA; i++)
+			{
+				for (int j = 0; j < SE; j++)
+				{
+					if (bat_arr[i][j] == 1)
+					{
+						total_count++;
+						func(i,j);
+					}
+				}
+			}
+		
+		store[s] = total_count;
+		for (int i = 0; i < GA; i++)
+		{
+			for (int j = 0; j < SE; j++)
+			{
+				bat_arr[i][j] = 0;
+				check[i][j] = 0;
+			}
+		}
+
+	}
+
+	for (int i = 0; i < Testcase; i++)
+	{
+		cout << store[i] << endl;
+	}
+	return 0;
+
+}

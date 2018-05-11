@@ -1,0 +1,99 @@
+// ConsoleApplication3.cpp: 콘솔 응용 프로그램의 진입점을 정의합니다.
+//
+#include<queue>
+#include<string.h>
+#include<iostream>
+#include<utility>
+using namespace std;
+int arr[1001][1001];
+bool visit[1001][1001];
+int main()
+{
+	ios::sync_with_stdio(false);
+
+	queue<pair<int, int>> q;
+	
+	int M,N;
+	cin >> M >> N;
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < M; j++)
+		{
+			cin >> arr[i][j];
+		}
+	}
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < M; j++)
+		{
+			visit[i][j] = false;
+		}
+	}
+
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < M; j++)
+		{
+			if (arr[i][j] == 1)
+			{
+				q.push(make_pair(i,j));
+			}
+		}
+	}
+	
+	
+	while (!q.empty())
+	{
+		
+		int px = q.front().first;
+		int py = q.front().second;
+		q.pop();
+		visit[px][py]=true;
+	
+		if (px + 1 < N&&arr[px + 1][py] == 0&&visit[px+1][py]==false)
+		{
+			q.push(make_pair(px+1,py));
+			arr[px+1][py] = arr[px][py] +1;
+
+		}
+		if (py + 1 < M&&arr[px][py+1] == 0 && visit[px][py+1] == false)
+		{
+			q.push(make_pair(px, py+1));
+			arr[px][py+1] = arr[px][py] + 1;
+
+		}
+		if (px - 1 >= 0&&arr[px - 1][py] == 0 && visit[px - 1][py] == false)
+		{
+			q.push(make_pair(px - 1, py));
+			arr[px - 1][py] = arr[px][py] + 1;
+
+		}
+		if (py - 1 >= 0&&arr[px][py-1] == 0 && visit[px][py-1] == false)
+		{
+			q.push(make_pair(px, py-1));
+			arr[px][py-1] = arr[px][py] + 1;
+
+		}
+	}
+	bool check = false;
+	int Max = 0;
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < M; j++)
+		{
+			if (arr[i][j] > Max)
+				Max = arr[i][j];
+			if (arr[i][j] == 0)
+				check = true;
+		}
+	}
+	if (check)
+		cout << "-1" << endl;
+	else
+	{
+		cout << Max - 1 << endl;
+	}
+	
+	return 0;
+}
+

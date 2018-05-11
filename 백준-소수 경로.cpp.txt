@@ -1,0 +1,245 @@
+// ConsoleApplication2.cpp: 콘솔 응용 프로그램의 진입점을 정의합니다.
+//
+
+#include <iostream>
+#include <cstdio>
+#include <queue>
+
+using namespace std;
+int *arr;
+int *dig;
+bool *check;
+int *sol;
+
+void Make_so()
+{
+	for (int i = 2; i < 10000; i++)
+	{
+		if (arr[i] == 0)
+			continue;
+		for (int j = 2 * i; j < 10000; j += i)
+		{
+			arr[j] = 0;
+		}
+	}
+}
+int main()
+{
+	arr = new int[10000];
+	for (int i = 2; i < 10000; i++)
+	{
+		arr[i] = i;
+	}
+	Make_so();
+
+	int T;
+	int T2;
+
+	cin >> T;
+	T2 = T;
+
+	sol = new int[T+1];
+
+	while (T != 0)
+	{
+		dig = new int[10000];
+		check = new bool[10000];
+
+
+
+		for (int i = 1000; i < 10000; i++)
+		{
+			check[i] = false;
+		}
+
+		int First_so, End_so;
+		bool impo = true;
+
+		queue<int> Q;
+
+		cin >> First_so >> End_so;
+
+		Q.push(First_so);
+		dig[First_so] = 0;
+
+		while (!Q.empty())
+		{
+			int num, second_num, ch1, ch2;
+			num = Q.front();
+			Q.pop();
+
+			if (num == End_so)
+			{
+				sol[T] = dig[num];
+				impo = false;
+				break;
+			}
+
+			for (int i = 1000; i <= 9000; i += 1000)
+			{
+				second_num = num + i;
+				if (second_num >= 10000)
+				{
+					break;
+				}
+				if (arr[second_num] != 0)
+				{
+					if (check[second_num] == false)
+					{
+						check[second_num] = true;
+						Q.push(second_num);
+						dig[second_num] = dig[num] + 1;
+					}
+				}
+			}
+			for (int i = 1000; i <= 9000; i += 1000)
+			{
+				second_num = num - i;
+				if (second_num <1000)
+				{
+					break;
+				}
+				if (arr[second_num] != 0)
+				{
+					if (check[second_num] == false)
+					{
+						check[second_num] = true;
+						Q.push(second_num);
+						dig[second_num] = dig[num] + 1;
+					}
+				}
+			}
+
+
+			for (int i = 100; i <= 900; i += 100)
+			{
+				ch1 = num / 1000;
+				second_num = num + i;
+				ch2 = second_num / 1000;
+				if (ch1 != ch2) {
+					break;
+				}
+				if (arr[second_num] != 0)
+				{
+					if (check[second_num] == false)
+					{
+						check[second_num] = true;
+						Q.push(second_num);
+						dig[second_num] = dig[num] + 1;
+					}
+				}
+			}
+
+			for (int i = 100; i <= 900; i += 100)
+			{
+				ch1 = num / 1000;
+				second_num = num - i;
+				ch2 = second_num / 1000;
+				if (ch1 != ch2) {
+					break;
+				}
+				if (arr[second_num] != 0)
+				{
+					if (check[second_num] == false)
+					{
+						check[second_num] = true;
+						Q.push(second_num);
+						dig[second_num] = dig[num] + 1;
+					}
+				}
+			}
+
+			for (int i = 10; i <= 90; i += 10)
+			{
+				ch1 = num / 100;
+				second_num = num + i;
+				ch2 = second_num / 100;
+				if (ch1 != ch2) {
+					break;
+				}
+				if (arr[second_num] != 0)
+				{
+					if (check[second_num] == false)
+					{
+						check[second_num] = true;
+						Q.push(second_num);
+						dig[second_num] = dig[num] + 1;
+					}
+				}
+			}
+			for (int i = 10; i <= 90; i += 10)
+			{
+				ch1 = num / 100;
+				second_num = num - i;
+				ch2 = second_num / 100;
+				if (ch1 != ch2) {
+					break;
+				}
+				if (arr[second_num] != 0)
+				{
+					if (check[second_num] == false)
+					{
+						check[second_num] = true;
+						Q.push(second_num);
+						dig[second_num] = dig[num] + 1;
+					}
+				}
+			}
+
+
+			for (int i = 1; i <= 9; i += 1)
+			{
+				ch1 = num / 10;
+				second_num = num + i;
+				ch2 = second_num / 10;
+				if (ch1 != ch2) {
+					break;
+				}
+				if (arr[second_num] != 0)
+				{
+					if (check[second_num] == false)
+					{
+						check[second_num] = true;
+						Q.push(second_num);
+						dig[second_num] = dig[num] + 1;
+					}
+				}
+			}
+			for (int i = 1; i <= 9; i += 1)
+			{
+				ch1 = num / 10;
+				second_num = num - i;
+				ch2 = second_num / 10;
+				if (ch1 != ch2) {
+					break;
+				}
+				if (arr[second_num] != 0)
+				{
+					if (check[second_num] == false)
+					{
+						check[second_num] = true;
+						Q.push(second_num);
+						dig[second_num] = dig[num] + 1;
+					}
+				}
+			}
+		}
+
+
+		if (impo == true)
+		{
+			sol[T] = -1;
+		}
+		T--;
+	}
+	for (int i = T2; i >0; i--)
+	{
+		if (sol[i] == -1)
+			cout << "Impossible" << endl;
+		else {
+			cout << sol[i] << endl;
+		}
+	}
+	return 0;
+}
+

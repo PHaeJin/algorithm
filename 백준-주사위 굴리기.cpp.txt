@@ -1,0 +1,186 @@
+// ConsoleApplication3.cpp: 콘솔 응용 프로그램의 진입점을 정의합니다.
+//
+#include<iostream>
+#include<string.h>
+#include<string>
+#include<queue>
+#include<utility>
+
+using namespace std;
+int arr[7];
+int Jido[21][21];
+int Mes[1001];
+void move_J(int sight)
+{
+	int ex_arr[7];
+	if (sight == 4)
+	{
+		ex_arr[2] = arr[1];
+		ex_arr[3] = arr[2];
+		ex_arr[4] = arr[3];
+		ex_arr[1] = arr[4];
+		ex_arr[5] = arr[5];
+		ex_arr[6] = arr[6];
+	}
+	//남쪽 이동
+	else if (sight == 3)
+	{
+		ex_arr[4] = arr[1];
+		ex_arr[1] = arr[2];
+		ex_arr[2] = arr[3];
+		ex_arr[3] = arr[4];
+		ex_arr[5] = arr[5];
+		ex_arr[6] = arr[6];
+
+
+
+	}//북쪽
+	else if (sight == 1)
+	{
+		ex_arr[1] = arr[1];
+		ex_arr[6] = arr[2];
+		ex_arr[3] = arr[3];
+		ex_arr[5] = arr[4];
+		ex_arr[2] = arr[5];
+		ex_arr[4] = arr[6];
+
+	}//동쪽
+	else if (sight == 2)
+	{
+		ex_arr[1] = arr[1];
+		ex_arr[5] = arr[2];
+		ex_arr[3] = arr[3];
+		ex_arr[6] = arr[4];
+		ex_arr[4] = arr[5];
+		ex_arr[2] = arr[6];
+
+	}//서쪽
+
+	for (int i = 1; i < 7; i++)
+	{
+		arr[i] = ex_arr[i];
+	}
+	return;
+}
+//남:4 북:3 동:1 서:2
+
+
+int main()
+{
+	ios::sync_with_stdio(false);
+	int N,M;
+	cin >> N>>M;
+	
+	int Jx, Jy;
+	cin >> Jx >> Jy;
+
+	int K;
+	cin >> K;
+
+
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < M; j++)
+		{
+			cin >> Jido[i][j];
+		}
+	}
+	for (int i = 1; i < 7; i++)
+	{
+		arr[i] = 0;
+	}
+	for (int i = 0; i < K; i++)
+	{
+		cin >> Mes[i];
+	}
+	int control = 0;
+	int sight;
+
+	while (K > 0)
+	{
+		sight = Mes[control];
+		
+		if (sight == 1)
+		{
+			if (Jy + 1 < M)
+			{
+				Jy += 1;
+				move_J(sight);
+
+				if (Jido[Jx][Jy] != 0)
+				{
+					arr[4] = Jido[Jx][Jy];
+					Jido[Jx][Jy] = 0;
+				}
+				else if (Jido[Jx][Jy] == 0 && arr[4] != 0)
+				{
+					Jido[Jx][Jy] = arr[4];
+				}
+				cout << arr[2] << endl;
+			}
+		}
+		else if (sight == 2)
+		{
+			if (Jy - 1 >= 0)
+			{
+				Jy -= 1;
+				move_J(sight);
+
+				if (Jido[Jx][Jy] != 0 )
+				{
+					arr[4] = Jido[Jx][Jy];
+					Jido[Jx][Jy] = 0;
+				}
+				else if (Jido[Jx][Jy] == 0 && arr[4] != 0)
+				{
+					Jido[Jx][Jy] = arr[4];
+				}
+				cout << arr[2] << endl;
+			}
+		}
+		else if (sight == 3)
+		{
+			if (Jx - 1 >= 0)
+			{
+				Jx -= 1;
+				move_J(sight);
+
+				if (Jido[Jx][Jy] != 0)
+				{
+					arr[4] = Jido[Jx][Jy];
+					Jido[Jx][Jy] = 0;
+				}
+				else if (Jido[Jx][Jy] == 0 && arr[4] != 0)
+				{
+					Jido[Jx][Jy] = arr[4];
+				}
+				cout << arr[2] << endl;
+			}
+		}
+		else if (sight == 4)
+		{
+			if (Jx + 1 < N)
+			{
+				Jx += 1;
+				move_J(sight);
+
+				if (Jido[Jx][Jy] != 0)
+				{
+					arr[4] = Jido[Jx][Jy];
+					Jido[Jx][Jy] = 0;
+				}
+				else if (Jido[Jx][Jy] == 0 && arr[4] != 0)
+				{
+					Jido[Jx][Jy] = arr[4];
+				}
+				cout << arr[2] << endl;
+			}
+		}
+
+		K--;
+		control++;
+	}
+
+	return 0;
+}
+

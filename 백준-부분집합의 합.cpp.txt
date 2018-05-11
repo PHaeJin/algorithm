@@ -1,0 +1,49 @@
+// ConsoleApplication2.cpp: 콘솔 응용 프로그램의 진입점을 정의합니다.
+
+#include <iostream>
+#include <cstdio>
+
+using namespace std;
+int* arr;
+int N,S;
+int result = 0;
+
+void go(int index,int sum)
+{
+	if (index == N)
+	{
+		if (sum == S)
+			result++;
+
+		return;
+	}
+	
+	go(index + 1, sum+arr[index]);
+	go(index+1, sum);
+
+}
+
+int main()
+{
+
+	int* sub;
+
+	cin >> N >> S;
+
+	arr = new int[N];
+	
+	for (int i = 0; i < N; i++)
+		cin >> arr[i];
+
+	go(0,0);
+
+	if (S == 0)
+		result=result - 1;
+
+	cout << result << endl;
+
+
+
+	return 0;
+}
+

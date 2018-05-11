@@ -1,0 +1,75 @@
+// ConsoleApplication3.cpp: 콘솔 응용 프로그램의 진입점을 정의합니다.
+//
+#include<queue>
+#include<string.h>
+#include<cstdio>
+#include<cstring>
+int arr[2001];
+int dp[2001][2001];
+
+int go(int start, int end)
+{
+	if (start == end)
+	{
+		dp[start][end] = 1;
+		return dp[start][end];
+	}
+	if (end == start + 1)
+	{
+		if (arr[end] == arr[start])
+			dp[start][end] = 1;
+		else
+			dp[start][end] = 0;
+
+		return dp[start][end];
+	}
+
+	if (dp[start][end] >= 0)
+		return dp[start][end];
+	else {
+
+		if (arr[start] == arr[end])
+		{
+			if (go(start + 1, end - 1) == 1)
+				dp[start][end] = 1;
+			else
+				dp[start][end] = 0;
+
+			return dp[start][end];
+		}
+		else
+		{
+			dp[start][end] = 0;
+
+			return dp[start][end];
+		}
+	}
+
+}
+int main()
+{
+	int N;
+	scanf("%d",&N);
+
+	for (int i = 1; i <= N; i++)
+		scanf("%d", &arr[i]);
+
+	for (int i = 0; i < 2001; i++)
+	{
+		memset(dp[i], -1, sizeof(int) * 2001);
+	}
+
+	int M;
+	scanf("%d", &M);
+
+	while (M--)
+	{
+		int start, end;
+		scanf("%d %d", &start, &end);
+		
+		printf("%d\n", go(start, end));
+	}
+
+	return 0;
+}
+

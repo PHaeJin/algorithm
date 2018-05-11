@@ -1,0 +1,167 @@
+// ConsoleApplication3.cpp: 콘솔 응용 프로그램의 진입점을 정의합니다.
+//
+#include<iostream>
+#include<string.h>
+#include<queue>
+#include<utility>
+
+using namespace std;
+int **arr;
+int **copy_arr;
+int N, M;
+int B_count = 0;
+bool **visit;
+int Result = 0;
+void build(int x, int y, int z)
+{
+	if (x == y)
+	{
+		return;
+	}
+	if (y == z)
+	{
+		return;
+	}
+	if (x == z)
+	{
+		return;
+	}
+
+	int A, B;
+	A = x / M;
+	B = x % M;
+	if (arr[A][B] !=0)
+	{
+		return;
+	}
+	else
+	{
+		arr[A][B] = 1;
+	}
+	A = y / M;
+	B = y % M;
+	if (arr[A][B] != 0)
+	{
+		return;
+	}
+	else
+	{
+		arr[A][B] = 1;
+	}
+	A = z / M;
+	B = z % M;
+	if (arr[A][B] != 0)
+	{
+		return;
+	}
+	else
+	{
+		arr[A][B] = 1;
+	}
+
+	queue<pair<int, int>> q;
+
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < M; j++)
+		{
+			if (arr[i][j] == 2)
+			{
+				q.push(make_pair(i, j));
+			}
+		}
+	}
+
+	while (!q.empty())
+	{
+		int q1 = q.front().first;
+		int q2 = q.front().second;
+		q.pop();
+
+		if (q1 + 1 < N&&arr[q1 + 1][q2] == 0)
+		{
+			arr[q1 + 1][q2] = 2;
+			q.push(make_pair(q1 + 1, q2));
+		}
+		if (q1 - 1 >= 0 && arr[q1 - 1][q2] == 0)
+		{
+			arr[q1 - 1][q2] = 2;
+			q.push(make_pair(q1 - 1, q2));
+		}
+		if (q2 + 1 < M&&arr[q1][q2 + 1] == 0)
+		{
+			arr[q1][q2 + 1] = 2;
+			q.push(make_pair(q1, q2 + 1));
+		}
+		if (q2 - 1 >= 0 && arr[q1][q2 - 1] == 0)
+		{
+			arr[q1][q2 - 1] = 2;
+			q.push(make_pair(q1, q2 - 1));
+		}
+	}
+	int count = 0;
+
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < M; j++)
+		{
+			if (arr[i][j] == 0)
+			{
+				count++;
+			}
+		}
+	}
+	if (count > Result)
+	{
+		Result = count;
+	}
+}
+int main()
+{
+	ios::sync_with_stdio(false);
+	cin >> N >> M;
+
+	arr = new int*[N];
+	copy_arr = new int*[N];
+
+	for (int i = 0; i < N; i++)
+	{
+		arr[i] = new int[M];
+		copy_arr[i] = new int[M];
+	}
+
+
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < M; j++)
+		{
+			cin >> arr[i][j];
+			copy_arr[i][j] = arr[i][j];
+		}
+	}
+
+
+
+	for (int i = 0; i < N*M; i++)
+	{
+		for (int j = 0; j < N*M; j++)
+		{
+			for (int k = 0; k < N*M; k++)
+			{
+				build(i, j, k);
+				for (int i = 0; i < N; i++)
+				{
+					for (int j = 0; j < M; j++)
+					{
+						arr[i][j] = copy_arr[i][j];
+					}
+				}
+			}
+		}
+	}
+
+	cout << Result;
+
+	return 0;
+}
+

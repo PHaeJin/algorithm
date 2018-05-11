@@ -1,0 +1,94 @@
+#include <iostream>
+#include<math.h>
+using namespace std;
+int m_max(int a, int b)
+{
+	if (a > b)
+		return a;
+	else
+		return b;
+}
+int m_min(int a, int b)
+{
+	if (a > b)
+		return b;
+	else
+		return a;
+}
+
+int main()
+{
+	int num1, num2;
+	long long result1, result2;
+	result1 = 100000001;
+	result2 = 100000001;
+	cin >> num1 >> num2;
+	int high = m_max(num1, num2);
+	int low = m_min(num1, num2);
+
+	double ex = high / low;
+
+	double en = sqrt(ex);
+	int r = (int)ex;
+	int check = (int)en;
+	
+	for (int i = 1; i <= check; i++)
+	{
+		if (r%i == 0)
+		{
+			long long A = num1 * i;
+			long long B = num1 * (r/i);
+			if (A + B < result1 + result2)
+			{
+				int c1 = -1;
+				int Big, Small;
+				if (A > B)
+				{
+					Big = A;
+					Small = B;
+				}
+				else
+				{
+					Big = B;
+					Small = A;
+				}
+
+				while (c1 != 0)
+				{
+					if (Big > Small)
+					{
+					}
+					else
+					{
+						int la = Big;
+						Big = Small;
+						Small = la;
+					}
+					c1 = Big % Small;
+					
+					
+					if (c1 == 0)
+					{
+						if (Small == num1)
+						{
+							result1 = A;
+							result2 = B;
+							
+						}
+						break;
+					}	
+					Big = c1;
+				}
+
+			}
+		}
+		else
+		{
+
+		}
+	}
+
+	cout << result1 << " " << result2 << endl;
+	return 0;
+}
+

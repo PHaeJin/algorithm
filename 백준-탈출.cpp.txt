@@ -1,0 +1,205 @@
+// ConsoleApplication5.cpp: 콘솔 응용 프로그램의 진입점을 정의합니다.
+//
+
+#include<iostream>
+#include <queue>
+#include <cstdio>
+#include<algorithm>
+#include<utility>
+
+using namespace std;
+int R,C;
+int Endx, Endy;
+char arr[51][51];
+bool visit[51][51];
+int depth[51][51];
+int main()
+{
+	ios::sync_with_stdio(false);
+	cin >> R >> C;
+	int Sx, Sy;
+	
+	queue<pair<int, int>> q_water;
+
+	
+	for (int i = 0; i < R; i++)
+	{
+		for (int j = 0; j < C; j++)
+		{
+			cin >> arr[i][j];
+			if (arr[i][j] == 'S')
+			{
+				Sx = i;
+				Sy = j;
+				arr[i][j] = '.';
+			}
+			if (arr[i][j] == '*')
+			{
+				q_water.push(make_pair(i,j));
+			}
+			if (arr[i][j] == 'D')
+			{
+				Endx = i;
+				Endy = j;
+			}
+			visit[i][j] = false;
+			depth[i][j] = 0;
+		}
+	}
+	
+	queue<pair<int, int>> q;
+	q.push(make_pair(Sx,Sy));
+	int check_depth = -1;
+	
+	while (!q.empty())
+	{
+		Sx = q.front().first;
+		Sy = q.front().second;
+		q.pop();
+
+		if (check_depth < depth[Sx][Sy])
+		{
+			check_depth = depth[Sx][Sy];
+			int size = q_water.size();
+			for (int i = 0; i < size; i++)
+			{
+				int wx = q_water.front().first;
+				int wy = q_water.front().second;
+				q_water.pop();
+				if (wx + 1 < R&&arr[wx + 1][wy] == '.')
+				{
+					arr[wx + 1][wy] = '*';
+					q_water.push(make_pair(wx + 1, wy));
+				}
+				if (wy + 1 < C&&arr[wx][wy + 1] == '.')
+				{
+					arr[wx][wy + 1] = '*';
+					q_water.push(make_pair(wx, wy + 1));
+				 }
+				if (wx - 1 >= 0 && arr[wx - 1][wy] == '.')
+				{
+					arr[wx - 1][wy] = '*';
+					q_water.push(make_pair(wx - 1, wy));
+				}
+				if (wy - 1 >= 0 && arr[wx][wy - 1] == '.')
+				{
+					arr[wx][wy - 1] = '*';
+					q_water.push(make_pair(wx, wy - 1));
+				}
+			}
+
+		}
+
+		
+		arr[Sx][Sy] = 'S';
+		if (arr[Sx][Sy] == '*')
+		{
+			if (arr[Sx][Sy - 1] == 'D')
+			{
+				depth[Sx][Sy - 1] = depth[Sx][Sy] + 1;
+				cout << depth[Sx][Sy] + 1 << endl;
+				break;
+			}
+			else if (arr[Sx-1][Sy] == 'D')
+			{
+				depth[Sx-1][Sy] = depth[Sx][Sy] + 1;
+				cout << depth[Sx][Sy] + 1 << endl;
+				break;
+			}
+			else if (arr[Sx][Sy + 1] == 'D')
+			{
+				depth[Sx][Sy + 1] = depth[Sx][Sy] + 1;
+				cout << depth[Sx][Sy] + 1 << endl;
+				break;
+			}
+			else if (arr[Sx+1][Sy] == 'D')
+			{
+				depth[Sx+1][Sy] = depth[Sx][Sy] + 1;
+				cout << depth[Sx][Sy] + 1 << endl;
+				break;
+			}
+
+			
+		}
+		else 
+		{
+			if (Sx + 1 < R && (arr[Sx + 1][Sy] == '.' || arr[Sx + 1][Sy] == 'D') && visit[Sx + 1][Sy] == false)
+			{
+				if (arr[Sx + 1][Sy] == 'D')
+				{
+					depth[Sx + 1][Sy] = depth[Sx][Sy] + 1;
+					cout << depth[Sx][Sy] + 1 << endl;
+					break;
+				}
+				q.push(make_pair(Sx + 1, Sy));
+				depth[Sx + 1][Sy] = depth[Sx][Sy] + 1;
+				visit[Sx+1][Sy] = true;
+			}
+			if (Sy + 1 < C && (arr[Sx][Sy + 1] == '.' || arr[Sx][Sy + 1] == 'D') && visit[Sx][Sy + 1] == false)
+			{
+				if (arr[Sx][Sy + 1] == 'D')
+				{
+					depth[Sx][Sy + 1] = depth[Sx][Sy] + 1;
+					cout << depth[Sx][Sy] + 1 << endl;
+					break;
+				}
+				q.push(make_pair(Sx, Sy + 1));
+				depth[Sx][Sy + 1] = depth[Sx][Sy] + 1;
+				visit[Sx][Sy+1] = true;
+			}
+			if (Sx - 1 >= 0 && (arr[Sx - 1][Sy] == '.' || arr[Sx - 1][Sy] == 'D') && visit[Sx - 1][Sy] == false)
+			{
+				if (arr[Sx - 1][Sy] == 'D')
+				{
+					depth[Sx - 1][Sy] = depth[Sx][Sy] + 1;
+					cout << depth[Sx][Sy] + 1 << endl;
+					break;
+				}
+				q.push(make_pair(Sx - 1, Sy));
+				depth[Sx - 1][Sy] = depth[Sx][Sy] + 1;
+				visit[Sx - 1][Sy] = true;
+
+			}
+			if (Sy - 1 >= 0 && (arr[Sx][Sy - 1] == '.' || arr[Sx][Sy - 1] == 'D') && visit[Sx][Sy - 1] == false)
+			{
+				if (arr[Sx][Sy - 1] == 'D')
+				{
+					depth[Sx][Sy - 1] = depth[Sx][Sy] + 1;
+					cout << depth[Sx][Sy] + 1 << endl;
+					break;
+				}
+				q.push(make_pair(Sx, Sy - 1));
+				depth[Sx][Sy - 1] = depth[Sx][Sy] + 1;
+				visit[Sx][Sy-1] = true;
+			}
+
+		}
+		
+	/*
+		for (int i = 0; i < R; i++)
+		{
+			for (int j = 0; j < C; j++)
+			{
+				cout << arr[i][j];
+			}
+			cout << endl;
+		}
+		cout << endl;
+		cout << endl;
+		cout << endl;
+		cout << endl;
+		cout << endl;
+		cout << endl;
+
+		arr[Sx][Sy] = '.';*/
+	}
+	if(depth[Endx][Endy]!=0)
+	{
+		;
+	}
+	else
+		cout << "KAKTUS" << endl;
+
+    return 0;
+}
+

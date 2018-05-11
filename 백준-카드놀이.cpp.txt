@@ -1,0 +1,55 @@
+#include <iostream>
+using namespace std;
+
+int arrA[11];
+int arrB[11];
+int scoreA = 0;
+int scoreB = 0;
+int last_win = 2; //0: A, 1: B, 2:D
+
+int main()
+{
+	for (int i = 0; i < 10; i++)
+		cin >> arrA[i];
+
+	for (int i = 0; i < 10; i++)
+		cin >> arrB[i];
+
+	for (int i = 0; i < 10; i++)
+	{
+		if (arrA[i] > arrB[i])
+		{
+			scoreA += 3;
+			last_win = 0;
+		}	
+		else if (arrA[i] < arrB[i])
+		{
+			scoreB += 3;
+			last_win = 1;
+		}
+		else
+		{
+			scoreA++;
+			scoreB++;
+		}
+	}
+	
+	cout << scoreA <<" "<< scoreB << endl;
+
+	if (scoreA > scoreB)
+		cout << "A" << endl;
+	else if (scoreA < scoreB)
+		cout << "B" << endl;
+	else
+	{
+		if (last_win == 0)
+			cout << "A" << endl;
+		else if (last_win == 1)
+			cout << "B" << endl;
+		else
+			cout << "D" << endl;
+	}
+	return 0;
+
+}
+

@@ -1,0 +1,157 @@
+// ConsoleApplication2.cpp: 콘솔 응용 프로그램의 진입점을 정의합니다.
+//
+
+#include <iostream>
+#include <queue>
+#include <map>
+using namespace std;
+int** arr;
+bool check = false;
+int make_num()
+{
+	int num = 0;
+	num = 1 * arr[2][2] + 10 * arr[2][1] + 100 * arr[2][0] + 1000 * arr[1][2] + 10000 * arr[1][1] + 100000 * arr[1][0] + 1000000 * arr[0][2] + 10000000 * arr[0][1] + 100000000 * arr[0][0];
+	return num;
+}
+void make_arr(int num_ex)
+{
+	arr[2][2] = num_ex % 10;
+	num_ex = num_ex / 10;
+	arr[2][1] = num_ex % 10;
+	num_ex = num_ex / 10;
+	arr[2][0] = num_ex % 10;
+	num_ex = num_ex / 10;
+	arr[1][2] = num_ex % 10;
+	num_ex = num_ex / 10;
+	arr[1][1] = num_ex % 10;
+	num_ex = num_ex / 10;
+	arr[1][0] = num_ex % 10;
+	num_ex = num_ex / 10;
+	arr[0][2] = num_ex % 10;
+	num_ex = num_ex / 10;
+	arr[0][1] = num_ex % 10;
+	num_ex = num_ex / 10;
+	arr[0][0] = num_ex % 10;
+
+	return ;
+}
+int main()
+{
+	arr = new int*[3];
+	for(int i=0;i<3;i++)
+	{
+		arr[i] = new int[3];
+	}
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+			cin >> arr[i][j];
+	}
+
+	map<int, int> m1;
+	queue<int> q1;
+	if (make_num() == 123456780)
+	{
+		cout << "0" << endl;
+		return 0;
+	}
+	m1[make_num()] = 0;
+	q1.push(make_num());
+	while (!q1.empty())
+	{
+		int num = q1.front();
+		q1.pop();
+		int num_ex = num;
+		make_arr(num_ex);
+		int nX, nY,dig;
+		dig = m1[num];
+		
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				if (arr[i][j] == 0)
+				{
+					nX = i;
+					nY = j;
+				}
+			}
+		}
+		if (nX - 1 >= 0)
+		{
+			int popo = arr[nX - 1][nY];
+			arr[nX - 1][nY] = 0;
+			arr[nX][nY] = popo;
+			
+			int popu=make_num();
+			if (!m1[popu])
+			{
+				m1[popu] = dig + 1;
+				q1.push(popu);
+			}
+		}
+		make_arr(num_ex);
+
+		if (nX + 1 <= 2)
+		{
+			int popo = arr[nX + 1][nY];
+			arr[nX + 1][nY] = 0;
+			arr[nX][nY] = popo;
+
+			int popu = make_num();
+			if (!m1[popu])
+			{
+				m1[popu] = dig + 1;
+				q1.push(popu);
+			}
+		}
+
+		make_arr(num_ex);
+
+		if (nY - 1 >= 0) 
+		{
+			int popo = arr[nX][nY-1];
+			arr[nX][nY-1] = 0;
+			arr[nX][nY] = popo;
+
+			int popu = make_num();
+			if (!m1[popu])
+			{
+				m1[popu] = dig + 1;
+				q1.push(popu);
+			}
+		}
+
+		make_arr(num_ex);
+
+		if (nY + 1 <= 2)
+		{
+			int popo = arr[nX][nY + 1];
+			arr[nX][nY + 1] = 0;
+			arr[nX][nY] = popo;
+
+			int popu = make_num();
+			if (!m1[popu])
+			{
+				m1[popu] = dig + 1;
+				q1.push(popu);
+			}
+		}
+
+		make_arr(num_ex);
+		if (m1[123456780])
+		{
+			cout << m1[123456780] << endl;
+			check = true;
+			break;
+		}
+	}
+	if (!check)
+	{
+		cout << "-1" << endl;
+
+	}
+	
+	return 0;
+}
+

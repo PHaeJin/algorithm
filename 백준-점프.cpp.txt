@@ -1,0 +1,52 @@
+// ConsoleApplication3.cpp: 콘솔 응용 프로그램의 진입점을 정의합니다.
+//
+#include<iostream>
+#include<string.h>
+#include<queue>
+#include<utility>
+
+using namespace std;
+long long dp[101][101];
+int arr[101][101];
+
+int main()
+{
+	ios::sync_with_stdio(false);
+
+	int N;
+	cin >> N;
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			cin >> arr[i][j];
+		}
+	}
+	for (int i = 0; i < 101; i++)
+	{
+		memset(dp[i], 0, sizeof(long long) * 100);
+	}
+	
+	dp[0][0] = 1;
+
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			if (arr[i][j] != 0)
+			{
+				dp[i][j + arr[i][j]] += dp[i][j];
+				dp[i + arr[i][j]][j] += dp[i][j];
+
+			}
+			else
+			{
+				continue;
+			}
+		}
+	}
+
+	cout << dp[N - 1][N - 1] << endl;
+	return 0;
+}
+

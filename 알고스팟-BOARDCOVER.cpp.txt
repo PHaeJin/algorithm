@@ -1,0 +1,122 @@
+#include <iostream>
+#include <algorithm>
+#include <math.h>
+#include <string.h>
+#include <string>
+using namespace std;
+int H, W;
+int count_c = 0;
+int block_count;
+
+void dfs(char arr[][21],int block)
+{
+	if (block == block_count)
+	{
+		count_c++;
+		return;
+	}
+
+	int x, y;
+	x = -1;
+	y = -1;
+	for (int i = 0; i < H; i++)
+	{
+		for (int j = 0; j < W; j++)
+		{
+			if (arr[i][j] == '.')
+			{
+				x = i;
+				y = j;
+				break;
+			}
+		}
+		if (x != -1 && y != -1)
+			break;
+	}
+	if (x + 1 < H&&y + 1 < W&&arr[x + 1][y] == '.'&&arr[x][y + 1] == '.')
+	{
+		arr[x][y] = '#';
+		arr[x + 1][y] = '#';
+		arr[x][y+1] = '#';
+		dfs(arr, block + 1);
+
+		arr[x][y] = '.';
+		arr[x + 1][y] = '.';
+		arr[x][y + 1] = '.';
+	}
+	if (x + 1 < H&&y + 1 < W&&arr[x + 1][y+1] == '.'&&arr[x][y + 1] == '.')
+	{
+
+		arr[x][y] = '#';
+		arr[x + 1][y+1] = '#';
+		arr[x][y + 1] = '#';
+		dfs(arr, block + 1);
+
+		arr[x][y] = '.';
+		arr[x + 1][y+1] = '.';
+		arr[x][y + 1] = '.';
+	}
+	if (x + 1 < H&&y + 1 < W&&arr[x + 1][y] == '.'&&arr[x+1][y + 1] == '.')
+	{
+
+		arr[x][y] = '#';
+		arr[x + 1][y] = '#';
+		arr[x+1][y + 1] = '#';
+		dfs(arr, block + 1);
+
+		arr[x][y] = '.';
+		arr[x + 1][y] = '.';
+		arr[x+1][y + 1] = '.';
+	}
+	if (x + 1 < H&&y -1>=0&&arr[x + 1][y-1] == '.'&&arr[x+1][y] == '.')
+	{
+
+		arr[x][y] = '#';
+		arr[x + 1][y-1] = '#';
+		arr[x+1][y] = '#';
+		dfs(arr, block + 1);
+
+		arr[x][y] = '.';
+		arr[x + 1][y-1] = '.';
+		arr[x+1][y] = '.';
+	}
+
+}
+int main()
+{
+	int T;
+	cin >> T;
+	while (T != 0)
+	{
+		count_c = 0;
+		cin >> H >> W;
+
+		char arr[21][21];
+		int white_map = 0;
+		for (int i = 0; i < H; i++)
+		{
+			for (int j = 0; j < W; j++)
+			{
+				cin >> arr[i][j];
+
+				if (arr[i][j] == '.')
+					white_map++;
+			}
+		}
+		if (white_map % 3 != 0)
+		{
+			cout << "0" << endl;
+			T--;
+			continue;
+		}
+		block_count = white_map / 3;
+		dfs(arr, 0);
+
+		cout << count_c << endl;
+		T--;
+	}
+	
+
+	return 0;
+
+}

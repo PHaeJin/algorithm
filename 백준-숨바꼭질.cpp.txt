@@ -1,0 +1,80 @@
+// ConsoleApplication2.cpp: 콘솔 응용 프로그램의 진입점을 정의합니다.
+//
+
+#include <iostream>
+#include <cstdio>
+#include <queue>
+
+using namespace std;
+bool* arr;
+int* dist;
+const int Maxsize = 200000;
+
+int main()
+{
+	arr = new bool[Maxsize+1];
+	for (int i = 0; i <= Maxsize; i++)
+		arr[i] = false;
+
+	dist = new int[Maxsize + 1];
+	for (int i = 0; i <= Maxsize; i++)
+	{
+		dist[i] = 0;
+	}
+	int N, K;
+	cin >> N >> K;
+	int count = 0;
+	bool check = false;
+	queue<int> Q;
+	Q.push(N);
+
+	while (!Q.empty())
+	{
+		int sz = Q.size();
+		
+			int location = Q.front();
+			Q.pop();
+			if (location == K)
+			{
+				check = true;
+				break;
+			}
+			if (location + 1 <= Maxsize)
+			{
+				if (arr[location + 1] != true)
+				{
+					Q.push(location + 1);
+					arr[location + 1] = true;
+					dist[location + 1] = dist[location] + 1;
+				}
+
+			}
+			if (location - 1 >= 0)
+			{
+				if (arr[location - 1] != true)
+				{
+					Q.push(location - 1);
+					arr[location - 1] = true;
+
+					dist[location - 1] = dist[location] + 1;
+				}
+
+			}
+			if (2 * location <= Maxsize)
+			{
+				if (arr[2 * location] != true)
+				{
+					Q.push(2 * location);
+					arr[2 * location] = true;
+
+					dist[2 * location] = dist[location] + 1;
+				}
+			}
+			
+			
+		
+	}
+	cout << dist[K] << endl;
+	return 0;
+}
+

@@ -1,0 +1,61 @@
+#include <iostream>
+using namespace std;
+int N,M;
+int arr[10001];
+bool check(int buget)
+{
+	int sum = 0;
+	for (int i = 0; i < N; i++)
+	{
+		if (arr[i] <= buget)
+			sum += arr[i];
+		else if (arr[i] > buget)
+			sum += buget;
+	}
+	if (sum <= M)
+		return true;
+	else
+		return false;
+}
+int main()
+{
+	cin >> N;
+	int sum = 0;
+	int big_n = 0;
+	for (int i = 0; i < N; i++)
+	{
+		cin >> arr[i];
+		sum += arr[i];
+		if (arr[i] > big_n)
+			big_n = arr[i];
+	}
+	
+	cin >> M;
+
+	int start = 1;
+	int end = 100000;
+	
+	if (sum <= M)
+	{
+		cout << big_n << endl;
+		return 0;
+	}
+	while (start <= end)
+	{
+		int middle = (start + end) / 2;
+		if (check(middle))
+		{
+			start = middle + 1;
+		}
+		else
+		{
+			end = middle - 1;
+		}
+	}
+
+	cout << start-1 << endl;
+
+	return 0;
+
+}
+

@@ -1,0 +1,44 @@
+// ConsoleApplication2.cpp: 콘솔 응용 프로그램의 진입점을 정의합니다.
+//
+#include <iostream>
+using namespace std;
+
+int dp[100001];
+int k;
+int arr[100001];
+int Max(int a, int b)
+{
+	if (a > b)
+		return a;
+	else
+		return b;
+}
+int main()
+{
+	int N;
+	cin >> N;
+
+	
+	for (int i = 0; i < N; i++)
+	{
+		cin >> arr[i];
+	}
+	
+	k = 0;
+	for (int i = 0; i < N; i++)
+	{
+		dp[i] = arr[i];
+		if (i == 0) continue;
+		dp[i] = Max(dp[i - 1] + arr[i], arr[i]);
+	}
+
+	int result = dp[0];
+	for (int i = 0; i < N; i++)
+	{
+		if (dp[i] > result)
+			result = dp[i];
+	}
+	cout << result << endl;
+
+	return 0;
+}

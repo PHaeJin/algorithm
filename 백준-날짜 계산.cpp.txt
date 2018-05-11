@@ -1,0 +1,45 @@
+#include <iostream>
+#include <cstdio>
+using namespace std;
+
+
+int main()
+{
+	int count = 0;
+	bool stop = true;
+	int a, b, c;
+	a = 1;
+	b = 1;
+	c = 1;
+
+	int E, S, M;
+	cin >> E >> S >> M;
+
+	while (stop)
+	{
+
+		if (E == a && S == b && M == c)
+		{
+			stop = false;
+		}
+
+		a++;
+		b++;
+		c++;
+
+		if (a > 15)
+			a = 1;
+		if (b > 28)
+			b = 1;
+		if (c > 19)
+			c = 1;
+
+		count++;
+
+	}
+
+	cout << count << endl;
+
+    return 0;
+}
+

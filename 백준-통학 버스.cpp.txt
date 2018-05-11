@@ -1,0 +1,98 @@
+#include <iostream>
+#include <algorithm>
+#include <math.h>
+#include <string.h>
+using namespace std;
+int N, K, S;
+int arr[30001];
+int arr_N[100001];
+
+int main()
+{
+	cin >> N >> K >> S;
+
+	int distance = 0;
+	int stud = 0;
+	int now_x = S;
+
+	memset(arr_N, 0, sizeof(int) * 100001);
+
+	for (int i = 0; i < N; i++)
+	{
+		cin >> arr[i];
+		cin >> arr_N[arr[i]];
+	}
+
+	sort(arr, arr + N);
+	
+	int flag = 0;
+	while (true)
+	{
+		if (arr[flag] > S|| flag >= N)
+		{
+			distance += abs(S - now_x);
+			stud = 0;
+			break;
+		}
+			
+		distance += abs(now_x - arr[flag]);
+		now_x = arr[flag];
+		while (arr_N[arr[flag]] != 0)
+		{			
+			stud += arr_N[arr[flag]];
+			arr_N[arr[flag]] = 0;
+			if (stud >= K)
+			{
+				if (stud == K)
+				{
+					distance = distance + abs(S - arr[flag]);
+					now_x = S;
+				}
+				else
+					distance = distance + 2 * abs(S - arr[flag]);
+
+				arr_N[arr[flag]] = stud - K;
+				stud = 0;
+			}
+		}
+		flag++;
+	}
+	now_x = S;
+	stud = 0;
+	flag = N - 1;
+	while (true)
+	{
+		if (arr[flag] < S || flag < 0)
+		{
+			distance += abs(S - now_x);
+			stud = 0;
+			break;
+		}
+
+		distance += abs(now_x - arr[flag]);
+		now_x = arr[flag];
+		while (arr_N[arr[flag]] != 0)
+		{
+			stud += arr_N[arr[flag]];
+			arr_N[arr[flag]] = 0;
+			if (stud >= K)
+			{
+				if (stud == K)
+				{
+					distance = distance + abs(S - arr[flag]);
+					now_x = S;
+				}
+				else
+					distance = distance + 2 * abs(S - arr[flag]);
+
+				arr_N[arr[flag]] = stud - K;
+				stud = 0;
+			}
+		}
+		flag--;
+	}
+	cout << distance << endl;
+	return 0;
+
+}
+

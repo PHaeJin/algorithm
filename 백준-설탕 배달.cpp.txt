@@ -1,0 +1,51 @@
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	int weight;
+	int count = 0;
+	bool check = true;
+	cin >> weight;
+	while (check)
+	{
+		if (weight % 5 == 0)
+		{
+
+			int num_5 = (weight / 5);
+			for (int i = 0; i < num_5; i++)
+				count++;
+			check = false;
+		}
+		else
+		{
+			int num_5 = (weight / 5);
+
+			int ex_weight = weight;
+			ex_weight-=5 * num_5;
+			
+			if (ex_weight % 3 == 0)
+			{
+
+				count++;
+				count += num_5;
+				check = false;
+			}
+			else {
+				int c = weight - 3;
+				if(c>=0)
+				{
+					weight -= 3;
+					count++;
+				}
+				else {
+					cout << "-1" << endl;
+					return 0;
+				}
+			}
+		}
+	}
+	cout << count;
+
+	return 0;
+}

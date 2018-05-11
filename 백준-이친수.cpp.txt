@@ -1,0 +1,36 @@
+// ConsoleApplication2.cpp: 콘솔 응용 프로그램의 진입점을 정의합니다.
+//
+#include <iostream>
+
+using namespace std;
+long long **dp;
+
+int main()
+{
+	
+	int N;
+
+	long long result;
+	
+	cin >> N;
+
+	dp = new long long*[N+1];
+	for (int i = 1; i < N+1; i++)
+	{
+		dp[i] = new long long[2];
+	}
+	dp[1][0] = 0;
+	dp[1][1] = 1;
+
+	for (int num = 2; num <= N; num++)
+	{
+		
+			dp[num][1] = dp[num - 1][0];
+			dp[num][0] = dp[num - 1][0]+dp[num-1][1];
+	}
+	
+	result = dp[N][0] + dp[N][1];
+	cout << result << endl;
+
+	return 0;
+}

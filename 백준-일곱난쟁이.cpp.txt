@@ -1,0 +1,50 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+int arr[9];
+int score[7];
+
+int main()
+{
+	
+	for (int i = 0; i < 9; i++)
+		cin >> arr[i];
+
+	int num1;
+	int num2;
+	int result = 0;
+	for (int i = 0; i < 9; i++)
+	{
+		for (int j = i+1 ; j < 9; j++)
+		{
+			num1 = arr[i];
+			num2 = arr[j];
+			arr[i] = 0;
+			arr[j] = 0;
+			for (int k = 0; k < 9; k++)
+			{
+				result += arr[k];
+			}
+			if (result == 100)
+			{
+				sort(arr, arr + 9);
+				for (int k = 0; k < 9; k++)
+				{
+					if(arr[k]!=0)
+					cout << arr[k] << endl;
+				}
+				break;
+			}
+
+			arr[i] = num1;
+			arr[j] = num2;
+			
+		
+			result = 0;
+		}
+	}
+
+
+	return 0;
+
+}

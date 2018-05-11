@@ -1,0 +1,77 @@
+#include <iostream>
+#include <algorithm>
+#include <math.h>
+#include <string.h>
+#include <string>
+using namespace std;
+int N,M;
+int arr[11];
+bool FR[11][11];
+int count_c = 0;
+int T;
+int main()
+{
+	cin >> T;
+	while (T!=0)
+	{
+		count_c = 0;
+		cin >> N >> M;
+
+
+		for (int i = 0; i < N; i++)
+		{
+			arr[i] = i;
+		}
+
+		for (int i = 0; i < N; i++)
+		{
+			for (int j = 0; j < N; j++)
+			{
+				FR[i][j] = false;
+			}
+		}
+
+		for (int i = 0; i < M; i++)
+		{
+			int s, k;
+			cin >> s >> k;
+			FR[s][k] = true;
+			FR[k][s] = true;
+		}
+
+		int ch = 0;
+		do
+		{
+			int c = 0;
+			for (int i = 0; i < N; i += 2)
+			{
+				int first=100000000;
+				for (int j = i; j < N; j++)
+				{
+					if (arr[j] < first)
+						first = arr[j];
+				}
+				int s = arr[i];
+				int k = arr[i + 1];
+				if (s > k)
+					continue;
+				if (s != first)
+					continue;
+				if (FR[s][k])
+					c++;
+			}
+			if (c == N / 2)
+			{
+				count_c++;
+			}
+
+		} while (next_permutation(arr, arr + N));
+
+
+		cout << count_c << endl;
+		T--;
+	}
+	
+	return 0;
+
+}

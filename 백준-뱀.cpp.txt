@@ -1,0 +1,306 @@
+// ConsoleApplication3.cpp: 콘솔 응용 프로그램의 진입점을 정의합니다.
+//
+#include<iostream>
+#include<string.h>
+#include<queue>
+#include<utility>
+#include<stdlib.h>
+
+using namespace std;
+int N;
+int **arr;//맵
+char Moving[10001]; //움직임
+int *mob;//몸통
+int mob_count = 1;
+int Result = 0;
+int H, T = 0;
+char Now_mov = 'R';
+int **check;
+
+void start_game()
+{
+	Result++;
+	/*
+	check = new int*[N]();
+	for (int i = 0; i < N; i++)
+	{
+		check[i] = new int[N]();
+	}
+
+	for (int i = 0; i < mob_count; i++)
+	{
+		int k = mob[i];
+		int A = k / N;
+		int B = k % N;
+		check[A][B] = 1;
+	}
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			cout << check[i][j] << " ";
+		}
+		cout << endl;
+	}
+
+	cout << endl;
+	*/
+	if (Now_mov == 'R')
+	{
+		int A, B;
+		A = H / N;
+		B = H % N;
+
+		if (B + 1 >= N)
+		{
+			cout << Result << endl;
+			exit(0);
+		}
+		H++;
+		T++;
+
+		for (int i = 0; i < mob_count; i++)
+		{
+			if (mob[i] == H)
+			{
+				cout << Result << endl;
+				exit(0);
+			}
+		}
+
+		int jujang = mob[mob_count - 1];
+		for (int i = mob_count - 1; i >0; i--)
+		{
+			mob[i] = mob[i - 1];
+		}
+
+		mob[0] = H;
+
+
+
+		if (arr[A][B + 1] == 1)
+		{
+			T = jujang;
+			mob[mob_count] = T;
+			mob_count++;
+			arr[A][B + 1] = 0;
+		}
+
+		if (Moving[Result] == 'D')
+		{
+			Now_mov = 'D';
+		}
+		else if (Moving[Result] == 'L')
+		{
+			Now_mov = 'U';
+		}
+		//cout << H << " " << T << endl;
+		start_game();
+	}
+	else if (Now_mov == 'L')
+	{
+		int A, B;
+		A = H / N;
+		B = H % N;
+
+		if (B - 1 <0)
+		{
+			cout << Result << endl;
+			exit(0);
+		}
+		H--;
+		T--;
+
+
+
+		for (int i = 0; i < mob_count; i++)
+		{
+			if (mob[i] == H)
+			{
+				cout << Result << endl;
+				exit(0);
+			}
+		}
+		int jujang = mob[mob_count - 1];
+		for (int i = mob_count - 1; i >0; i--)
+		{
+			mob[i] = mob[i - 1];
+		}
+
+		mob[0] = H;
+
+
+		if (arr[A][B - 1] == 1)
+		{
+			T = jujang;
+			mob[mob_count] = T;
+			mob_count++;
+			arr[A][B - 1] = 0;
+		}
+
+		if (Moving[Result] == 'D')
+		{
+			Now_mov = 'U';
+		}
+		else if (Moving[Result] == 'L')
+		{
+			Now_mov = 'D';
+		}
+		//cout << H << " " << T << endl;
+		start_game();
+	}
+	else if (Now_mov == 'U')
+	{
+		int A, B;
+		A = H / N;
+		B = H % N;
+
+		if (A - 1 < 0)
+		{
+			cout << Result << endl;
+			exit(0);
+		}
+		H = H - N;
+		T = T - N;
+
+
+		for (int i = 0; i < mob_count; i++)
+		{
+			if (mob[i] == H)
+			{
+				cout << Result << endl;
+				exit(0);
+			}
+		}
+		int jujang = mob[mob_count - 1];
+		for (int i = mob_count - 1; i >0; i--)
+		{
+			mob[i] = mob[i - 1];
+		}
+
+		mob[0] = H;
+
+		if (arr[A - 1][B] == 1)
+		{
+			T = jujang;
+
+			mob[mob_count] = T;
+			mob_count++;
+			arr[A - 1][B] = 0;
+		}
+
+		if (Moving[Result] == 'D')
+		{
+			Now_mov = 'R';
+		}
+		else if (Moving[Result] == 'L')
+		{
+			Now_mov = 'L';
+		}
+		//cout << H << " " << T << endl;
+		start_game();
+	}
+	else if (Now_mov == 'D')
+	{
+		int A, B;
+		A = H / N;
+		B = H % N;
+
+		if (A + 1 >= N)
+		{
+			cout << Result << endl;
+			exit(0);
+		}
+		H = H + N;
+		T = T + N;
+
+
+
+
+		for (int i = 0; i < mob_count; i++)
+		{
+			if (mob[i] == H)
+			{
+				cout << Result << endl;
+				exit(0);
+			}
+		}
+
+		int jujang = mob[mob_count - 1];
+		for (int i = mob_count - 1; i >0; i--)
+		{
+			mob[i] = mob[i - 1];
+		}
+
+		mob[0] = H;
+
+		if (arr[A + 1][B] == 1)
+		{
+			T = jujang;
+
+			mob[mob_count] = T;
+			mob_count++;
+			arr[A + 1][B] = 0;
+		}
+
+		if (Moving[Result] == 'D')
+		{
+			Now_mov = 'L';
+		}
+		else if (Moving[Result] == 'L')
+		{
+			Now_mov = 'R';
+		}
+		//cout << H << " " << T << endl;
+		start_game();
+	}
+
+}
+int main()
+{
+	ios::sync_with_stdio(false);
+
+	cin >> N;
+	mob = new int[N*N];
+	arr = new int*[N]();
+
+	for (int i = 0; i < N; i++)
+	{
+		arr[i] = new int[N]();
+	}
+	//0~N까지
+
+	int App;
+	cin >> App;
+
+	for (int i = 0; i < App; i++)
+	{
+		int x, y;
+		cin >> x >> y;
+		arr[x - 1][y - 1] = 1;
+	}
+	//사과
+
+	int Bang;
+	cin >> Bang;
+	for (int i = 0; i < 10001; i++)
+	{
+		Moving[i] = 'N';
+	}
+
+	for (int i = 0; i < Bang; i++)
+	{
+		int num;
+		char C;
+		cin >> num >> C;
+		Moving[num] = C;
+	}
+	//움직임 저장
+
+	mob[0] = 0;
+
+	start_game();
+
+	return 0;
+}
+

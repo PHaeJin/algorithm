@@ -1,0 +1,67 @@
+#include <iostream>
+#include <algorithm>
+#include <queue>
+#include <utility>
+#include<cstdio>
+using namespace std;
+int **arr;
+int **result;
+int ddx[4] = { -1,0,1,0 };
+int ddy[4] = { 0,1,0,-1 };
+int main()
+{
+	int N, M;
+	cin >> N >> M;
+
+	arr = new int*[N];
+	result = new int*[N];
+	for (int i = 0; i < N; i++)
+	{
+		arr[i] = new int[M];
+		result[i] = new int[M];
+	}
+	
+	for (int i = 0; i < N; i++)
+	{
+		/*int ex,ex2;
+		cin >> ex;*/
+		for (int j = 0; j < M; j++)
+		{
+			/*ex2 = ex % 10;
+			ex = ex / 10;*/
+			scanf("%1d",&arr[i][j]);
+			result[i][j] = 1;
+		}
+	}
+	queue<pair<int,int>> q;
+	pair<int, int> p = make_pair(0, 0);
+	q.push(p);
+	
+	while (!q.empty())
+	{
+		int dx, dy;
+
+		dx = q.front().first;
+		dy = q.front().second;
+		q.pop();
+		
+		for (int i = 0; i < 4; i++)
+		{
+			int A, B;
+			A = dx + ddx[i];
+			B = dy + ddy[i];
+			if (A >= N || B >= M || A < 0 || B < 0) continue;
+			if (result[A][B] == 1&&arr[A][B]==1)
+			{
+				pair<int, int> p = make_pair(A, B);
+				q.push(p);
+				result[A][B] = result[dx][dy] + 1;
+
+			}
+		}
+	}
+
+	cout << result[N-1][M-1] << endl;
+	return 0;
+
+}
