@@ -1,0 +1,84 @@
+#include<iostream>
+#include<math.h>
+#include<algorithm>
+#include<utility>
+#include<queue>
+#include<vector>
+#include<stdio.h>
+#include<string>
+using namespace std;
+
+vector<int> v;
+int f_max(int a, int b)
+{
+	if (a > b)
+		return a;
+	else
+		return b;
+}
+int f_min(int a, int b)
+{
+	if (a > b)
+		return b;
+	else
+		return a;
+}
+
+int dv(int left, int right)
+{
+	if (left == right) 
+	{
+		return v[left];
+
+	}
+	int mid = ((left + right) / 2);
+	
+	int res = f_max(dv(left, mid), dv(mid + 1, right));
+	int lv = mid;
+	int rv = mid + 1;
+	
+	int low_v = f_min(v[lv], v[rv]);
+
+	res = f_max(res, low_v * 2);
+	while (lv > left||rv < right)
+	{
+		if (rv < right && (lv==left||v[lv-1]<v[rv+1]))
+		{
+			rv++;
+			low_v = f_min(low_v, v[rv]);
+		}
+		else
+		{
+			lv--;
+			low_v = f_min(low_v, v[lv]);
+		}
+		int go = low_v * (rv - lv + 1);
+		res = f_max(res, go);
+	}
+	return res;
+}
+int main()
+{
+	int testcase;
+	cin >> testcase;
+	while (testcase != 0)
+	{
+		v.clear();
+		int N;
+		cin >> N;
+		for (int i = 0; i < N; i++)
+		{
+			int num;
+			cin >> num;
+			v.push_back(num);
+		}
+		int result;
+		result = dv(0, N - 1);
+		cout << result << endl;
+		testcase--;
+	}
+	
+
+	return 0;
+}
+
