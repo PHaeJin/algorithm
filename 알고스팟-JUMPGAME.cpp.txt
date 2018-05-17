@@ -1,0 +1,63 @@
+#include<iostream>
+#include<math.h>
+#include<algorithm>
+#include<utility>
+#include<queue>
+#include<vector>
+#include<stdio.h>
+#include<string>
+using namespace std;
+int N;
+int game[101][101];
+bool visit[101][101];
+bool possible = false;
+void go(int x, int y)
+{
+	if (x == N - 1 && y == N - 1)
+	{
+		possible = true;
+		return;
+	}
+	visit[x][y] = true;
+
+	int mov = game[x][y];
+	
+	if (x + mov < N&&visit[x + mov][y] == false)
+		go(x + mov, y);
+	if (y + mov < N&&visit[x][y+mov] == false)
+		go(x, y+mov);
+
+}
+
+int main()
+{
+	int testcase;
+	cin >> testcase;
+	while (testcase != 0)
+	{
+		cin >> N;
+
+		possible = false;
+		
+		for (int i = 0; i < N; i++)
+		{
+			for (int j = 0; j < N; j++)
+			{
+				cin >> game[i][j];
+				visit[i][j] = false;
+			}
+		}
+		visit[0][0] = true;
+		go(0, 0);
+
+		if (possible)
+			cout << "YES" << endl;
+		else
+			cout << "NO" << endl;
+
+		testcase--;
+
+	}
+	return 0;
+}
+

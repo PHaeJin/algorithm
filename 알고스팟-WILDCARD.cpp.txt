@@ -1,0 +1,80 @@
+#include<iostream>
+#include<math.h>
+#include<algorithm>
+#include<utility>
+#include<queue>
+#include<vector>
+#include<stdio.h>
+#include<string>
+using namespace std;
+int memo[101][101];
+bool match(string w, string c)
+{
+	if (memo[w.size()][c.size()] >= 0)
+	{
+		if (memo[w.size()][c.size()] == 1)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	int pos = 0;
+	while (pos<w.size()&&pos<c.size() && (w[pos] == '?' || w[pos] == c[pos]))
+	{
+		pos++;
+	}
+	if (pos == w.size())
+	{
+		return pos == c.size();
+	}
+	if (w[pos] == '*')
+	{
+		for (int key = 0; pos + key <= c.size(); key++)
+		{
+			if (match(w.substr(pos + 1), c.substr(pos + key)))
+			{
+				memo[w.substr(pos + 1).size()][c.substr(pos + key).size()] = 1;
+				return true;
+			}	
+		}
+	}
+
+	memo[w.size()][c.size()] = 0;
+	return false;
+}
+
+int main()
+{
+	int testcase;
+	cin >> testcase;
+	while (testcase != 0)
+	{
+		vector<string> result;
+		string s, c;
+		int N;
+		cin >> s;
+		cin >> N;
+		for (int i = 0; i < N; i++)
+		{
+			for (int a = 0; a < 101; a++)
+			{
+				for (int b = 0; b < 101; b++)
+					memo[a][b] = -1;
+			}
+			cin >> c;
+			if (match(s, c))
+				result.push_back(c);
+			
+		}
+		sort(result.begin(), result.end());
+		for (int i = 0; i < result.size(); i++)
+			cout << result[i] << endl;
+		testcase--;
+	}
+	
+	return 0;
+}
+
