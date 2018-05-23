@@ -1,0 +1,58 @@
+
+#include<iostream>
+#include<math.h>
+#include<algorithm>
+#include<utility>
+#include<queue>
+#include<vector>
+#include<stdio.h>
+#include<string>
+#include<cmath>
+using namespace std;
+int arr[501];
+int memo[501];
+int N;
+int max_num(int a, int b)
+{
+	if (a > b)
+		return a;
+	else
+		return b;
+}
+int LIS(int num)
+{
+	if (memo[num] >= 0)
+		return memo[num];
+	int result = 1;
+	for (int i = num + 1; i < N; i++)
+	{
+		if(arr[num]<arr[i])
+		result = max_num(result, LIS(i) + 1);
+	}
+	memo[num] = result;
+	return result;		
+}
+int main()
+{
+	int testcase;
+	cin >> testcase;
+	while (testcase != 0)
+	{
+		cin >> N;
+		for (int i = 0; i < N; i++)
+		{
+			cin >> arr[i];
+			memo[i] = -1;
+		}
+		int result = 0;
+		for (int i = 0; i < N; i++)
+		{
+			result = max_num(result, LIS(i));
+		}
+		cout << result << endl;
+		testcase--;
+	}
+
+	return 0;
+}
+
