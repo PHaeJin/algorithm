@@ -1,0 +1,79 @@
+
+#include<iostream>
+#include<math.h>
+#include<algorithm>
+#include<utility>
+#include<queue>
+#include<vector>
+#include<stdio.h>
+#include<string>
+#include<cmath>
+using namespace std;
+long long memo[101][101];
+int arrA[101];
+int arrB[101];
+int N,M;
+const long long NEGINF = numeric_limits<long long>::min();
+
+long long max_num(long long a, long long b)
+{
+	if (a > b)
+		return a;
+	else
+		return b;
+}
+int lis(int indexA,int indexB)
+{
+	if (memo[indexA+1][indexB+1] >= 0)
+		return memo[indexA+1][indexB+1];
+
+	long long A = (indexA == -1 ? NEGINF : arrA[indexA]);
+	long long B = (indexB == -1 ? NEGINF : arrB[indexB]);
+	
+	long long result = 2;
+	long long big_num = max_num(A, B);
+	for (int i = indexA + 1; i < N; i++)
+	{
+		if (arrA[i] > big_num)
+			result = max_num(result, lis(i, indexB)+1);
+	}
+	for (int i = indexB + 1; i < M; i++)
+	{
+		if (arrB[i] > big_num)
+			result = max_num(result, lis(indexA, i)+1);
+	}
+	memo[indexA+1][indexB+1] = result;
+
+	return result;
+}
+
+int main()
+{
+	int testcase;
+	cin >> testcase;
+	while (testcase != 0)
+	{
+		cin >> N >> M;
+		for (int i = 0; i < N; i++)
+		{
+			cin >> arrA[i];
+		}
+		for (int i = 0; i < M; i++)
+		{
+			cin >> arrB[i];
+		}
+		for (int i = 0; i <= N; i++)
+		{
+			for (int j = 0; j <= M; j++)
+				memo[i][j] = -1;
+		}
+
+		int result = 0;
+		result = lis(-1, -1);
+		cout << result - 2 << endl;
+		testcase--;
+	}
+	
+	return 0;
+}
+
