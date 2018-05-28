@@ -1,0 +1,87 @@
+#include<iostream>
+#include<algorithm>
+#include<math.h>
+#include<vector>
+using namespace std;
+
+int N,D,P,T;
+int arr[51];
+int map[51][51];
+int sol[51];
+double memo[101][51];
+double NUMB3RS(int days, int end)
+{
+	if (days == 0)
+	{
+		if (end == P)
+			return 1;
+		else
+			return 0;
+	}
+	if (memo[days][end] >= 0)
+		return memo[days][end];
+
+
+	double ret = 0;
+	for (int i = 0; i < N; i++)
+	{
+		if (map[end][i] == 1)
+		{
+			double h = (double)1 / arr[i];
+			ret = ret + h*NUMB3RS(days - 1, i);
+			
+		}
+	}
+	memo[days][end] = ret;
+	return ret;
+}
+int main()
+{
+	int testcase;
+	cin >> testcase;
+	while (testcase != 0)
+	{
+		cin >> N >> D >> P;
+		for (int i = 0; i < N; i++)
+		{
+			arr[i] = 0;
+		}
+
+		for (int i = 0; i < N; i++)
+		{
+			for (int j = 0; j < N; j++)
+			{
+				int num;
+				cin >> num;
+				map[i][j] = num;
+				if (num == 1)
+				{
+					arr[i]++;
+				}
+			}
+		}
+
+		cin >> T;
+		for (int i = 0; i < T; i++)
+		{
+			cin >> sol[i];
+		}
+		for (int i = 0; i < 101; i++)
+		{
+			for (int j = 0; j < 51; j++)
+				memo[i][j] = -1;
+		}
+
+		cout.precision(8);
+		for (int i = 0; i < T; i++)
+		{
+			double result = NUMB3RS(D, sol[i]);
+			cout << result << " ";
+		}
+		cout << endl;
+		testcase--;
+	}
+	
+	return 0;
+}
+
