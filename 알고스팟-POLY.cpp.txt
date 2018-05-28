@@ -1,0 +1,54 @@
+#include<iostream>
+#include<algorithm>
+#include<math.h>
+#include<vector>
+using namespace std;
+const int MOD = 10000000;
+int memo[101][101];
+int poly(int num, int start)
+{
+	if (num == start)
+		return 1;
+
+	if (memo[num][start] >= 0)
+		return memo[num][start];
+
+	int ret = 0;
+
+	for (int i = 1; i <= (num-start); i++)
+	{
+		int count_c = start + i - 1;
+		ret = (ret + count_c * poly(num-start,i))%MOD;
+	}
+
+	memo[num][start] = ret;
+
+	return ret;
+
+}
+int main()
+{
+	int testcase;
+	cin >> testcase;
+	while (testcase != 0)
+	{
+		int N;
+		cin >> N;
+
+		int result = 0;
+
+		for (int i = 0; i <= N; i++)
+		{
+			for (int j = 0; j <= N; j++)
+				memo[i][j] = -1;
+		}
+		for (int i = 1; i <= N; i++)
+			result = (result + poly(N, i)) % MOD;
+
+		cout << result << endl;
+		testcase--;
+	}
+	
+	return 0;
+}
+

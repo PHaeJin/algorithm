@@ -1,0 +1,96 @@
+
+#include<iostream>
+#include<algorithm>
+#include<math.h>
+using namespace std;
+
+
+
+int N,S;
+int arr[101];
+int memo[101][11];
+const int BIG = 1000000000;
+
+int min_num(int a, int b)
+{
+	if (a > b)
+		return b;
+	else
+		return a;
+}
+
+int calculate(int start, int end)
+{
+	int sum;
+
+	sum = 0;
+	for (int i = start; i <= end; i++)
+	{
+		sum += arr[i];
+	}
+
+	int middle = int(0.5+(double)sum/(end-start+1));
+
+
+	int result = 0;
+	for (int i = start; i <= end; i++)
+	{
+		result += ((abs(arr[i] - middle))*(abs(arr[i] - middle)));
+	}
+
+	return result;
+
+}
+
+
+int Quant(int start, int M)
+{
+	if (start == N)
+		return 0;
+	if (M == 0)
+		return BIG;
+	if (memo[start][M] >= 0)
+		return memo[start][M];
+
+	int ret = BIG;
+
+	for (int i = 0; i < N; i++)
+	{
+		if(start+i<N)
+		ret = min_num(ret, calculate(start, start + i) + Quant(start + i + 1, M - 1));
+
+	}
+		
+	memo[start][M] = ret;
+
+	return ret;
+}
+
+int main()
+{
+	int testcase;
+	cin >> testcase;
+	while (testcase != 0)
+	{
+		cin >> N >> S;
+
+		for (int i = 0; i < N; i++)
+			cin >> arr[i];
+
+		sort(arr, arr + N);
+
+		for (int i = 0; i < N; i++)
+		{
+			for (int j = 0; j <= S; j++)
+				memo[i][j] = -1;
+		}
+
+		int result = Quant(0, S);
+
+		cout << result << endl;
+		testcase--;
+	}
+	
+	return 0;
+}
+

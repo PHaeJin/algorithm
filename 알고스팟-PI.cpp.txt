@@ -1,0 +1,131 @@
+#include<iostream>
+#include<math.h>
+#include<algorithm>
+#include<utility>
+#include<queue>
+#include<vector>
+#include<stdio.h>
+#include<string>
+#include<cmath>
+
+using namespace std;
+
+int arr[10001];
+int memo[10001];
+int N;
+int min_num(int a, int b)
+{
+	if (a > b)
+		return b;
+	else
+		return a;
+}
+
+int calculate_score(int start, int end)
+{
+	bool check1 = true;
+	int a = arr[start];
+	for (int i = start+1; i < end; i++)
+	{
+		if (a != arr[i])
+			check1 = false;
+	}
+	if (check1)
+		return 1;
+	bool check2 = true;
+	bool check3	= true;
+	for (int i = start+1; i < end; i++)
+	{
+		if (arr[i] - arr[i - 1] != 1)
+			check2 = false;
+	}
+	for (int i = start + 1; i < end; i++)
+	{
+		if (arr[i] - arr[i - 1] != -1)
+			check3 = false;
+	}
+
+	if (check2 || check3)
+		return 2;
+
+	int b = arr[start + 1];
+	bool check4 = true;
+	int flag = 1;
+	for (int i = start + 2; i < end; i++)
+	{
+		if (flag == 1)
+		{
+			if (arr[i] != a)
+				check4 = false;
+		}
+		else
+		{
+			if (arr[i] != b)
+				check4 = false;
+		}
+		if (flag == 1)
+			flag = 0;
+		else
+			flag = 1;
+	}
+	if (check4)
+		return 4;
+
+
+	bool check5 = true;
+	int d = arr[start + 1] - a;
+	for (int i = start + 2; i < end; i++)
+	{
+		if (arr[i] - arr[i - 1] != d)
+			check5 = false;
+	}
+	if (check5)
+		return 5;
+
+
+	return 10;
+}
+int pi(int start)
+{
+	if (start == N)
+		return 0;
+
+	if (memo[start] >= 0)
+		return memo[start];
+
+	int ret=1000000000;
+	
+	for (int L = 3; L <= 5; L++)
+	{
+		if (start + L <= N)
+			ret = min_num(ret, pi(start + L)+calculate_score(start,start+L));
+	}
+	memo[start] = ret;
+	return ret;
+}
+
+int main()
+{
+	int testcase;
+	cin >> testcase;
+	while (testcase != 0)
+	{
+		string s;
+		cin >> s;
+		N = s.size();
+		for (int i = 0; i < s.size(); i++)
+		{
+			arr[i] = s[i] - '0';
+			memo[i] = -1;
+		}
+
+
+		int result = pi(0);
+
+		cout << result << endl;
+		testcase--;
+	}
+	
+	return 0;
+}
+

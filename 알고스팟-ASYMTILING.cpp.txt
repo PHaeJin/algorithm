@@ -1,0 +1,64 @@
+
+#include<iostream>
+#include<algorithm>
+#include<math.h>
+#include<vector>
+using namespace std;
+int N;
+int memo[101];
+const int MOD = 1000000007;
+int tile(int start)
+{
+	if (start == N)
+	{
+		return 1;
+	}
+		
+	if (start > N)
+		return 0;
+	if (memo[start] >= 0)
+		return memo[start];
+	
+	int ret;
+	ret = (tile(start + 1)+tile(start+2))%MOD;
+
+	memo[start] = ret;
+
+	return ret;
+
+		
+}
+int ASYMTILING()
+{
+	if (N % 2 == 1)
+	{
+		return tile(N / 2+1);
+	}
+
+	int ret = 0;
+	ret = tile(N / 2 + 1);
+	ret = (ret+tile(N / 2))%MOD;
+
+	return ret;
+}
+
+
+int main()
+{
+	int testcase;
+	cin >> testcase;
+	while (testcase != 0)
+	{
+		cin >> N;
+		for (int i = 0; i < N; i++)
+			memo[i] = -1;
+
+		int result = tile(0);
+
+		cout << (result - ASYMTILING() + MOD) % MOD << endl;
+		testcase--;
+	}
+	
+	return 0;
+}
+

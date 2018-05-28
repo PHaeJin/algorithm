@@ -1,0 +1,49 @@
+#include<iostream>
+#include<algorithm>
+#include<math.h>
+using namespace std;
+int N,M;
+double memo[1001][2001];
+double SNAIL(int days, int sum)
+{
+	if (days == M)
+	{
+		if (sum >= N)
+			return 1;
+		else
+			return 0;
+	}
+	if (memo[days][sum] >= 0)
+		return memo[days][sum];
+
+	double result;
+
+	result = 0.75*SNAIL(days + 1, sum + 2) + 0.25*SNAIL(days + 1, sum + 1);
+
+	memo[days][sum] = result;
+
+	return result;
+}
+int main()
+{
+
+	int testcase;
+	cin >> testcase;
+	cout.setf(ios::fixed);
+
+	while (testcase != 0)
+	{
+		cin >> N >> M;
+		for (int i = 0; i < M; i++)
+		{
+			for (int j = 0; j < 2 * M + 1; j++)
+				memo[i][j] = -1;
+		}
+		double result = SNAIL(0, 0);
+		cout.precision(9);
+		cout << result << endl;
+		testcase--;
+	}
+	return 0;
+}
+
