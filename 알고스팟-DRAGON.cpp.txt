@@ -1,0 +1,81 @@
+
+#include<iostream>
+#include<algorithm>
+#include<math.h>
+#include<vector>
+#include<string>
+using namespace std;
+int N,P;
+int Max = 1000000001;
+int gener[51]; // x,y를 n 세대까지 확장했을때 늘어 날수있는 문자열 개수
+
+int min_num(int a, int b)
+{
+	if (a > b)
+		return b;
+	else
+		return a;
+}
+
+void calculate_gener(int start)
+{
+	if (start == 50)
+		return;
+
+	
+	gener[start + 1] =min_num(Max, 2 * gener[start] + 2);
+	
+	calculate_gener(start + 1);
+}
+char dragon(string seed, int generation,int skip)
+{
+	if (generation == 0)
+	{
+		return seed[skip];
+	}
+
+	for (int i = 0; i < seed.size(); i++)
+	{
+		if (seed[i] == 'X' || seed[i] == 'Y')
+		{
+			if (skip >= gener[generation])
+				skip -= gener[generation];
+			else if (seed[i] == 'X')
+				return dragon("X+YF", generation - 1,skip);
+			else
+				return dragon("FX-Y", generation - 1,skip);
+		}
+		else if(skip>0)
+		{
+				skip--;			
+		}
+		else
+			return seed[i];
+	}
+	return 'H';
+}
+int main()
+{
+	int testcase;
+	cin >> testcase;
+	while (testcase != 0)
+	{
+		int L;
+		cin >> N >> P >> L;
+		gener[0] = 1;
+		calculate_gener(0);
+
+
+		int skip = P;
+		for (int i = 0; i < L; i++)
+		{
+			char c = dragon("FX", N, skip + i - 1);
+			cout << c;
+		}
+		cout << endl;
+		testcase--;
+	}
+	
+	return 0;
+}
+

@@ -1,0 +1,81 @@
+
+#include<iostream>
+#include<algorithm>
+#include<math.h>
+#include<vector>
+#include<string>
+using namespace std;
+
+const int MOD = 1000000007;
+string e, digits;
+int n, m;
+int cache[1 << 15][21][2];
+
+int price(int index,int taken,int mod,int less,bool go[])
+{
+	
+	if (index == n)
+		return (less&&mod == 0) ? 1 : 0;
+	
+	if (cache[taken][mod][less] >= 0)
+		return cache[taken][mod][less];
+
+	int ret = 0;
+
+	for (int i = 0; i < n; i++)
+	{
+		if (!go[i])
+		{
+			if (!less&&e[index] < digits[i])
+				continue;
+
+			if (i == 0 || digits[i - 1] != digits[i] || go[i - 1])
+			{
+				go[i] = true;
+				int nextTaken = taken | (1 << i);
+				int nextmod = (mod * 10 + digits[i] - '0') % m;
+				int nextless = less || e[index] > digits[i];
+				ret += price(index + 1, nextTaken, nextmod, nextless,go);
+				ret %= MOD;
+				go[i] = false;
+			}
+		}
+	}
+	cache[taken][mod][less] = ret;
+	return ret;
+
+}
+int main()
+{
+	int testcase;
+	cin >> testcase;
+	while (testcase != 0)
+	{
+		cin >> e >> m;
+
+		digits = e;
+		n = e.size();
+		sort(digits.begin(), digits.end());
+
+		bool taken[15];
+		for (int i = 0; i < n; i++)
+			taken[i] = false;
+
+		string s;
+
+		for (int i = 0; i < (1 << 15); i++)
+		{
+			for (int j = 0; j < 21; j++)
+			{
+				for (int s = 0; s < 2; s++)
+					cache[i][j][s] = -1;
+			}
+		}
+
+		cout << price(0, 0, 0, 0, taken) << endl;
+		testcase--;
+	}
+	
+	return 0;
+}
+
