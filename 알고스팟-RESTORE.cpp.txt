@@ -1,0 +1,133 @@
+
+#include<iostream>
+#include<algorithm>
+#include<math.h>
+#include<vector>
+#include<string>
+using namespace std;
+const int max_N = 15;
+int k;
+string word[max_N];
+int cache[max_N][1 << max_N];
+int overlap[max_N][max_N];
+int calculate_s(string a, string b)
+{
+	int start_s=-1;
+	int ret = 0;
+
+	int mid_ret;
+	
+	for (int i = 0; i < a.size(); i++)
+	{
+		if (a[i] == b[0])
+		{
+			int s = i+1;
+			int j = 1;
+			mid_ret = 1;
+			while (true)
+			{
+				if (s>=a.size() || j>=b.size())
+					break;
+				if (a[s] != b[j])
+					break;
+				mid_ret++;
+				s++;
+				j++;
+			}
+			if(s==a.size()||j==b.size())
+			ret = max(ret, mid_ret);
+		}
+	}
+	
+	return ret;
+}
+int restore(int last, int used)
+{
+	if (used == (1 << k) - 1) return 0;
+	
+	if (cache[last][used] >= 0)
+		return cache[last][used];
+
+	int ret = 0;
+
+	for (int i = 0; i < k; i++)
+	{
+		if ((used&(1 << i)) == 0)
+		{
+			int nexti = i;
+			if (overlap[last][i] == word[i].size())
+				nexti = last;
+			int cand = overlap[last][i] + restore(nexti, used + (1 << i));
+			ret = max(ret, cand);
+		}
+	}
+	cache[last][used] = ret;
+	return ret;
+}
+string reconstruct(int last, int used)
+{
+	if (used == (1 << k) - 1) return "";
+
+	for (int i = 0; i < k; i++)
+	{
+		if ((used&(1 << i))) continue;
+		int nexti = i;
+		if (overlap[last][i] == word[i].size())
+			nexti = last;
+		int ifUsed = restore(nexti, used + (1 << i)) + overlap[last][i];
+		if (restore(last, used) == ifUsed)
+		{
+			//cout <<word[last]<<" "<<word[i] <<" "<<word[i].substr(overlap[last][i]) << endl;
+			return (word[i].substr(overlap[last][i]) + reconstruct(nexti, used + (1 << i)));
+		}
+	}
+	return "*@#*@*@*";
+}
+
+int main()
+{
+	int testcase;
+	cin >> testcase;
+	while (testcase != 0)
+	{
+		cin >> k;
+		for (int i = 0; i < k; i++)
+		{
+			cin >> word[i];
+		}
+		for (int i = 0; i < max_N; i++)
+		{
+			for (int j = 0; j < (1 << max_N); j++)
+				cache[i][j] = -1;
+		}
+		for (int i = 0; i < k; i++)
+		{
+			for (int j = 0; j < k; j++)
+			{
+				if (i == j)
+				{
+					continue;
+				}
+				overlap[i][j] = calculate_s(word[i], word[j]);
+			}
+		}
+		int ret = -1;
+		int maxret = -1;
+		for (int i = 0; i < k; i++)
+		{
+			int num = ret;
+			ret = max(ret, restore(i, (1 << i)));
+			if (ret > num)
+				maxret = i;
+		}
+
+		string s = word[maxret] + reconstruct(maxret, (1 << maxret));
+
+		cout << s << endl;
+
+		testcase--;
+	}
+	
+	return 0;
+}
+
