@@ -1,0 +1,152 @@
+
+#include<iostream>
+#include<algorithm>
+#include<math.h>
+#include<vector>
+#include<string>
+using namespace std;
+char map[3][3];
+int memo[19683];
+int calculate_map(char map[3][3])
+{
+	int ret = 0;
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			ret = ret * 3;
+			if (map[i][j] == 'o')
+				ret++;
+			else if (map[i][j] == 'x')
+				ret += 2;
+		}
+	}
+	return ret;
+}
+bool game_end(char map[3][3], char turn)
+{
+	bool check;
+	for (int i = 0; i < 3; i++)
+	{
+		check = true;
+		for (int j = 0; j < 3; j++)
+		{
+			if (map[i][j] != turn)
+				check = false;
+		}
+		if (check)
+			return true;
+	}
+
+	for (int j = 0; j < 3; j++)
+	{
+		check = true;
+		for (int i = 0; i < 3; i++)
+		{
+			if (map[i][j] != turn)
+				check = false;
+		}
+		if (check)
+			return true;
+	}
+
+	check = true;
+	for (int i = 0; i < 3; i++)
+	{
+		if (map[i][i] != turn)
+			check = false;
+	}
+	if (check)
+		return true;
+
+	check = true;
+	for (int i = 0; i < 3; i++)
+	{
+		if (map[i][2-i] != turn)
+			check = false;
+	}
+	if (check)
+		return true;
+
+	return false;
+}
+
+int TICTACTOE(char map[3][3], char turn)
+{
+	char par = (turn == 'o' ? 'x' : 'o');
+	if (game_end(map, par)) return -1;
+
+	if (memo[calculate_map(map)] >= -1)
+		return memo[calculate_map(map)];
+
+	int ret = 2;
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			if (map[i][j] == '.')
+			{
+				map[i][j] = turn;
+				ret=min(ret, TICTACTOE(map, par));
+				map[i][j] = '.';
+			}
+		}
+	}
+	if (ret == 2 || ret == 0) return 0;
+
+	return -ret;
+
+}
+
+int main()
+{
+	int testcase;
+	cin >> testcase;
+	while (testcase != 0)
+	{
+		int x_count = 0;
+		int o_count = 0;
+		for (int i = 0; i < 3; i++)
+		{
+			string s;
+			cin >> s;
+			for (int j = 0; j < 3; j++)
+			{
+				map[i][j] = s[j];
+				if (map[i][j] == 'o')
+					o_count++;
+				else if (map[i][j] == 'x')
+					x_count++;
+			}
+		}
+
+		for (int i = 0; i < 19683; i++)
+		{
+			memo[i] = -2;
+		}
+		char turn = (o_count >= x_count ? 'x' : 'o');
+		int result = TICTACTOE(map, turn);
+		if (result == -1)
+		{
+			if (turn == 'o')
+				cout << "x" << endl;
+			else
+				cout << "o" << endl;
+		}
+		else if (result == 0)
+		{
+			cout << "TIE" << endl;
+		}
+		else
+		{
+			if (turn == 'o')
+				cout << "o" << endl;
+			else
+				cout << "x" << endl;
+		}
+		testcase--;
+	}
+	
+	return 0;
+}
+
