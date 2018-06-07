@@ -1,0 +1,64 @@
+
+#include<iostream>
+#include<algorithm>
+#include<math.h>
+#include<vector>
+#include<string>
+using namespace std;
+const int MIN = -123456;
+int arr[51];
+int memo[51][51];
+
+int play(int start, int last)
+{
+	if (start > last) return 0;
+	//memo
+
+	if (memo[start][last] != MIN)
+		return memo[start][last];
+
+	int ret;
+	
+	ret = max((arr[start] - play(start + 1, last)), (arr[last] - play(start, last - 1)));
+
+	if (last - start + 1 >= 2)
+	{
+		ret = max(ret,-play(start + 2, last));
+		ret = max(ret,-play(start, last - 2));
+	}
+
+	memo[start][last] = ret;
+
+	return ret;
+
+}
+
+
+int main()
+{
+	int testcase;
+	cin >> testcase;
+	while (testcase != 0)
+	{
+		int N;
+		cin >> N;
+		for (int i = 0; i < N; i++)
+			cin >> arr[i];
+
+		for (int i = 0; i < N; i++)
+		{
+			for (int j = 0; j < N; j++)
+				memo[i][j] = MIN;
+		}
+
+		int result = play(0, N - 1);
+
+		cout << result << endl;
+	
+		testcase--;
+	}
+
+
+	return 0;
+}
+
