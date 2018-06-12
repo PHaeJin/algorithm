@@ -1,0 +1,142 @@
+
+#include<iostream>
+#include<algorithm>
+#include<math.h>
+#include<vector>
+#include<string>
+#include<queue>
+using namespace std;
+
+string str[1001];
+char alpha[26] = {'a','b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+int ad[26][26];
+int N;
+vector<char> q;
+bool visit[26];
+void make_map(string front, string end)
+{
+	int size = min(front.size(), end.size());
+
+	char fro_c, end_c;
+	int fro_n, end_n;
+	bool check = false;
+	for (int i = 0; i < size; i++)
+	{
+		if (front[i] != end[i]) 
+		{
+			fro_c = front[i];
+			end_c = end[i];
+			check = true;
+			break;
+		}
+	}
+	if (check)
+	{
+		for (int i = 0; i < 26; i++)
+		{
+			if (fro_c == alpha[i])
+				fro_n = i;
+		}
+		for (int i = 0; i < 26; i++)
+		{
+			if (end_c == alpha[i])
+				end_n = i;
+		}
+		ad[fro_n][end_n] = 1;
+	}
+	
+}
+
+void dfs(int start)
+{
+	visit[start] = true;
+	for (int i = 0; i < 26; i++)
+	{
+		if (ad[start][i] == 1 && !visit[i]) 
+		{
+			dfs(i);
+		}
+	}
+	q.push_back(alpha[start]);
+}
+
+int main()
+{
+	int testcase;
+	cin >> testcase;
+	while (testcase != 0)
+	{
+		cin >> N;
+		q.clear();
+		for (int i = 0; i < N; i++)
+			cin >> str[i];
+
+		for (int i = 0; i < 26; i++)
+		{
+			for (int j = 0; j < 26; j++)
+			{
+				ad[i][j] = 0;
+			}
+		}
+
+		for (int i = 0; i < N - 1; i++)
+		{
+			make_map(str[i], str[i + 1]);
+		}
+
+
+
+		for (int i = 0; i < 26; i++)
+		{
+			visit[i] = false;
+		}
+
+		for (int i = 0; i < 26; i++)
+		{
+			if (!visit[i])
+				dfs(i);
+		}
+		bool check = false;
+		reverse(q.begin(), q.end());
+		for (int i = 0; i < 26; i++)
+		{
+			for (int j = i - 1; j >= 0; j--)
+			{
+				int fro_n, end_n;
+				for (int s = 0; s < 26; s++)
+				{
+					if (alpha[s] == q[i])
+						fro_n = s;
+				}
+				for (int s = 0; s < 26; s++)
+				{
+					if (alpha[s] == q[j])
+						end_n = s;
+				}
+
+				if (ad[fro_n][end_n] == 1)
+				{
+					check = true;
+					cout << "INVALID HYPOTHESIS" << endl;
+					break;
+				}
+			}
+
+			if (check)
+				break;
+		}
+		if (!check)
+		{
+			for (int i = 0; i < 26; i++)
+				cout << q[i];
+			cout << endl;
+		}
+	
+		testcase--;
+	}
+	
+	
+	return 0;
+
+}
+
