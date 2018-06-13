@@ -1,0 +1,140 @@
+
+#include<iostream>
+#include<algorithm>
+#include<math.h>
+#include<vector>
+#include<string>
+#include<queue>
+using namespace std;
+int arr[26][26];
+int indegree[26];
+int outdegree[26];
+vector<string> str[26][26];
+char alpha[26] = {'a','b','c' ,'d' ,'e' ,'f' ,'g' ,'h' ,'i' ,'j' ,'k' ,'l' ,'m' ,'n' ,'o' ,'p' ,'q' ,'r' ,'s' ,'t' ,'u' ,'v' ,'w' ,'x' ,'y' ,'z' };
+int N;
+vector<int> sol;
+
+bool check_oiler()
+{
+	int plus = 0;
+	int minus = 0;
+
+	for (int i = 0; i < 26; i++)
+	{
+		int num = indegree[i] - outdegree[i];
+		if (num == 1) plus++;
+		else if (num == -1) minus++;
+		else if (num > 1 || num < -1)
+			return false;
+	}
+
+	return ((plus == 1 && minus == 1)||(plus==0&&minus==0));
+}
+
+void make_oiler(int start)
+{
+	for (int i = 0; i < 26; i++)
+	{
+		while(arr[start][i] > 0)
+		{
+			arr[start][i]--;
+			make_oiler(i);
+		}
+	}
+	sol.push_back(start);
+}
+
+
+
+int main()
+{
+	int testcase;
+	cin >> testcase;
+	while (testcase != 0)
+	{
+		cin >> N;
+		for (int i = 0; i < 26; i++)
+		{
+			for (int j = 0; j < 26; j++)
+			{
+				arr[i][j] = 0;
+				str[i][j].clear();
+			}
+			indegree[i] = 0;
+			outdegree[i] = 0;
+		}
+		for (int i = 0; i < N; i++)
+		{
+			string s;
+			cin >> s;
+			char c1 = s[0];
+			char c2 = s[s.size() - 1];
+			int n1, n2;
+			for (int i = 0; i < 26; i++)
+			{
+				if (c1 == alpha[i])
+					n1 = i;
+				if (c2 == alpha[i])
+					n2 = i;
+			}
+			arr[n1][n2]++;
+			outdegree[n1]++;
+			indegree[n2]++;
+			str[n1][n2].push_back(s);
+		}
+
+		sol.clear();
+		if (!check_oiler())
+		{
+			cout << "IMPOSSIBLE" << endl;
+			testcase--;
+			continue;
+			//종료
+		}
+		bool check_train = false;
+
+		for (int i = 0; i < 26; i++)
+		{
+			if (outdegree[i] - indegree[i] == 1)
+			{
+				check_train = true;
+				make_oiler(i);
+
+			}
+		}
+
+		if (!check_train)
+		{
+			for (int i = 0; i < 26; i++)
+			{
+				if (outdegree[i] > 0)
+				{
+					make_oiler(i);
+				}
+			}
+		}
+		if (sol.size() != N + 1)
+		{
+			cout << "IMPOSSIBLE" << endl;
+			testcase--;
+			continue;
+			//종료
+		}
+		reverse(sol.begin(), sol.end());
+		string ret;
+		for (int i = 0; i < sol.size() - 1; i++)
+		{
+			int a = sol[i];
+			int b = sol[i + 1];
+			if (ret.size()) ret += " ";
+			ret += str[a][b].back();
+			str[a][b].pop_back();
+		}
+		cout << ret << endl;
+		testcase--;
+	}
+	
+	return 0;
+
+}
+
