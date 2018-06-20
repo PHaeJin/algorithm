@@ -1,0 +1,93 @@
+
+#include<iostream>
+#include<algorithm>
+#include<math.h>
+#include<vector>
+#include<string>
+#include<queue>
+#include<map>
+using namespace std;
+map<vector<int>, int> m;
+
+void preCal(int N)
+{
+	vector<int> toSort;
+
+	queue<vector<int>> q;
+
+	for (int i = 0; i < N; i++)
+		toSort.push_back(i);
+
+	m[toSort] = 0;
+	q.push(toSort);
+	while (!q.empty())
+	{
+		vector<int> start = q.front();
+		q.pop();
+
+
+		int depth = m[start];
+		for (int i = 2; i <= N; i++)
+		{
+			for (int j = 0; j + i - 1 < N; j++)
+			{
+				reverse(start.begin() + j, start.begin() + j + i);
+				if (m.count(start) == 0)
+				{
+					m[start] = depth + 1;
+					q.push(start);
+				}
+				reverse(start.begin() + j, start.begin() + j + i);
+
+			}
+		}
+	}
+}
+int main()
+{
+	for (int i = 1; i <= 8; i++)
+	{
+		preCal(i);
+	}
+	int testcase;
+	cin >> testcase;
+	while (testcase!=0)
+	{
+		int N;
+		cin >> N;
+		vector<int> v;
+		
+		
+		for (int i = 0; i < N; i++)
+		{
+			int num;
+			cin >> num;
+			v.push_back(num);
+		}
+		
+		vector<int> fixed(N);
+
+		for (int i = 0; i < N; i++)
+		{
+			int smaller = 0;
+			for (int j = 0; j < N; j++)
+			{
+				if (v[j] < v[i])
+					smaller++;
+			}
+			fixed[i] = smaller;
+		}
+
+
+		cout << m[fixed] << endl;
+
+
+
+		testcase--;
+	}
+	
+
+	return 0;
+
+}
+

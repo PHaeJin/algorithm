@@ -1,0 +1,58 @@
+
+#include<iostream>
+#include<algorithm>
+#include<math.h>
+#include<vector>
+#include<string>
+#include<queue>
+#include<map>
+#include<stdio.h>
+#include<utility>
+#include<stack>
+using namespace std;
+
+struct RNG {
+	unsigned seed;
+	RNG():seed(1983){}
+	unsigned next()
+	{
+		unsigned ret = seed;
+		seed = ((seed * 214013u) + 2531011u);
+		return ret % 10000 + 1;
+	}
+};
+int main()
+{
+	int testcase;
+	cin >> testcase;
+	while (testcase != 0)
+	{
+		int K, N;
+
+		cin >> K >> N;
+
+		RNG rng;
+		int ret = 0;
+		long long Psum = 0;
+
+		queue<long long> psums;
+
+		for (int i = 0; i < N; i++)
+		{
+			Psum += rng.next();
+			psums.push(Psum);
+			while (psums.front() + K < Psum)
+			{
+				psums.pop();
+			}
+			if (psums.front() + K == Psum)
+				++ret;
+		}
+		cout << ret << endl;
+	
+		
+		testcase--;
+	}
+	return 0;
+}
+
