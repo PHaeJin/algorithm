@@ -1,0 +1,63 @@
+
+#include<iostream>
+#include<algorithm>
+#include<math.h>
+#include<vector>
+#include<string>
+#include<queue>
+#include<map>
+#include<stdio.h>
+#include<utility>
+#include<stack>
+#include<functional>
+using namespace std;
+
+int N;
+
+vector<int> v;
+int ret = 0;
+
+int main()
+{
+	int testcase;
+	cin >> testcase;
+	while (testcase != 0)
+	{
+		v.clear();
+		ret = 0;
+		cin >> N;
+		for (int i = 0; i < N; i++)
+		{
+			int num;
+			cin >> num;
+			v.push_back(num);
+		}
+
+		priority_queue<int, vector<int>,greater<int> > pq;
+
+		for (int i = 0; i < N; i++)
+		{
+			pq.push(v[i]);
+		}
+
+		while (pq.size() > 1)
+		{
+			int num1 = pq.top();
+			pq.pop();
+
+			int num2 = pq.top();
+			pq.pop();
+
+			pq.push(num1 + num2);
+
+			ret += num1 + num2;
+		}
+		cout << ret << endl;
+		testcase--;
+
+	}
+	
+
+	return 0;
+}
+

@@ -1,0 +1,64 @@
+
+#include<iostream>
+#include<algorithm>
+#include<math.h>
+#include<vector>
+#include<string>
+#include<queue>
+#include<map>
+#include<stdio.h>
+#include<utility>
+#include<stack>
+
+using namespace std;
+
+vector<int> slice(const vector<int>& vec, int a, int b)
+{
+	return vector<int>(vec.begin()+a,vec.begin()+b);
+}
+
+void printPostOrder(const vector<int>& preorder,const vector<int>& inorder)
+{
+	int size = preorder.size();
+	
+	if (preorder.empty()) return;
+
+	int root = preorder[0];
+	int devid = find(inorder.begin(), inorder.end(), root)-inorder.begin();
+	
+	printPostOrder(slice(preorder,1,devid+1),slice(inorder,0,devid));
+	printPostOrder(slice(preorder, devid+1, size), slice(inorder, devid+1, size));
+	
+	cout << root <<" ";
+}
+
+int main()
+{
+	int testcase;
+	cin >> testcase;
+	while (testcase != 0)
+	{
+		int N;
+		vector<int> preorder;
+		vector<int> inorder;
+		cin >> N;
+		for (int i = 0; i < N; i++)
+		{
+			int num;
+			cin >> num;
+			preorder.push_back(num);
+		}
+		for (int i = 0; i < N; i++)
+		{
+			int num;
+			cin >> num;
+			inorder.push_back(num);
+		}
+		printPostOrder(preorder, inorder);
+		cout << endl;
+		testcase--;
+	}
+	
+	return 0;
+}
+

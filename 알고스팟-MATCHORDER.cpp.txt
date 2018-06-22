@@ -1,0 +1,88 @@
+
+#include<iostream>
+#include<algorithm>
+#include<math.h>
+#include<vector>
+#include<string>
+#include<queue>
+#include<map>
+#include<stdio.h>
+#include<utility>
+#include<stack>
+
+using namespace std;
+vector<int> R;
+int ret = 0;
+int N;
+
+void MATCHORDER(vector<int> K,int index)
+{
+	if (index == N)
+		return;
+
+	int num = R[index];
+	int Knum=0;
+	for (int i = 0; i < K.size(); i++)
+	{
+		if (K[i] >= num)
+		{
+			ret++;
+			Knum = K[i];
+			K[i] = 0;
+			break;
+		}
+	}
+	if (Knum == 0)
+	{
+		for (int i = 0; i < K.size(); i++)
+		{
+			if (K[i] !=0)
+			{
+				Knum = K[i];
+				K[i] = 0;
+				break;
+			}
+		}
+	}
+	MATCHORDER(K, index + 1);
+}
+
+int main()
+{
+	int testcase;
+	cin >> testcase;
+	while (testcase != 0)
+	{
+		vector<int> K;
+
+		cin >> N;
+
+		for (int i = 0; i < N; i++)
+		{
+			int num;
+			cin >> num;
+			R.push_back(num);
+		}
+
+		for (int i = 0; i < N; i++)
+		{
+			int num;
+			cin >> num;
+			K.push_back(num);
+		}
+
+		sort(K.begin(), K.end());
+
+		MATCHORDER(K, 0);
+
+		cout << ret << endl;
+		
+		testcase--;
+		ret = 0;
+		R.clear();
+	}
+	
+
+	return 0;
+}
+
