@@ -1,0 +1,87 @@
+
+#include<iostream>
+#include<algorithm>
+#include<math.h>
+#include<vector>
+#include<string>
+#include<queue>
+#include<map>
+using namespace std;
+int arr[1001][1001];
+int N, M;
+void dfs(bool visit[1001],int vertex)
+{
+	cout << vertex << " ";
+
+	visit[vertex] = true;
+
+	for (int i = 0; i <= N; i++)
+	{
+		if (arr[vertex][i] == 1&&!visit[i])
+		{
+			dfs(visit, i);
+		}
+	}
+
+}
+
+int main()
+{
+	int V;
+	bool visit[1001];
+
+	cin >> N >> M >> V;
+	for (int i = 0; i <= N; i++)
+	{
+		for (int j = 0; j <= N; j++)
+		{
+			arr[i][j] = 0;
+		}
+	}
+
+	for (int i = 0; i < M; i++)
+	{
+		int start, end;
+		cin >> start >> end;
+		arr[start][end] = 1;
+		arr[end][start] = 1;
+
+	}
+	
+	for (int i = 0; i <= N; i++)
+	{
+		visit[i] = false;
+	}
+
+	dfs(visit,V);
+	cout << endl;
+
+	for (int i = 0; i <= N; i++)
+	{
+		visit[i] = false;
+	}
+
+	queue<int> q;
+	q.push(V);
+	visit[V] = true;
+
+	while (!q.empty())
+	{
+		int vertex = q.front();
+		q.pop();
+		
+		cout << vertex << " ";
+
+		for (int i = 0; i <= N; i++)
+		{
+			if (arr[vertex][i] == 1 && !visit[i])
+			{
+				visit[i] = true;
+				q.push(i);
+			}
+		}
+	}
+
+	return 0;
+}
+
