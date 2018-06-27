@@ -1,0 +1,135 @@
+
+#include<iostream>
+#include<algorithm>
+#include<math.h>
+#include<vector>
+#include<string>
+#include<queue>
+#include<map>
+using namespace std;
+int map_g[11][11];
+int map_stor[11][11];
+int N, M, C;
+int res = 0;
+
+void Combinate(vector<int> v_s,vector<int> v_o,int size,int index,int total,int total2)
+{
+	if (total > C)
+		return;
+
+	if (v_s.size() == size||index>=M)
+	{
+		
+		if (v_s.size() != size)
+			return;
+		
+
+		if (total2 > res)
+			res = total2;
+	
+		return;
+	}
+	v_s.push_back(v_o[index]);
+	Combinate(v_s, v_o, size, index + 1, total + v_o[index], total2 + v_o[index] * v_o[index]);
+	v_s.pop_back();
+	Combinate(v_s, v_o, size, index + 1,total,total2);
+	
+}
+
+int calculate(vector<int> v1,vector<int> v2,int v1_s,int v2_s)
+{
+	int ret = 0;
+	int	x = v1_s / N;
+	int y = v1_s % N;
+	if (map_stor[x][y] > 0)
+		ret += map_stor[x][y];
+	else
+	{
+		for (int i = 1; i <= M; i++)
+		{
+			vector<int> v;
+			Combinate(v, v1, i, 0, 0, 0);
+		}
+		ret += res;
+		map_stor[x][y] = res;
+	}
+	
+	res = 0;
+
+	x = v2_s / N;
+	y = v2_s % N;
+	if (map_stor[x][y] > 0)
+		ret += map_stor[x][y];
+	else
+	{
+		for (int i = 1; i <= M; i++)
+		{
+			vector<int> v;
+			Combinate(v, v2, i, 0, 0, 0);
+		}
+		map_stor[x][y] = res;
+		ret += res;
+	}
+	
+	return ret;
+}
+int main()
+{
+	
+	int testcase,count_T;
+	cin >> testcase;
+	count_T = 1;
+
+	while (testcase != 0)
+	{
+		cin >> N >> M >> C;
+
+		for (int i = 0; i < N; i++)
+		{
+			for (int j = 0; j < N; j++)
+			{
+				cin >> map_g[i][j];
+				map_stor[i][j] = 0;
+			}
+		}
+		int result = 0;
+		for (int i = 0; i + M <= N * N; i++)
+		{
+			int x = i / N;
+			int y = i % N;
+
+			if (y + M > N)
+				continue;
+
+			vector<int> v1;
+
+			for (int count_c = 0; count_c < M; count_c++)
+			{
+				v1.push_back(map_g[x][y + count_c]);
+			}
+
+			for (int j = i + M; j + M <= N * N; j++)
+			{
+				x = j / N;
+				y = j % N;
+				if (y + M > N)
+					continue;
+
+				vector<int> v2;
+
+				for (int count_c = 0; count_c < M; count_c++)
+				{
+					v2.push_back(map_g[x][y + count_c]);
+				}
+				res = 0;
+				result = max(result, calculate(v1, v2,i,j));
+			}
+		}
+
+		cout <<"#"<<count_T++<<" "<< result << endl;
+		testcase--;
+	}
+
+	return 0;
+}
+

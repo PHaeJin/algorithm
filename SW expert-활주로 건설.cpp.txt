@@ -1,0 +1,132 @@
+#include<iostream>
+#include<algorithm>
+#include<math.h>
+#include<vector>
+#include<string>
+#include<queue>
+#include<map>
+using namespace std;
+int N, X;
+
+bool check_possible(vector<int> v,int x,int y)
+{
+	bool is_K[21];
+
+	for (int i = 0; i < N; i++)
+		is_K[i] = true;
+
+	int num = v[0];
+
+	for (int i = 1; i < N; i++)
+	{
+		if (v[i] - num >= 1)
+		{
+			if (v[i] - num > 1)
+				return false;
+			
+			if (i - X < 0)
+				return false;
+
+			bool check_s = true;
+			for (int s = 1; s <= X; s++)
+			{
+				if ((v[i - s] + 1) == v[i] && is_K[i - s])
+				{
+					;
+				}
+				else
+					check_s = false;
+			}
+			
+			if (check_s)
+			{
+				for (int s = 1; s <= X; s++)
+				{
+					is_K[i - s] = false;
+				}				
+				num = v[i];
+			}
+			else
+				return false;
+		}
+		else if (v[i] - num <= -1)
+		{
+
+			if (v[i] - num < -1)
+				return false;
+
+			if (i + X > N)
+				return false;
+		
+
+			bool check_s = true;
+			for (int s = 0; s < X; s++)
+			{
+				if ((v[i + s] + 1) == v[i-1] && is_K[i + s])
+				{
+					;
+				}
+				else
+					check_s = false;
+			}
+
+			if (check_s)
+			{
+				for (int s = 0; s < X; s++)
+				{
+					is_K[i + s] = false;
+				}
+				num = v[i];
+			}
+			else
+				return false;
+		}
+	}
+	return true;
+}
+
+int main()
+{
+	int testcase,countT;
+	cin >> testcase;
+	countT = 1;
+	while (testcase != 0)
+	{
+		int map_s[21][21];
+		cin >> N >> X;
+
+		for (int i = 0; i < N; i++)
+		{
+			for (int j = 0; j < N; j++)
+				cin >> map_s[i][j];
+		}
+		int ret = 0;
+
+		for (int i = 0; i < N; i++)
+		{
+			vector<int> check_v;
+			for (int j = 0; j < N; j++)
+			{
+				check_v.push_back(map_s[i][j]);
+			}
+			if (check_possible(check_v,i,-1))
+				ret++;
+		}
+
+		for (int j = 0; j < N; j++)
+		{
+			vector<int> check_v;
+			for (int i = 0; i < N; i++)
+			{
+				check_v.push_back(map_s[i][j]);
+			}
+			if (check_possible(check_v,-1,j))
+				ret++;
+		}
+
+		cout << "#"<<countT++<<" "<<ret << endl;
+		testcase--;
+	}
+	
+	return 0;
+}
