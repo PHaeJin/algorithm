@@ -1,0 +1,186 @@
+#include<iostream>
+#include<algorithm>
+#include<math.h>
+#include<vector>
+#include<string>
+#include<queue>
+#include<map>
+using namespace std;
+int N, M, K, A, B;
+int a[10];
+int a_ex[10];
+int who_a[10];
+int b[10];
+int b_ex[10];
+int T[1001];
+int who_b[10];
+
+int check_where[1001][2];
+
+int main()
+{
+	int testcase,count_T;
+	cin >> testcase;
+	count_T = 1;
+	while (testcase != 0)
+	{
+		cin >> N >> M >> K >> A >> B;
+		for (int i = 1; i <= N; i++)
+		{
+			cin >> a[i];
+			a_ex[i] = a[i];
+			who_a[i] = 0;
+		}
+		for (int i = 1; i <= M; i++)
+		{
+			cin >> b[i];
+			b_ex[i] = b[i];
+			who_b[i] = 0;
+		}
+		for (int i = 1; i <= K; i++)
+		{
+			cin >> T[i];
+		}
+		for (int i = 1; i <= K; i++)
+		{
+			check_where[i][0] = 0;
+			check_where[i][1] = 0;
+		}
+		queue<int>  q_a;
+
+		queue<int>  q_b;
+
+		while (true)
+		{
+			bool check_end = true;
+			for (int i = 1; i <= K; i++)
+			{
+				if (T[i] >= 0)
+				{
+					check_end = false;
+					break;
+				}
+			}
+			for (int i = 1; i <= N; i++)
+			{
+				if (a[i] != a_ex[i] || who_a[i] != 0)
+				{
+					check_end = false;
+					break;
+				}
+			}
+			for (int i = 1; i <= M; i++)
+			{
+				if (b[i] != b_ex[i] || who_b[i] != 0)
+				{
+					check_end = false;
+					break;
+				}
+			}
+			if (check_end)
+				break;
+
+			vector<int> s;
+			vector<pair<int, int> > v;
+			for (int i = 1; i <= K; i++)
+			{
+				if (T[i] == 0)
+				{
+					s.push_back(i);
+				}
+				T[i]--;
+			}
+
+			for (int i = 0; i < s.size(); i++)
+				q_a.push(s[i]);
+
+			for (int i = 1; i <= N; i++)
+			{
+				if (a[i] == a_ex[i] && who_a[i] == 0)
+				{
+					if (!q_a.empty())
+					{
+						who_a[i] = q_a.front();
+						q_a.pop();
+						check_where[who_a[i]][0] = i;
+					}
+				}
+				else
+				{
+					a_ex[i]--;
+				}
+
+				if (a_ex[i] == 0)
+				{
+					v.push_back(make_pair(i, who_a[i]));
+
+
+					who_a[i] = 0;
+					a_ex[i] = a[i];
+					if (!q_a.empty())
+					{
+						who_a[i] = q_a.front();
+						q_a.pop();
+
+						check_where[who_a[i]][0] = i;
+					}
+				}
+			}
+			//접수창고
+
+			sort(v.begin(), v.end());
+
+			for (int i = 0; i < v.size(); i++)
+			{
+				q_b.push(v[i].second);
+			}
+
+			for (int i = 1; i <= M; i++)
+			{
+				if (b[i] == b_ex[i] && who_b[i] == 0)
+				{
+					if (!q_b.empty())
+					{
+						who_b[i] = q_b.front();
+						q_b.pop();
+
+						check_where[who_b[i]][1] = i;
+					}
+				}
+				else
+				{
+					b_ex[i]--;
+				}
+
+				if (b_ex[i] == 0)
+				{
+					who_b[i] = 0;
+					b_ex[i] = b[i];
+					if (!q_b.empty())
+					{
+						who_b[i] = q_b.front();
+						q_b.pop();
+
+						check_where[who_b[i]][1] = i;
+					}
+				}
+
+			}
+		}
+
+		int ret = 0;
+		for (int i = 1; i <= K; i++)
+		{
+			if (check_where[i][0] == A && check_where[i][1] == B)
+				ret += i;
+		}
+		if(ret!=0)
+		cout <<"#"<<count_T++<<" "<<ret << endl;
+		else
+			cout << "#" << count_T++ << " " << -1 << endl;
+		testcase--;
+	}
+	
+	return 0;
+}
+

@@ -1,0 +1,120 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+int N, M, H;
+int result=-1;
+vector<vector<int> > v;
+
+bool simulate()
+{
+	/*
+	for (int i = 0; i < H; i++)
+	{
+		for (int j = 0; j <= N - 1; j++)
+			cout << v[i][j];
+		cout << endl;
+	}
+	cout << endl;
+	*/
+	for (int startY = 0; startY < N; startY++)
+	{
+		int x = 0;
+		int y = startY;
+		
+		while (x != H)
+		{
+			if (v[x][y] == 1)
+			{
+				x = x + 1;
+				y = y + 1;
+			}
+			else if (y - 1 >= 0 && v[x][y - 1] == 1)
+			{
+				x = x + 1;
+				y = y - 1;
+			}
+			else
+			{
+				x = x + 1;
+			}
+		}
+
+		if (y == startY)
+			;
+		else
+			return false;
+	}
+	return true;
+}
+
+void make_line(int cnt,int start,int target)
+{
+	
+		if (result != -1)
+		return;
+
+		if (cnt==target&&simulate())
+		{
+			result = cnt;
+			return;
+		}
+		if (cnt >= target)
+		{
+			return;
+		}
+
+		for (int index = start; index < (H*(N - 1)); index++)
+		{
+			int x = index / (N - 1);
+			int y = index % (N - 1);
+			if (v[x][y] == 1)
+				continue;
+			if (y - 1 >= 0 && v[x][y - 1] == 1)
+				continue;
+			if (y + 1 < N - 1 && v[x][y + 1] == 1)
+				continue;
+
+			v[x][y] = 1;
+
+			make_line(cnt + 1,index+1,target);
+			
+			v[x][y] = 0;
+		}
+		return;
+}
+
+int main()
+{
+	
+		ios::sync_with_stdio(false);
+
+		cin >> N >> M >> H;
+
+		for (int i = 0; i < H; i++)
+		{
+			vector<int> v_Ex;
+			for (int j = 0; j <= N - 1; j++)
+			{
+				v_Ex.push_back(0);
+			}
+			v.push_back(v_Ex);
+		}
+
+		for (int i = 0; i < M; i++)
+		{
+			int a, b;
+			cin >> a >> b;
+			v[a - 1][b - 1] = 1;
+		}
+		for (int i = 0; i <= 3; i++)
+		{
+			make_line(0, 0, i);
+			if (result != -1)
+				break;
+		}
+		
+		cout << result << endl;
+
+	return 0;
+}
+
