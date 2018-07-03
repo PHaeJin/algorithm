@@ -1,0 +1,122 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+vector<int> s;
+vector<int> T;
+int N;
+int S[17][17];
+int ST[17][17];
+int result = numeric_limits<int>::max();
+
+
+void find_min(int v_size, int index, int num)
+{
+
+	if (v_size >= num || index >= N)
+	{
+		if (v_size >= num)
+		{
+			int score = 0;
+			int score2 = 0;
+			vector<int> v;
+			int cont1=0, cont2 = 0;
+			
+			while (true)
+			{
+				if (s[cont1] == T[cont2])
+				{
+					cont1++;
+					cont2++;
+				}
+				else
+				{
+					v.push_back(s[cont1]);
+					cont1++;
+				}
+				if (cont2 >= num)
+				{
+					for (int i = cont1; i < N; i++)
+					{
+						v.push_back(s[i]);
+					}
+					break;
+				}
+			}
+			
+
+				for (int i = 0; i < num; i++)
+				{
+					for (int j = i + 1; j < num; j++)
+					{
+						int a = T[i];
+						int b = T[j];
+						score += ST[a][b];
+					}
+				}
+			
+			
+			for (int i = 0; i < num; i++)
+			{
+				for (int j = i + 1; j < num; j++)
+				{
+					int a = v[i];
+					int b = v[j];
+					score2 += ST[a][b];
+				}
+			}
+			if (result > abs(score - score2))
+				result = abs(score - score2);
+		}
+		return;
+	}
+	find_min(v_size, index + 1, num);
+	T.push_back(s[index]);
+	find_min(v_size + 1, index + 1, num);
+	T.pop_back();
+}
+
+int main()
+{
+
+	int testcase,countT;
+	countT = 1;
+	cin >> testcase;
+	while (testcase != 0)
+	{
+		
+		result = numeric_limits<int>::max();
+		s.clear();
+		T.clear();
+		cin >> N;
+
+		for (int i = 1; i <= N; i++)
+			s.push_back(i);
+
+		for (int i = 1; i <= N; i++)
+		{
+			for (int j = 1; j <= N; j++)
+			{
+				cin >> S[i][j];
+				ST[i][j] = 0;
+			}
+		}
+
+		for (int i = 1; i <= N; i++)
+		{
+			for (int j = i + 1; j <= N; j++)
+			{
+				ST[i][j] = S[i][j] + S[j][i];
+			}
+		}
+
+		find_min(0, 0, N / 2);
+
+		cout <<"#"<<countT++<<" "<< result << endl;
+		testcase--;
+	}
+	
+
+	return 0;
+}
+
