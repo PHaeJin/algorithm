@@ -1,0 +1,55 @@
+// ConsoleApplication8.cpp: 콘솔 응용 프로그램의 진입점을 정의합니다.
+//
+
+#include "stdafx.h"
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<utility>
+#include<queue>
+#include<map>
+using namespace std;
+
+map<char, int> M;
+char arr[21][21];
+int R, C;
+int result = numeric_limits<int>::min();
+
+void dfs(int x, int y, int depth)
+{
+	if (result < depth) result = depth;
+	if (result > 25) {
+		return;
+	}
+	alpa[arr[x][y]] = true;
+	if (x - 1 >= 0 && alpa[arr[x - 1][y]] == false)
+		dfs(x - 1, y, depth + 1);
+	if (x + 1 <R && alpa[arr[x + 1][y]] == false)
+		dfs(x + 1, y, depth + 1);
+	if (y - 1 >= 0 && alpa[arr[x][y - 1]] == false)
+		dfs(x, y - 1, depth + 1);
+	if (y + 1 <C &&alpa[arr[x][y + 1]] == false)
+		dfs(x, y + 1, depth + 1);
+	alpa[arr[x][y]] = false;
+
+}
+int main()
+{
+	cin >> R >> C;
+
+	for (int i = 0; i < R; i++)
+	{
+		for (int j = 0; j < C; j++)
+		{
+			cin >> arr[i][j];
+		}
+	}
+
+
+	dfs(0, 0, 1);
+
+	cout << result << endl;
+
+	return 0;
+}
+

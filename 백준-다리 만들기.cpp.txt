@@ -1,0 +1,162 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<utility>
+#include<queue>
+#include<map>
+using namespace std;
+
+int map_m[101][101];
+bool visit[101][101];
+int depth[101][101];
+
+int result = numeric_limits<int>::max();
+int N;
+
+int main()
+{
+	int make_S;
+	queue<pair<int, int> > q;
+	make_S = 2;
+	cin >> N;
+
+
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			cin >> map_m[i][j];
+			if (map_m[i][j] == 1&&q.empty())
+			{
+				q.push(make_pair(i, j));
+			}
+			depth[i][j] = 0;
+		}
+	}
+
+	while (true)
+	{
+		while (!q.empty())
+		{
+			int x = q.front().first;
+			int y = q.front().second;
+			q.pop();
+			map_m[x][y] = make_S;
+
+			if (x + 1 < N&&map_m[x + 1][y] == 1)
+			{
+				map_m[x + 1][y] = make_S;
+				q.push(make_pair(x + 1, y));
+			}
+			if (x - 1 >= 0 && map_m[x - 1][y] == 1)
+			{
+				map_m[x - 1][y] = make_S;
+				q.push(make_pair(x - 1, y));
+			}
+			if (y + 1 < N&&map_m[x][y + 1] == 1)
+			{
+				map_m[x][y + 1] = make_S;
+				q.push(make_pair(x, y + 1));
+			}
+			if (y - 1 >= 0 && map_m[x][y - 1] == 1)
+			{
+				map_m[x][y - 1] = make_S;
+				q.push(make_pair(x, y - 1));
+			}
+
+		}
+
+		for (int i = 0; i < N; i++)
+		{
+			for (int j = 0; j < N; j++)
+			{
+				if (map_m[i][j] == 1 && q.empty())
+				{
+					q.push(make_pair(i, j));
+				}
+			}
+		}
+		if (q.empty())
+			break;
+
+		make_S++;
+	}
+	//섬 구별해놓기
+
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			if(map_m[i][j]!=0)
+			q.push(make_pair(i, j));
+		}
+	}
+
+	while (!q.empty())
+	{
+		int x = q.front().first;
+		int y = q.front().second;
+		
+		q.pop();
+
+		if (x + 1 < N&&map_m[x + 1][y] != map_m[x][y])
+		{
+			if (map_m[x + 1][y] == 0)
+			{
+				map_m[x + 1][y] = map_m[x][y];
+				depth[x + 1][y] = depth[x][y] + 1;
+				q.push(make_pair(x + 1, y));
+			}
+			else
+			{
+				result = min(result, depth[x + 1][y] + depth[x][y]);
+			}
+		}
+		if (y + 1 < N&&map_m[x][y+1] != map_m[x][y])
+		{
+			if (map_m[x][y + 1] == 0)
+			{
+
+				map_m[x][y + 1] = map_m[x][y];
+				depth[x][y + 1] = depth[x][y] + 1;
+				q.push(make_pair(x, y + 1));
+			}
+			else
+			{
+				result = min(result, depth[x][y+1] + depth[x][y]);
+			}
+		}
+		if (x -1>=0&&map_m[x - 1][y] != map_m[x][y])
+		{
+			if (map_m[x - 1][y] == 0)
+			{
+				map_m[x - 1][y] = map_m[x][y];
+				depth[x - 1][y] = depth[x][y] + 1;
+				q.push(make_pair(x - 1, y));
+			}
+			else
+			{
+				result = min(result, depth[x - 1][y] + depth[x][y]);
+			}
+		}
+		if (y- 1 >=0&&map_m[x][y-1] != map_m[x][y])
+		{
+			if (map_m[x][y - 1] == 0)
+			{
+				map_m[x][y - 1] = map_m[x][y];
+				depth[x][y - 1] = depth[x][y] + 1;
+				q.push(make_pair(x, y - 1));
+			}
+			else
+			{
+				result = min(result, depth[x][y-1] + depth[x][y]);
+			}
+		}
+	}
+
+	cout << result << endl;
+
+
+	return 0;
+}
+

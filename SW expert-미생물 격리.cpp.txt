@@ -1,0 +1,176 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<utility>
+#include<queue>
+#include<map>
+using namespace std;
+
+struct Peo {
+	int x, y,num,go;
+};
+
+int result=0;
+int mmap[101][101];
+
+int main()
+{
+	int testcase,countT;
+	cin >> testcase;
+	countT = 1;
+	while (testcase != 0)
+	{
+		Peo peo[1001];
+	
+		for (int i = 0; i < 101; i++)
+		{
+			for (int j = 0; j < 101; j++)
+				mmap[i][j] = 0;
+		}
+		result = 0;
+
+		int N, M, K;
+
+		cin >> N >> M >> K;
+
+
+
+		for (int i = 0; i < K; i++)
+		{
+			cin >> peo[i].x >> peo[i].y >> peo[i].num >> peo[i].go;
+			mmap[peo[i].x][peo[i].y] = 1;
+		}
+
+		while (M != 0)
+		{
+			M--;
+
+			for (int i = 0; i < K; i++)
+			{
+				if (peo[i].num != 0)
+				{
+					if (peo[i].go == 1)
+					{
+						mmap[peo[i].x][peo[i].y]--;
+						peo[i].x--;
+						mmap[peo[i].x][peo[i].y]++;
+
+					}
+					else if (peo[i].go == 2)
+					{
+						mmap[peo[i].x][peo[i].y]--;
+						peo[i].x++;
+						mmap[peo[i].x][peo[i].y]++;
+
+					}
+					else if (peo[i].go == 3)
+					{
+						mmap[peo[i].x][peo[i].y]--;
+						peo[i].y--;
+						mmap[peo[i].x][peo[i].y]++;
+
+					}
+					else if (peo[i].go == 4)
+					{
+						mmap[peo[i].x][peo[i].y]--;
+						peo[i].y++;
+						mmap[peo[i].x][peo[i].y]++;
+					}
+				}
+			}
+
+			for (int i = 0; i < K; i++)
+			{
+				if (peo[i].num != 0)
+				{
+					if (peo[i].x == 0 || peo[i].y == 0 || peo[i].x == N - 1 || peo[i].y == N - 1)
+					{
+						peo[i].num /= 2;
+						
+						if (peo[i].num == 0)
+						{
+							mmap[peo[i].x][peo[i].y]--;
+						}
+
+						if (peo[i].go == 1)
+						{
+							peo[i].go = 2;
+						}
+						else if (peo[i].go == 2)
+						{
+							peo[i].go = 1;
+						}
+						else if (peo[i].go == 3)
+						{
+							peo[i].go = 4;
+						}
+						else if (peo[i].go == 4)
+						{
+							peo[i].go = 3;
+						}
+					}
+				}
+			}
+
+			for (int i = 0; i < N; i++)
+			{
+				for (int j = 0; j < N; j++)
+				{
+					if (mmap[i][j] > 1)
+					{
+						int Num = 0;
+						int Max_num = 0;
+						int Max_go;
+						for (int s = 0; s < K; s++)
+						{
+							if (peo[s].num != 0)
+							{
+								if (peo[s].x == i && peo[s].y == j)
+								{
+									Num += peo[s].num;
+									if (Max_num < peo[s].num)
+									{
+										Max_num = peo[s].num;
+										Max_go = peo[s].go;
+									}
+								}
+							}
+							
+						}
+
+						for (int s = 0; s < K; s++)
+						{
+							if (peo[s].num != 0)
+							{
+								if (peo[s].x == i && peo[s].y == j)
+								{
+									if (peo[s].num == Max_num)
+									{
+										peo[s].num = Num;
+									}
+									else
+									{
+										peo[s].num = 0;
+										mmap[i][j]--;
+									}
+								}
+							}
+						}
+
+					}
+				}
+			}
+		}
+
+		for (int i = 0; i < K; i++)
+		{
+			result += peo[i].num;
+		}
+		cout <<"#"<<countT++<<" "<< result << endl;
+		testcase--;
+
+	}
+	
+
+	return 0;
+}
