@@ -1,0 +1,112 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+int N, M;
+vector<int> Chicken_House;
+int Chicken_distance[51][51];
+int Chicken_map[51][51];
+vector<int> now_chicken;
+int Chicken_num=0;
+int Last_chickendistance = numeric_limits<int>::max();
+
+void Calculate()
+{
+	for (int i = 0; i <N; i++)
+	{
+		for (int j = 0; j <N; j++)
+		{
+			if (Chicken_map[i][j] == 1)
+			{
+				Chicken_distance[i][j] = 1;
+			}
+			else
+			{
+				Chicken_distance[i][j] = 0;
+			}
+		}
+	}
+	
+
+
+	for (int i = 0; i <N; i++)
+	{
+		for (int j = 0; j <N; j++)
+		{
+			if (Chicken_distance[i][j] == 1)
+			{
+				int ret = 10000000;
+				for (int s = 0; s < M; s++)
+				{
+					int num = now_chicken[s];
+					int x = num / N;
+					int y = num % N;
+					
+					int ex_ret = abs(x - i) + abs(y - j);
+					if (ret > ex_ret)
+						ret = ex_ret;
+				}
+			
+				Chicken_distance[i][j] = ret;
+			}
+
+		}
+	}
+
+	int ret=0;
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			ret += Chicken_distance[i][j];
+		}
+	}
+
+	if (ret < Last_chickendistance)
+		Last_chickendistance = ret;
+
+}
+
+void Combinate(int index, int size, int num)
+{
+	if (index >= Chicken_num||size==num)
+	{
+		if (size == num)
+		{
+			Calculate();
+		}
+		return;
+	}
+
+	now_chicken.push_back(Chicken_House[index]);
+	Combinate(index + 1, size + 1, num);
+	now_chicken.pop_back();
+	Combinate(index + 1, size, num);
+
+}
+
+int main()
+{
+	cin >> N >> M;
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			cin >> Chicken_map[i][j];
+			if (Chicken_map[i][j] == 2)
+			{
+				Chicken_House.push_back(N*i + j);
+				Chicken_num++;
+			}
+		}
+	}
+
+	Combinate(0, 0, M);
+
+	
+	cout << Last_chickendistance << endl;
+
+	return 0;
+}
+
