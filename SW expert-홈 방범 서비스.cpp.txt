@@ -1,0 +1,106 @@
+
+#include<iostream>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+int arr[21][21];
+int map_m[21][21];
+int result = numeric_limits<int>::min();
+
+
+int main()
+{
+	int testcase,CountT;
+	CountT = 1;
+	cin >> testcase;
+
+	while (testcase != 0)
+	{
+		result = numeric_limits<int>::min();
+
+		int N, M;
+		cin >> N >> M;
+
+
+		for (int i = 0; i < N; i++)
+		{
+			for (int j = 0; j < N; j++)
+			{
+				cin >> map_m[i][j];
+				arr[i][j] = 0;
+			}
+		}
+
+		int K = 1;
+
+		while (true)
+		{
+			int cost;
+			int Home_count;
+
+			for (int i = 0; i < N; i++)
+			{
+				for (int j = 0; j < N; j++)
+				{
+					int x = i;
+					int y = j;
+					cost = K * K + (K - 1)*(K - 1);
+					Home_count = 0;
+
+					int index = 0;
+					
+					for (int s = -K + 1; s < K; s++)
+					{
+						for (int t = -index; t <= index; t++)
+						{
+							if (x + s >= 0 && x + s < N && y + t >= 0 && y + t < N)
+							{
+								if (map_m[x + s][y + t] == 1)
+									Home_count++;
+							}
+						}
+						if (s >= 0)
+						{
+							index--;
+						}
+						else
+						{
+							index++;
+						}
+					}
+
+				
+
+					cost = Home_count * M - cost;
+					
+					if (cost >= 0)
+					{
+						if (result < Home_count)
+							result = Home_count;
+					}
+
+
+				}
+			}
+
+			K++;
+
+			if (K > N + 2)
+				break;
+		}
+
+
+
+
+		cout <<"#"<<CountT++<<" "<< result << endl;
+
+		testcase--;
+	}
+	
+	
+
+
+	return 0;
+}
+
