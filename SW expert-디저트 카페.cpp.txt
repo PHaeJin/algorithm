@@ -1,0 +1,129 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+int map_m[21][21];
+int startX, startY;
+int result = numeric_limits<int>::min();
+int N;
+bool desert[101];
+
+void Possible(int x,int y,int a, int b, int c, int d,int size)
+{
+
+	if (a > 0)
+	{
+		if (x + 1 < N&&y + 1 < N&&!desert[map_m[x + 1][y + 1]])
+		{
+	
+				desert[map_m[x + 1][y + 1]] = true;
+				Possible(x + 1, y + 1, a - 1, b, c, d, size);
+
+		}
+	}
+	else if (b > 0)
+	{
+		if (x + 1 < N&&y - 1 >= 0 && !desert[map_m[x + 1][y - 1]])
+		{
+				desert[map_m[x + 1][y - 1]] = true;
+				
+				Possible(x + 1, y - 1, a, b - 1, c, d, size);
+
+		}
+	}
+	else if (c > 0)
+	{
+		if (x - 1>=0&&y- 1>=0 && !desert[map_m[x - 1][y - 1]] )
+		{
+			
+				desert[map_m[x - 1][y - 1]] = true;
+				
+				Possible(x - 1, y - 1, a, b, c - 1, d, size);
+			
+		}
+	}
+	else if (d > 0)
+	{
+		if (x - 1>=0&&y + 1<N && (!desert[map_m[x - 1][y + 1]] || (startX == x - 1 && startY == y + 1)))
+		{
+			if (startX == x - 1 && startY == y + 1 && d == 1)
+			{
+				if (result < size)
+					result = size;
+			}
+			else
+			{
+				desert[map_m[x - 1][y + 1]] = true;
+				Possible(x - 1, y + 1, a, b, c, d - 1, size);
+			}
+		}
+	}
+}
+
+int main()
+{
+	int testcase, CountT;
+	CountT = 1;
+	cin >> testcase;
+	while (testcase != 0)
+	{
+		result = numeric_limits<int>::min();
+		cin >> N;
+		for (int i = 0; i < N; i++)
+		{
+			for (int j = 0; j < N; j++)
+			{
+				cin >> map_m[i][j];
+			}
+		}
+
+		int a = 1;
+		int b = 1;
+		int c = a;
+		int d = b;
+
+		for (int a = 1; a < N-1; a++)
+		{
+			for (int b = 1; b < N - 1; b++)
+			{
+				c = a;
+				d = b;
+				if (a + b < N)
+				{
+					for (int i = 0; i < N; i++)
+					{
+						for (int j = 0; j < N; j++)
+						{
+							startX = i;
+							startY = j;
+
+							for (int s = 0; s < 101; s++)
+								desert[s] = false;
+
+							desert[map_m[startX][startY]] = true;
+
+							Possible(startX, startY, a, b, c, d, a + b + c + d);
+
+						}
+					}
+				}
+			}
+		}
+			
+		
+
+		if (result <= 0)
+		{
+			cout << "#" << CountT++ << " -1"  << endl;
+
+		}
+		else
+		cout <<"#"<<CountT++<<" "<< result << endl;
+		
+		testcase--;
+	}
+	
+
+	return 0;
+}
