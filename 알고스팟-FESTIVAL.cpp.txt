@@ -1,0 +1,49 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+int N, L;
+double Psum[1001];
+double day_cost[1001];
+double result = numeric_limits<double>::max();
+
+int main()
+{
+	int testcase;
+	cin >> testcase;
+	while (testcase != 0)
+	{
+		result = numeric_limits<double>::max();
+		cin >> N >> L;
+
+		for (int i = 0; i < N; i++)
+		{
+			cin >> day_cost[i];
+		}
+		cout << fixed;
+		cout.precision(8);
+
+		Psum[0] = 0;
+
+		for (int i = 0; i < N; i++)
+		{
+			Psum[i + 1] = Psum[i] + day_cost[i];
+		}
+
+		for (int i = 1; i + L - 1 < N + 1; i++)
+		{
+			for (int j = i + L - 1; j < N + 1; j++)
+			{
+				double cost = (Psum[j] - Psum[i - 1]) / (j - i + 1);
+				result = min(result, cost);
+			}
+		}
+		cout << result << endl;
+
+		testcase--;
+	}
+	
+	return 0;
+}
+

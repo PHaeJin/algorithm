@@ -1,0 +1,97 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<map>
+
+using namespace std;
+
+vector<int> v;
+int v_size;
+int ret = 0;
+map<int, int> m;
+
+
+void simulate(int count)
+{
+	if (count == 0)
+	{
+		
+		int num = v[0];
+		
+		for (int i = 1; i < v_size; i++)
+		{
+			num = num * 10 + v[i];
+		}
+		
+		if (num > ret)
+			ret = num;
+
+		return;
+	}
+	int num = v[0];
+
+	for (int i = 1; i < v_size; i++)
+	{
+		num = num * 10 + v[i];
+	}
+
+	if (m.count(num)!=0&&m[num]>=count)
+	{
+		return;
+	}
+
+	for (int i = 0; i < v_size; i++)
+	{
+		for (int j = i+1; j < v_size; j++)
+		{
+				int temp = v[i];
+				v[i] = v[j];
+				v[j] = temp;
+
+				simulate(count - 1);
+
+				temp = v[i];
+				v[i] = v[j];
+				v[j] = temp;
+		}
+	}
+
+	m[num] = count;
+
+}
+
+
+int main()
+{
+	int testcase,countT;
+	countT = 1;
+	cin >> testcase;
+	while (testcase != 0)
+	{
+		v.clear();
+		ret = 0;
+		int num, count;
+		cin >> num>>count;
+
+	
+
+		while (num != 0)
+		{
+			v.push_back(num % 10);
+			num /= 10;
+		}
+
+		reverse(v.begin(), v.end());
+		v_size = v.size();
+		
+		
+		simulate(count);
+
+		cout << "#" << countT++ <<" "<< ret << endl;
+		
+		testcase--;
+	}
+
+}
+
