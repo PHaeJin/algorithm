@@ -1,0 +1,123 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<queue>
+#include<utility>
+#include<string>
+#include<cstdio>
+using namespace std;
+
+bool visit[10001];
+string how_rotate[10001];
+
+
+int main()
+{
+	
+	int T;
+	scanf_s("%d", &T);
+
+	while (T != 0)
+	{
+		int A, B;
+		queue<int> q;
+
+		for (int i = 0; i < 10001; i++)
+			visit[i] = false;
+
+		scanf_s("%d%d", &A, &B);
+
+		q.push(A);
+		how_rotate[A] = "";
+
+		int D, S, L, R;
+		visit[A] = true;
+
+		while (!q.empty())
+		{
+
+			int Num = q.front();
+			q.pop();
+			
+		
+			if (Num == B)
+			{
+				printf("%s\n", how_rotate[B].c_str());
+				break;
+			}
+
+			D = (Num * 2) % 10000;
+
+			if (!visit[D])
+			{
+				q.push(D);
+				how_rotate[D] = how_rotate[Num] + "D";
+				visit[D] = true;
+			}
+			//D
+
+			S = Num - 1;
+			if (S == -1)
+				S = 9999;
+			if (!visit[S])
+			{
+				q.push(S);
+				how_rotate[S] = how_rotate[Num] + "S";
+				visit[S] = true;
+			}
+			//S
+		
+			L = Num;
+			
+
+			if (L == 0)
+			{
+				;
+			}
+			else
+			{
+				int Fi = L / 1000;
+				int La = L % 1000;
+				L = La * 10 + Fi;
+			}
+			if (!visit[L])
+			{
+				q.push(L);
+				how_rotate[L] = how_rotate[Num] + "L";
+				visit[L] = true;
+			}
+			//L
+		
+			R = Num;
+			
+
+			if (R == 0)
+			{
+				;
+			}
+			else
+			{
+				int La = R % 10;
+				R = La * 1000 + R / 10;
+			}
+
+			if (!visit[R])
+			{
+				q.push(R);	
+				how_rotate[R] = how_rotate[Num] + "R";
+				visit[R] = true;
+			}
+			
+			//R
+
+		}
+
+		T--;
+
+	}
+
+
+
+	return 0;
+}
+

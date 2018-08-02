@@ -1,0 +1,87 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<queue>
+#include<utility>
+
+using namespace std;
+int N;
+int dist = numeric_limits<int>::max();
+vector<int> num;
+vector<int> ch(7);
+bool is_ok[10];
+
+void make_ch(int K, int G)
+{
+	if (K == G)
+	{
+		int num = ch[0];
+		
+		for (int i = 1; i < K; i++)
+		{
+			num = num * 10 + ch[i];
+		}
+		
+
+
+		if (abs(N - num)+G < dist)
+		{
+			dist = abs(N - num)+ G;
+	
+		}
+			
+		
+		return;
+	}
+	int n_size = num.size();
+
+	for (int i = 0; i < n_size; i++)
+	{
+		ch[K] = num[i];
+		make_ch(K + 1, G);
+	}
+
+}
+
+int main()
+{
+	
+	ios::sync_with_stdio(false);
+	
+
+		dist = numeric_limits<int>::max();
+
+		for (int i = 0; i < 10; i++)
+			is_ok[i] = true;
+
+		int broken;
+
+		cin >> N;
+		cin >> broken;
+
+		for (int i = 0; i < broken; i++)
+		{
+			int brok;
+			cin >> brok;
+			is_ok[brok] = false;
+		}
+
+		for (int i = 0; i < 10; i++)
+		{
+			if (is_ok[i])
+			{
+				num.push_back(i);
+			}
+		}
+		for (int i = 1; i < 7; i++)
+		{
+			make_ch(0, i);
+		}
+		if (dist > abs(N - 100))
+			dist = abs(N - 100);
+
+		cout << dist << endl;
+
+	return 0;
+}
+

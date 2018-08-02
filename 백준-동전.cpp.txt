@@ -1,0 +1,48 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<queue>
+#include<utility>
+
+using namespace std;
+
+int Coin[101];
+int N, K;
+int dp[10001];
+
+int main()
+{
+	ios::sync_with_stdio(false);
+
+	cin >>N>>K;
+
+	for (int i = 1; i <= N; i++)
+	{
+		int C;
+		cin >> C;
+		Coin[i]=C;
+	}
+
+	for (int i = 0; i <= K; i++)
+	{
+			dp[i] = 0;
+	}
+	
+	dp[0] = 1;
+	
+	for (int i = 1; i <= N; i++)
+	{
+		for (int j = 1; j <= K; j++)
+		{
+			if (Coin[i] <= j)
+			{
+				dp[j] += dp[j - Coin[i]];
+			}			
+		}
+	}
+
+	cout << dp[K] << endl;
+
+	return 0;
+}
+
