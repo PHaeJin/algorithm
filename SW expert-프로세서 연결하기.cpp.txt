@@ -1,0 +1,253 @@
+#include<iostream>
+#include<algorithm>
+#include<math.h>
+#include<vector>
+#include<string>
+#include<queue>
+#include<map>
+using namespace std;
+int result = 1000;
+int Max_C = 0;
+int N;
+
+void dfs(int map[13][13])
+{
+	int CoreX, CoreY;
+	int JS = 0;
+	int CC = 0;
+	bool find_core = false;
+	
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			if (map[i][j] == 1)
+			{
+				CoreX = i;
+				CoreY = j;
+				find_core = true;
+				break;
+			}
+			else if (map[i][j] == 2)
+			{
+				JS++;
+			}
+			else if (map[i][j] == 3)
+			{
+				CC++;
+			}
+		}
+		if (find_core)
+			break;
+	}
+
+
+	if (!find_core)
+	{
+		if (Max_C <= CC)
+		{
+			if (Max_C < CC)
+			{
+				Max_C = CC;
+				result = JS;
+			}
+			else
+			{
+				if (result > JS)
+					result = JS;
+			}
+		}
+		return;
+	}
+	
+	bool check_possible = true;
+	//아래쪽
+	for (int i = CoreX + 1; i < N; i++)
+	{
+		if (map[i][CoreY] == 2 || map[i][CoreY] == 3 || map[i][CoreY] == 1)
+			check_possible = false;
+	}
+	if (check_possible)
+	{
+		for (int i = CoreX + 1; i < N; i++)
+		{
+			map[i][CoreY] = 2;
+		}
+		map[CoreX][CoreY] = 3;
+		dfs(map);
+		map[CoreX][CoreY] = 1;
+	}
+	
+	if (check_possible)
+	{
+		for (int i = CoreX + 1; i < N; i++)
+		{
+			map[i][CoreY] = 0;
+		}
+	}
+
+	//위쪽
+	check_possible = true;
+
+	for (int i = CoreX - 1; i >=0 ; i--)
+	{
+		if (map[i][CoreY] == 2 || map[i][CoreY] == 3 || map[i][CoreY] == 1)
+			check_possible = false;
+	}
+	if (check_possible)
+	{
+		for (int i = CoreX - 1; i >=0; i--)
+		{
+			map[i][CoreY] = 2;
+		}
+		map[CoreX][CoreY] = 3;
+		dfs(map);
+		map[CoreX][CoreY] = 1;
+	}
+	
+
+	if (check_possible)
+	{
+		for (int i = CoreX - 1; i >= 0; i--)
+		{
+			map[i][CoreY] = 0;
+		}
+	}
+	//왼쪽
+	check_possible = true;
+
+	for (int i = CoreY - 1; i >= 0; i--)
+	{
+		if (map[CoreX][i] == 2 || map[CoreX][i] == 3 || map[CoreX][i] == 1)
+			check_possible = false;
+	}
+	if (check_possible)
+	{
+		for (int i = CoreY - 1; i >= 0; i--)
+		{
+			map[CoreX][i] = 2;
+		}
+		map[CoreX][CoreY] = 3;
+		dfs(map);
+		map[CoreX][CoreY] = 1;
+	}
+	
+	if (check_possible)
+	{
+		for (int i = CoreY - 1; i >= 0; i--)
+		{
+			map[CoreX][i] = 0;
+		}
+	}
+	//오른쪽
+	check_possible = true;
+
+	for (int i = CoreY + 1; i <N; i++)
+	{
+		if (map[CoreX][i] == 2 || map[CoreX][i] == 3 || map[CoreX][i] == 1)
+			check_possible = false;
+	}
+	if (check_possible)
+	{
+		for (int i = CoreY + 1; i <N; i++)
+		{
+			map[CoreX][i] = 2;
+		}
+		map[CoreX][CoreY] = 3;
+		dfs(map);
+		map[CoreX][CoreY] = 1;
+	}
+	
+
+	if (check_possible)
+	{
+		for (int i = CoreY + 1; i <N; i++)
+		{
+			map[CoreX][i] = 0;
+		}
+	}
+}
+int main()
+{
+	int testcase,countT;
+	cin >> testcase;
+	countT = 1;
+	while (testcase != 0)
+	{
+		result = 1000;
+		Max_C = 0;
+
+		int map[13][13];
+		cin >> N;
+		for (int i = 0; i < N; i++)
+		{
+			for (int j = 0; j < N; j++)
+			{
+				cin >> map[i][j];
+				if ((map[i][j] == 1) && (i == N - 1 || i == 0 || j == N - 1 || j == 0))
+					map[i][j] = 3;
+			}
+		}
+		for (int i = 0; i < N; i++)
+		{
+			for (int j = 0; j < N; j++)
+			{
+				if (map[i][j] == 1)
+				{
+					bool check = true;
+
+					for (int s = i-1; s >= 0; s--)
+					{
+						if (map[s][j] != 0)
+							check = false;
+					}
+					if (!check)
+					{
+						check = true;
+
+						for (int s = i+1; s <N; s++)
+						{
+							if (map[s][j] != 0)
+								check = false;
+						}
+
+						if (!check)
+						{
+							check = true;
+
+							for (int s = j+1; s <N; s++)
+							{
+								if (map[i][s] != 0)
+									check = false;
+							}
+							if (!check)
+							{
+								check = true;
+
+								for (int s = j-1; s >=0; s--)
+								{
+									if (map[i][s] != 0)
+										check = false;
+								}
+								if (!check)
+								{
+									map[i][j] = 4;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		dfs(map);
+		if (result == 1000)
+			result = 0;
+
+		cout << "#"<<countT++<<" "<<result << endl;
+		testcase--;
+	}
+	
+	return 0;
+}
+

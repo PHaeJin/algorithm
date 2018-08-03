@@ -1,0 +1,94 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<queue>
+#include<utility>
+
+using namespace std;
+int Tr[200001];
+
+int main()
+{
+	bool* visit = new bool[200001];
+	
+	for (int i = 0; i <= 200000; i++)
+	{
+		visit[i] = false;
+	}
+
+	int N, K;
+	cin >> N >> K;
+
+
+
+	queue<pair<int, int>> q;
+
+	q.push(make_pair(N, 0));
+	Tr[N] = N;
+	int re;
+	while (!q.empty())
+	{
+		int x = q.front().first;
+		int depth = q.front().second;
+		q.pop();
+		if (x == K)
+		{
+			re = depth;
+			cout << depth << endl;
+			break;
+		}
+		if (x - 1 >= 0 && !visit[x - 1])
+		{
+			q.push(make_pair(x - 1, depth + 1));
+			visit[x - 1] = true;
+			Tr[x - 1] = x;
+		}
+		if (x + 1 <= 200000 && !visit[x + 1])
+		{
+
+			q.push(make_pair(x + 1, depth + 1));
+			visit[x + 1] = true;
+			Tr[x + 1] = x;
+
+		}
+
+		if (x * 2 <= 200000 && !visit[x * 2])
+		{
+			q.push(make_pair(x * 2, depth + 1));
+			visit[x * 2] = true;
+			Tr[x * 2] = x;
+		}
+
+	}
+
+	vector<int> result;
+
+	if (re > 0)
+	{
+		
+		while (true)
+		{
+			result.push_back(K);
+			K = Tr[K];
+			if (K == N)
+			{
+				result.push_back(K);
+				break;
+			}
+		}
+		reverse(result.begin(), result.end());
+
+		for (int i = 0; i < result.size(); i++)
+		{
+			cout << result[i] << " ";
+		}
+		cout << endl;
+	}
+	else
+	{
+		cout << N << endl;
+	}
+
+	return 0;
+}
+

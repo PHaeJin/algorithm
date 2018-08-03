@@ -1,0 +1,60 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<queue>
+#include<utility>
+
+using namespace std;
+
+int main()
+{
+	bool* visit = new bool[200001];
+	
+	for (int i = 0; i <= 200000; i++)
+	{
+		visit[i] = false;
+	}
+
+	int N, K;
+	cin >> N >> K;
+
+	queue<pair<int, int>> q;
+
+	q.push(make_pair(N, 0));
+
+	
+	while (!q.empty())
+	{
+		int x = q.front().first;
+		int depth = q.front().second;
+		q.pop();
+		
+		if (x == K)
+		{		
+			cout << depth << endl;
+			break;
+		}
+		if (x * 2 <= 200000 && !visit[x * 2])
+		{
+			q.push(make_pair(x * 2, depth));
+			visit[x * 2] = true;
+		}
+
+		if (x - 1 >= 0 && !visit[x - 1])
+		{
+			q.push(make_pair(x - 1, depth + 1));
+			visit[x - 1] = true;
+		}
+		if (x + 1 <= 200000 && !visit[x + 1])
+		{
+			q.push(make_pair(x + 1, depth + 1));
+			visit[x + 1] = true;
+		}
+
+		
+	}
+	
+	
+	return 0;
+}
+

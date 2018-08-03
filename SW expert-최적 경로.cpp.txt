@@ -1,0 +1,88 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+int Custom_X[11];
+int Custom_Y[11];
+int Home_x, Home_y;
+int Comp_x, Comp_y;
+int dp[11][1 << 11];
+
+int N;
+
+int Calculate(int now,int x,int y,int next)
+{
+
+
+	if (next == ((1 << N) - 1))
+	{
+		return abs(x - Home_x) + abs(y - Home_y);
+	}
+
+	if (now != -1)
+	{
+		if (dp[now][next] != -1)
+		{
+			return dp[now][next];
+		}
+	}
+	
+	
+
+	int ret = numeric_limits<int>::max();
+
+
+		for (int i = 0; i < N; i++)
+		{
+			if ((next&(1<<i))==0)
+			{
+				ret=min(ret, abs(x- Custom_X[i]) + abs(y- Custom_Y[i]) + Calculate(i,Custom_X[i], Custom_Y[i], next + (1 << i)));
+			}
+		}
+	
+
+		if (now!= -1)
+		{
+			dp[now][next] = ret;
+		}	
+	
+	return ret;
+
+}
+
+int main()
+{
+	int testcase,CountT;
+	cin >> testcase;
+	CountT = 1;
+	while (testcase != 0)
+	{
+		cin >> N;
+		cin >> Comp_x >> Comp_y;
+		cin >> Home_x >> Home_y;
+
+		for (int i = 0; i < N; i++)
+		{
+			cin >> Custom_X[i] >> Custom_Y[i];
+
+		}
+		for (int j = 0; j < 11; j++)
+		{
+			for (int i = 0; i < (1 << 11); i++)
+			{
+				dp[j][i] = -1;
+			}
+		}
+
+
+
+
+		cout <<"#"<<CountT++<<" "<<Calculate(-1, Comp_x, Comp_y, 0) << endl;
+		
+		testcase--;
+	}
+	
+	return 0;
+}
+

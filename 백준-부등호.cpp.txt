@@ -1,0 +1,116 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<queue>
+#include<utility>
+#include<string>
+using namespace std;
+
+int num[10] = { 0,1,2,3,4,5,6,7,8,9 };
+int K;
+char Bu[10];
+long long max_num = numeric_limits<long long>::min();
+string max_string;
+long long min_num = numeric_limits<long long>::max();
+
+string min_string;
+vector<int> permute;
+
+void Combinate(int index, string s)
+{
+	if (index >= 10 || s.size() == K + 1)
+	{
+		if (s.size() == K + 1)
+		{
+			permute.clear();
+
+			for (int i = 0; i < K + 1; i++)
+			{
+				permute.push_back(s[i]-'0');
+			}
+			long long num;
+			do
+			{
+				bool check = false;
+
+				for (int index = 0; index < K; index++)
+				{
+					if (Bu[index] == '<')
+					{
+						if (permute[index] < permute[index + 1])
+						{
+							;
+						}
+						else
+						{
+							check = true;
+							break;
+						}
+					}
+					else if (Bu[index] == '>')
+					{
+						if (permute[index] > permute[index + 1])
+						{
+							;
+						}
+						else
+						{
+							check = true;
+							break;
+						}
+					}
+				}
+
+				if (check)
+					continue;
+
+
+				s = to_string(permute[0]);
+				for (int i = 1; i < K + 1; i++)
+				{
+					s += to_string(permute[i]);
+				}
+
+				num = stoll(s);
+				
+				if (num > max_num)
+				{
+					max_num = num;
+					max_string = s;
+				}
+
+				if (num < min_num)
+				{
+					min_num = num;
+					min_string = s;
+				}
+
+
+			} while (next_permutation(permute.begin(), permute.end()));
+
+			
+			
+		}
+		return;
+	}
+
+	Combinate(index + 1, s + to_string(num[index]));
+	Combinate(index + 1, s);
+
+}
+
+int main()
+{
+	cin >> K;
+	
+	for (int i = 0; i < K; i++)
+		cin >> Bu[i];
+
+	Combinate(0, "");
+
+	cout << max_string << endl;
+	cout << min_string << endl;
+	return 0;
+}
+
+
