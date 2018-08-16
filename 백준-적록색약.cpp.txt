@@ -1,0 +1,81 @@
+#include <iostream>
+#include<algorithm>
+#include<string>
+using namespace std;
+
+bool visit[101][101];
+char arr[101][101];
+
+int N;
+int count_c = 0;
+int count_js = 0;
+int dx[4] = { -1,1,0,0 };
+int dy[4] = { 0,0,-1,1 };
+
+void dfs(int x, int y)
+{
+	visit[x][y] = true;
+	
+	for (int i = 0; i < 4; i++)
+	{
+		int ix = x + dx[i];
+		int iy = y + dy[i];
+		if (ix >= 0 && ix < N&&iy >= 0 && iy < N&&!visit[ix][iy]&&(arr[ix][iy]==arr[x][y]))
+		{
+			dfs(ix, iy);
+		}
+	}
+	
+}
+
+int main()
+{
+	cin >> N;
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			cin >> arr[i][j];
+			visit[i][j] = false;
+		}
+	}
+
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			if (!visit[i][j])
+			{
+				dfs(i, j);
+				count_c++;
+			}
+		}
+	}
+
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			visit[i][j] = false;
+			if (arr[i][j] == 'G')
+				arr[i][j] = 'R';
+		}
+	}
+
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			if (!visit[i][j])
+			{
+				dfs(i, j);
+				count_js++;
+			}
+		}
+	}
+
+	cout << count_c <<" "<<count_js<<endl;
+	
+    return 0;
+}
+

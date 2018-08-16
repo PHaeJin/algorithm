@@ -1,0 +1,180 @@
+#include <iostream>
+#include<algorithm>
+#include<string>
+#include<vector>
+using namespace std;
+
+int D, W, K;
+int arr[14][21];
+int st_arr[14][21];
+
+//A:0, B:1
+vector<int> total_D(14);
+vector<int> select_D(14);
+bool protect_OK;
+
+bool check_end()
+{
+	
+	for (int i = 0; i < W; i++)
+	{
+		int type;
+		int cnt = 0;
+		bool cc = false;
+
+		for (int j = 0; j < D; j++)
+		{
+			if (cnt == 0)
+			{
+				type = arr[j][i];
+				cnt++;
+			}
+			else
+			{
+				if (arr[j][i] == type)
+				{
+					cnt++;					
+				}
+				else
+				{
+					type = arr[j][i];
+					cnt = 1;
+				}
+			}
+			if (cnt == K)
+			{
+				cc = true;
+				break;
+			}
+		}
+
+		if (!cc)
+		{
+			return false;
+		}
+	}
+
+	return true;
+
+}
+
+void insert_Y(int A, int B,int size,int index)
+{
+	if (A == 0 && B == 0)
+	{
+		if (check_end())
+			protect_OK = true;
+
+		return;
+	}
+
+	if (A > 0)
+	{
+		for (int i = 0; i < W; i++)
+			arr[select_D[index]][i] = 0;
+
+		insert_Y(A - 1, B, size,index+1);
+	}
+	if (B > 0)
+	{
+		for (int i = 0; i < W; i++)
+			arr[select_D[index]][i] = 1;
+
+		insert_Y(A, B - 1, size,index+1);
+	}
+
+}
+
+void Calculate(int index,int size,int num)
+{
+	if (num == size || index >= D)
+	{
+		if (num == size)
+		{
+			for (int i = 0; i <= size; i++)
+			{
+				for (int j = 0; j <= size; j++)
+				{
+					if ((i + j) == size) 
+					{
+						insert_Y(i, j, size, 0);
+
+						if (protect_OK)
+							return;
+
+						for (int s = 0; s < D; s++)
+						{
+							for (int k = 0; k < W; k++)
+							{
+								arr[s][k] = st_arr[s][k];
+							}
+						}
+
+					
+					}
+				}			
+			}
+
+			
+			
+		}
+		return;
+	}
+
+	select_D[size] = total_D[index];
+
+	Calculate(index + 1, size + 1, num);
+
+	Calculate(index + 1, size, num);
+
+}
+
+int main()
+{
+	int testcase, countT;
+	countT = 1;
+	cin >> testcase;
+	while (testcase != 0)
+	{
+		protect_OK = false;
+
+		cin >> D >> W >> K;
+		for (int i = 0; i < D; i++)
+		{
+			total_D[i] = i;
+
+			for (int j = 0; j < W; j++)
+			{
+				cin >> arr[i][j];
+				st_arr[i][j] = arr[i][j];
+			}
+		}
+
+		if (check_end())
+		{
+			cout << "#" << countT++ << " " << "0" << endl;
+		}
+		else
+		{
+			int num = 1;
+
+			while (true)
+			{
+				Calculate(0, 0, num);
+
+				if (protect_OK)
+					break;
+
+				num++;
+			}
+
+			cout <<"#"<<countT++<<" "<< num << endl;
+		}
+
+		testcase--;
+	}
+	
+	
+    return 0;
+}
+
