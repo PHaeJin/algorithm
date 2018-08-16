@@ -1,0 +1,45 @@
+#include <iostream>
+#include<algorithm>
+#include<cstdio>
+#include<cmath>
+
+using namespace std;
+
+bool arr[1000001];
+
+int main()
+{
+	int M, N;
+
+	scanf_s("%d %d", &M, &N);
+
+	for (int i = 0; i <= N; i++)
+	{
+		arr[i] = true;
+	}
+
+	int index = sqrt(N);
+
+	for (int i = 2; i <= index; i++)
+	{
+		if (!arr[i])
+			continue;
+
+		for (int j = i*i; j <= N; j+=i)
+		{
+			arr[j] = false;
+		}
+	}
+
+	arr[0] = false;
+	arr[1] = false;
+
+	for (int i = M; i <= N; i++)
+	{
+		if (arr[i])
+			printf("%d\n", i);
+	}
+	
+    return 0;
+}
+
