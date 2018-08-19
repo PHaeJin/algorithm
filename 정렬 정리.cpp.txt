@@ -1,0 +1,182 @@
+#include<iostream>
+#include<cstdio>
+using namespace std;
+
+void Selcetion(int *arr, int count)
+{
+	for (int i = 0; i < count; i++)
+	{
+		int num = arr[i];
+		int temp = i;
+		for (int j = i + 1; j < count; j++)
+		{
+			if (arr[j] < num)
+			{
+				num = arr[j];
+				temp = j;
+			}
+		}
+		arr[temp] = arr[i];
+		arr[i] = num;
+	}
+}
+
+void Insertion(int *arr,int count)
+{
+	for (int i = 1; i < count; i++)
+	{
+		int num = arr[i];		
+		for (int j = i-1; j >= 0; j--)
+		{
+			if (arr[j] > num)
+			{
+				arr[j + 1] = arr[j];
+				arr[j] = num;
+			}
+			else
+			{
+				break;
+			}
+		}
+	}
+}
+
+void BubbleSort(int *arr, int count)
+{
+	for (int i = count - 1; i > 0; i--)
+	{
+		for (int j = 0; j < i; j++)
+		{
+			if (arr[j] > arr[j + 1])
+			{
+				int temp = arr[j+1];
+				arr[j + 1] = arr[j];
+				arr[j] = temp;
+			}
+		}
+	}
+}
+
+void QuickSort(int *arr, int start,int end)
+{
+if (end - start <= 1)
+return;
+
+
+int pivot = arr[start];
+int j = start;
+
+for (int i=start+1;i<end;i++)
+{
+if (arr[i] < pivot)
+{
+j++;
+int temp = arr[j];
+arr[j] = arr[i];
+arr[i] = temp;
+}
+}
+int temp = arr[j];
+arr[j] = arr[start];
+arr[start] = temp;
+
+QuickSort(arr, start, j);
+QuickSort(arr, j+1, end);
+
+}
+
+void Merge(int *arr, int start, int end,int mid)
+{
+	int i = start;
+	int j = mid + 1;
+	int k = start;
+
+	int ex[1001];
+
+	while (i <= mid && j <= end)
+	{
+		if (arr[i] < arr[j])
+		{
+			ex[k] = arr[i];
+			i++;
+		}
+		else
+		{
+			ex[k] = arr[j];
+			j++;
+		}
+		k++;
+	}
+	if (i > mid)
+	{
+		for (int s = j; s <= end; s++)
+		{
+			ex[k] = arr[s];
+			k++;
+		}
+	}
+	else
+	{
+		for (int s = i; s <= mid; s++)
+		{
+			ex[k] = arr[s];
+			k++;
+		}
+	}
+
+	for (int s = start; s <= end; s++)
+	{
+		arr[s] = ex[s];
+	}
+}
+
+void MergeSort(int *arr, int start,int end)
+{
+	int mid = (start + end) / 2;
+	if (start < end)
+	{
+		MergeSort(arr, start, mid);
+		MergeSort(arr, mid + 1, end);
+
+		Merge(arr, start, end,mid);
+	}
+}
+
+void HeapSort(int *arr, int count)
+{
+	for (int i = 1; i <= count; i++)
+	{
+		int child = i;
+		while (child > 0)
+		{
+			int root = (child - 1) / 2;
+			if (arr[root] < arr[child])
+			{
+				int temp = arr[root];
+				arr[root] = arr[child];
+				arr[child] = temp;
+			}
+			child = root;
+		}
+	}
+}
+
+int main(void)
+{
+	int arr[1001];
+	
+	int N;
+	cin >> N;
+	for (int i = 0; i < N; i++)
+	{
+		cin >> arr[i];
+	}
+
+//sort
+
+	for (int i = 0; i < N; i++)
+	{
+		cout << arr[i] << endl;
+	}
+	return 0;
+}

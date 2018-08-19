@@ -1,0 +1,244 @@
+#include<vector>
+#include<iostream>
+using namespace std;
+int N;
+class Node {
+public:
+	int Data;
+	Node* left;
+	Node* right;
+	Node(int d)
+	{
+		Data = d;
+		left = NULL;
+		right = NULL;
+	}
+};
+
+class BST {
+public:
+	Node * root;
+	BST()
+	{
+		root = NULL;
+	}
+	void insertNode(int Num)
+	{
+		Node* node = new Node(Num);
+
+		if (root == NULL)
+		{
+			root = node;
+		}
+		else
+		{
+			Node* parent = NULL;
+			Node* current = root;
+			while (current != NULL)
+			{
+				parent = current;
+				if (Num < parent->Data)
+				{
+					current = current->left;
+				}
+				else
+				{
+					current = current->right;
+				}
+			}
+
+			if (Num < parent->Data)
+			{
+				parent->left = node;
+			}
+			else
+			{
+				parent->right = node;
+			}
+		}
+	}
+	Node* getRoot()
+	{
+		return root;
+	}
+	void visit(Node* current)
+	{
+		cout << current->Data << " ";
+	}
+
+	void preOrder(Node* current)
+	{
+		if (current != NULL)
+		{
+			cout << current->Data << " ";
+			preOrder(current->left);
+			preOrder(current->right);
+		}
+	}
+	void inOrder(Node* current)
+	{
+		if (current != NULL)
+		{
+			inOrder(current->left);
+			cout << current->Data << " ";
+			inOrder(current->right);
+		}
+	}
+	void postOrder(Node* current)
+	{
+		if (current != NULL)
+		{
+			postOrder(current->left);
+			postOrder(current->right);
+			cout << current->Data << " ";
+		}
+	}
+};
+
+
+int main() {
+
+	BST bst;
+	bst.insertNode(8);
+	bst.insertNode(3);
+	bst.insertNode(10);
+	bst.insertNode(14);
+	bst.insertNode(2);
+	bst.insertNode(5);
+	bst.insertNode(11);
+	bst.insertNode(16);
+
+	bst.preOrder(bst.getRoot());
+	cout << endl;
+	bst.inOrder(bst.getRoot());
+	cout << endl;
+	bst.postOrder(bst.getRoot());
+
+	return 0;
+
+}
+
+// ConsoleApplication8.cpp: 콘솔 응용 프로그램의 진입점을 정의합니다.
+//
+
+#include "stdafx.h"
+#include<vector>
+#include<iostream>
+using namespace std;
+int N;
+class Node {
+public:
+	int Data;
+	Node* left;
+	Node* right;
+	Node(int d)
+	{
+		Data = d;
+		left = NULL;
+		right = NULL;
+	}
+};
+
+class BST {
+public:
+	Node * root;
+	BST()
+	{
+		root = NULL;
+	}
+	void insertNode(int Num)
+	{
+		Node* node = new Node(Num);
+
+		if (root == NULL)
+		{
+			root = node;
+		}
+		else
+		{
+			Node* parent = NULL;
+			Node* current = root;
+			while (current != NULL)
+			{
+				parent = current;
+				if (Num < parent->Data)
+				{
+					current = current->left;
+				}
+				else
+				{
+					current = current->right;
+				}
+			}
+
+			if (Num < parent->Data)
+			{
+				parent->left = node;
+			}
+			else
+			{
+				parent->right = node;
+			}
+		}
+	}
+	Node* getRoot()
+	{
+		return root;
+	}
+	void visit(Node* current)
+	{
+		cout << current->Data << " ";
+	}
+
+	void preOrder(Node* current)
+	{
+		if (current != NULL)
+		{
+			cout << current->Data << " ";
+			preOrder(current->left);
+			preOrder(current->right);
+		}
+	}
+	void inOrder(Node* current)
+	{
+		if (current != NULL)
+		{
+			inOrder(current->left);
+			cout << current->Data << " ";
+			inOrder(current->right);
+		}
+	}
+	void postOrder(Node* current)
+	{
+		if (current != NULL)
+		{
+			postOrder(current->left);
+			postOrder(current->right);
+			cout << current->Data << " ";
+		}
+	}
+};
+
+
+int main() {
+
+	BST bst;
+	bst.insertNode(8);
+	bst.insertNode(3);
+	bst.insertNode(10);
+	bst.insertNode(14);
+	bst.insertNode(2);
+	bst.insertNode(5);
+	bst.insertNode(11);
+	bst.insertNode(16);
+
+	bst.preOrder(bst.getRoot());
+	cout << endl;
+	bst.inOrder(bst.getRoot());
+	cout << endl;
+	bst.postOrder(bst.getRoot());
+
+	return 0;
+
+}
+

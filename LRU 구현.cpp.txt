@@ -1,0 +1,236 @@
+
+#include<iostream>
+#include<vector>
+using namespace std;
+int Page_Fault = 0;
+
+
+class Data {
+public:
+	int data;
+	Data* next;
+	Data* prev;
+	Data(int num)
+	{
+		data = num;
+		next = NULL;
+		prev = NULL;
+	}
+
+};
+
+class LRU {
+	
+public:
+	Data * Head;
+	Data* Tail;
+	int size_q;
+
+	LRU()
+	{
+		size_q = 0;
+		Head = NULL;
+		Tail = NULL;
+	}
+
+	void Push(int num)
+	{
+		Data* newdata = new Data(num);
+
+		if (Head == NULL)
+		{
+			Head = newdata;
+		}
+		else
+		{
+			newdata->prev = Tail;
+			Tail->next = newdata;
+		}
+		Tail = newdata;
+		size_q++;
+	}
+	int front()
+	{
+		Data* Tempdata = Head;
+		if (Tempdata != NULL)
+		{
+			int num = Tempdata->data;
+			return num;
+		}
+
+	}
+	int back()
+	{
+		Data* Tempdata = Tail;
+		if (Tempdata != NULL)
+		{
+			int num = Tempdata->data;
+			return num;
+		}
+	}
+
+	int size()
+	{
+		return size_q;
+	}
+	bool find_num(int num)
+	{
+		Data* Tempdata = Head;
+		int k = 1;
+		if (Tempdata == NULL)
+			return false;
+		else
+		{
+			bool check_find = false;
+			while (Tempdata != NULL)
+			{
+				if (Tempdata->data == num)
+				{
+					check_find = true;
+					break;
+				}
+				k++;
+				Tempdata = Tempdata->next;
+			}
+
+			if (check_find)
+				return true;
+			else
+				return false;
+		}
+	}
+	void remove(int num)
+	{
+		Data* Tempdata = Head;
+		int k = 1;
+		if (Tempdata == NULL)
+		{
+			return;
+		}
+		else
+		{
+			bool check_find = false;
+			while (Tempdata != NULL)
+			{
+				if (Tempdata->data == num)
+				{					
+					check_find = true;
+					break;
+				}
+				k++;
+				Tempdata = Tempdata->next;
+			}
+			if (!check_find) 
+			{
+				return;
+			}
+			else
+			{
+				if (k == 1)
+				{
+					Head = Head->next;
+
+					if (Head != NULL)
+						Head->prev = NULL;
+
+					size_q--;
+
+					if (size_q == 0)
+					{
+						Tail = NULL;
+					}
+
+					delete Tempdata;
+
+				}
+				else if (k == size_q)
+				{
+					Tail = Tail->prev;
+					Tail->next = NULL;
+
+					
+					size_q--;
+
+					if (size_q == 0)
+						Head = NULL;
+
+
+					delete Tempdata;
+
+				}
+				else
+				{
+					Tempdata->prev->next = Tempdata->next;
+					Tempdata->next->prev = Tempdata->prev;
+					size_q--;
+					delete Tempdata;
+				}
+			}
+		}
+
+	}
+	void pop()
+	{
+		Data* Tempdata = Head;
+		if (Tempdata != NULL)
+		{
+			Head = Head->next;
+
+			if (Head != NULL)
+				Head->prev = NULL;
+
+			delete Tempdata;
+			size_q--;
+		}
+		else
+		{
+			cout << "error" << endl;
+		}
+	}
+
+	bool empty()
+	{
+		if (Head == NULL)
+			return true;
+		else
+			return false;
+	}
+
+};
+
+int main() {
+	
+	int N;
+	cin >> N;
+
+	
+	LRU q;
+	
+	for (int i = 0; i < N; i++)
+	{
+		int num;
+		cin >> num;
+		if (!q.find_num(num)&&q.size()<3)
+		{
+			q.Push(num);
+			Page_Fault++;
+		}
+		else if (q.find_num(num))
+		{
+			q.remove(num);
+			q.Push(num);
+		}
+		else if (q.size() >= 3)
+		{
+			q.pop();
+			q.Push(num);
+			Page_Fault++;
+		}
+	}
+
+	cout << Page_Fault << endl;
+	
+	return 0;
+
+}
+

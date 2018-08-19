@@ -1,0 +1,104 @@
+#include<iostream>
+#include<queue>
+#include<cstdio>
+#include<utility>
+using namespace std;
+
+int arr[1001][1001];
+bool visit[1001][1001][2];
+int N, M;
+int dx[4] = { -1,1,0,0 };
+int dy[4] = { 0,0,-1,1 };
+
+struct my_s {
+	int x, y, crash,depth;
+};
+
+int main(void)
+{
+	scanf_s("%d %d", &N, &M);
+	
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < M; j++)
+		{
+			int num;
+			scanf_s("%1d", &num);
+			arr[i][j] = num;
+			for(int k=0;k<2;k++)
+			visit[i][j][k] = false;
+			
+		}
+	}
+
+	
+	int ret = 1000000000;
+	
+	queue<my_s> q;
+			
+	my_s ms;
+	ms.x = 0;
+	ms.y = 0;
+	ms.crash = 0;
+	ms.depth = 1;
+
+	q.push(ms);
+		
+	visit[0][0][0] = true;
+	
+	while (!q.empty())
+	{
+		ms = q.front();
+		q.pop();
+		int x = ms.x;
+		int y = ms.y;
+		int crash = ms.crash;
+		int depth = ms.depth;
+
+		if (x == N - 1 && y == M - 1)
+		{
+			ret = depth;
+			break;
+		}
+
+		for (int i = 0; i < 4; i++)
+		{
+			int ix = x + dx[i];
+			int iy = y + dy[i];
+
+			if (ix >= 0 && ix < N&&iy >= 0 && iy < M)
+			{
+				if (arr[ix][iy]==0&&!visit[ix][iy][crash])
+				{
+					ms.x = ix;
+					ms.y = iy;
+					ms.crash = crash;
+					ms.depth = depth + 1;
+					visit[ix][iy][crash] = true;
+					q.push(ms);
+				}
+				else if (arr[ix][iy] == 1 && crash == 0&&!visit[ix][iy][crash+1])
+				{
+					ms.x = ix;
+					ms.y = iy;
+					ms.crash = crash + 1;
+					ms.depth = depth + 1;
+					visit[ix][iy][crash + 1] = true;
+					q.push(ms);
+				}
+			}
+		}
+	}
+
+
+	if (ret == 1000000000)
+	{
+		cout << "-1" << endl;
+	}
+	else
+	{
+		cout << ret << endl;
+	}
+
+	return 0;
+}

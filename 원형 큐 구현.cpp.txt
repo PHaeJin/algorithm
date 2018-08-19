@@ -1,0 +1,47 @@
+#include<iostream>
+using namespace std;
+
+int rear = 0;
+int front = 0;
+int maxsize = 5;
+int circular_Q[5];
+
+bool Isempty()
+{
+	if (rear == front)
+		return true;
+	else
+		return false;
+}
+bool isfull()
+{
+	if ((rear + 1) % 5 == front)
+		return true;
+	else
+		return false;
+}
+void EnQueue(int num)
+{
+	if (isfull())
+		cout << "no !" << endl;
+	else
+	{
+		rear = (rear + 1) % maxsize;
+		circular_Q[rear] = num;
+	}
+}
+int DeQueue()
+{
+	if (Isempty())
+		return -1;
+	else
+	{
+		front = (front + 1) % maxsize;
+		return circular_Q[front];
+	}
+}
+int main(void)
+{
+
+	return 0;
+}

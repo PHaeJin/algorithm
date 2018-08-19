@@ -1,0 +1,156 @@
+#include<iostream>
+#include<fstream>
+using namespace std;
+
+class Node
+{
+public:
+	int Data;
+	Node* next;
+
+	Node(int n)
+	{
+		Data = n;
+		next = NULL;
+	}
+
+};
+
+class List
+{
+public:
+	Node * front;
+	Node* rear;
+	int count_n;
+
+	List()
+	{
+		front = NULL;
+		rear = NULL;
+		count_n = 0;
+	}
+
+	void insertNode(int item)
+	{
+		Node* newnode = new Node(item);
+
+		Node* temp = front;
+		if (temp == NULL)
+		{
+			front = newnode;
+			rear = newnode;
+		}
+		else
+		{
+			while (temp->next != NULL)
+			{
+				temp = temp->next;
+			}
+			temp->next = newnode;
+			rear = newnode;
+		}
+		count_n++;
+	}
+
+	void deleteNode(int item)
+	{
+		Node* temp = front;
+		Node* ex_temp = front;
+		if (temp == NULL)
+		{
+			return;
+		}
+		else
+		{
+			while (temp->Data != item)
+			{
+				ex_temp = temp;
+				temp = temp->next;
+				if (temp == NULL)
+					return;
+			}
+			
+			if (temp->Data == front->Data)
+			{
+				front = front->next;
+			}
+			else if (temp->Data == rear->Data)
+			{
+				rear = ex_temp;
+				ex_temp->next = NULL;
+			}
+			else
+			{
+				ex_temp->next = temp->next;
+			}
+			delete temp;
+			count_n--;
+		}
+	}
+
+	void SearchList()
+	{
+		Node* temp = front;
+		while (temp != NULL)
+		{
+			cout << temp->Data << "->";
+			temp = temp->next;
+		}
+
+	}
+	void sortList()
+	{
+		for (int i = 0; i < count_n-1; i++)
+		{
+			Node* temp = front;
+			Node* S_temp;
+			
+
+			int index = i;
+			int temp_index;
+			
+			while (index != 0)
+			{
+				temp = temp->next;
+				index--;
+			}
+
+			Node* D_temp = temp;
+			int D = temp->Data;
+			S_temp = temp;
+			
+			while (S_temp->next!=NULL)
+			{
+				if (D > S_temp->Data)
+				{
+					D = S_temp->Data;
+					D_temp = S_temp;
+				}
+				S_temp = S_temp->next;
+			}
+
+			D_temp->Data = temp->Data;
+			temp->Data = D;
+		}
+
+
+	}
+};
+
+int main(void)
+{
+	List ls;
+	ls.insertNode(1);
+	ls.insertNode(3);
+	ls.insertNode(2);
+	ls.insertNode(8);
+	ls.insertNode(5);
+	ls.insertNode(10);
+	ls.SearchList();
+
+	cout << endl;
+
+	ls.sortList();
+	ls.SearchList();
+	return 0;
+}

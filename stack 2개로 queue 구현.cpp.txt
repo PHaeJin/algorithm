@@ -1,0 +1,204 @@
+#include<iostream>
+#include<cstring>
+using namespace std;
+
+class stack {
+	public:
+		int arr[10001];
+		int size_stack;
+
+		stack();
+		void push(int A);
+		int pop();		
+		int top();
+		int size();
+		int empty();
+	
+};
+
+stack::stack()
+{
+	size_stack = 0;
+}
+
+void stack::push(int A)
+{
+	arr[size_stack++] = A;
+}
+
+int stack::pop()
+{
+	if (size_stack == 0)
+	{
+		return -1;
+	}
+	else
+	{
+		int num = arr[size_stack - 1];
+		size_stack--;
+		return num;		
+	}
+}
+
+int stack::top()
+{
+	if (size_stack == 0)
+	{
+		return -1;
+	}
+	else
+	{
+		return arr[size_stack - 1];
+	}
+}
+
+int stack::size()
+{
+	return size_stack;
+}
+
+int stack::empty()
+{
+	if (size_stack == 0)
+		return 1;
+	else
+		return 0;
+}
+
+class queue {
+public:
+	stack* st1;
+	stack* st2;
+	int size_queue;
+	queue();
+	void push(int A);
+	int pop();
+	int size();
+	int empty();
+	int front();
+	int back();
+};
+
+queue::queue()
+{
+	st1 = new stack();
+	st2 = new stack();
+	size_queue = 0;
+}
+
+void queue::push(int A)
+{
+	st1->push(A);
+}
+
+int queue::pop()
+{
+	if (st2->size() == 0)
+	{
+		while (st1->size() > 0)
+		{
+			st2->push(st1->pop());
+		}
+	}
+
+	return st2->pop();
+	
+}
+
+int queue::size()
+{
+	return (st1->size() + st2->size());
+}
+
+int queue::empty()
+{
+	if ((st1->empty() == 1) && (st2->empty() == 1))
+		return 1;
+	else
+		return 0;
+}
+
+int queue::front()
+{
+	if (st2->size() == 0)
+	{
+		while (st1->size() > 0)
+		{
+			st2->push(st1->pop());
+		}
+	}
+
+	return st2->top();
+
+}
+
+int queue::back()
+{
+	if (st2->size() == 0)
+	{
+		while (st1->size() > 0)
+		{
+			st2->push(st1->pop());
+		}
+	}
+
+	if (st2->size() == 0)
+		return -1;
+	else
+	{
+		if (st1->size() > 0)
+		{
+			return st1->arr[st1->size()-1];
+		}
+		else
+		return st2->arr[0];
+
+	}
+		
+
+}
+
+int main() {
+
+	queue st;
+	int N;
+	cin >> N;
+
+	for (int i = 0; i < N; i++)
+	{
+		char s[10];
+		cin >> s;
+
+		if (!strcmp(s, "push"))
+		{
+			int num;
+			cin >> num;
+			st.push(num);
+		}
+		else if (!strcmp(s, "pop"))
+		{
+			cout << st.pop() << endl;
+		}
+		else if (!strcmp(s, "size"))
+		{
+			cout << st.size() << endl;
+
+		}
+		else if (!strcmp(s, "empty"))
+		{
+
+			cout << st.empty() << endl;
+		}
+		else if (!strcmp(s, "front"))
+		{
+			cout << st.front() << endl;
+		}
+		else if (!strcmp(s, "back"))
+		{
+			cout << st.back() << endl;
+		}
+	}
+
+	return 0;
+
+}

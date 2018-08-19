@@ -1,0 +1,131 @@
+#include<iostream>
+using namespace std;
+
+class Data {
+public:
+	int data;
+	Data* next;
+	Data* prev;
+	Data(int num)
+	{
+		data = num;
+		next = NULL;
+		prev = NULL;
+	}
+
+};
+
+class queue {
+public:
+	Data * Head;
+	Data* Tail;
+	int size_q;
+
+	queue()
+	{
+		size_q = 0;
+		Head = NULL;
+		Tail = NULL;
+	}
+
+	void Push(int num)
+	{
+		Data* newdata = new Data(num);
+
+		if (Head == NULL)
+		{
+			Head = newdata;
+		}
+		else
+		{
+			newdata->prev = Tail;
+			Tail->next = newdata;
+		}
+		Tail = newdata;
+		size_q++;
+	}
+	int front()
+	{
+		Data* Tempdata = Head;
+		if (Tempdata != NULL)
+		{
+			int num = Tempdata->data;
+			return num;
+		}
+		
+	}
+	int back()
+	{
+		Data* Tempdata = Tail;
+		if (Tempdata != NULL)
+		{
+			int num = Tempdata->data;
+			return num;
+		}
+	}
+	
+	int size()
+	{
+		return size_q;
+	}
+
+	void pop()
+	{
+		Data* Tempdata = Head;
+		if (Tempdata != NULL)
+		{
+			Head = Head->next;
+			
+			if(Head!=NULL)
+			Head->prev = NULL;
+			
+			delete Tempdata;
+			size_q--;
+		}
+		else
+		{
+			cout << "error" << endl;
+		}
+	}
+
+	bool empty()
+	{
+		if (Head == NULL)
+			return true;
+		else
+			return false;
+	}
+
+};
+
+int main() {
+
+	queue q;
+	q.Push(10);
+	q.Push(20);
+	q.Push(30);
+	q.Push(40);
+	q.Push(50);
+	
+	q.pop();
+	q.pop();
+	
+	cout << "queue front: " << q.front() << endl;
+	
+	cout << "queue back: " << q.back() << endl;
+	
+	cout << "queue size: " << q.size() << endl;
+
+	if (q.empty())
+	{
+		cout << "queue is empty!" << endl;
+	}
+	else
+	{
+		cout << "queue is not empty!" << endl;
+	}
+
+	return 0;
+
+}
+

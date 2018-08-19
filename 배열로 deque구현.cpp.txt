@@ -1,0 +1,134 @@
+#include<iostream>
+#include<cstring>
+using namespace std;
+
+class deq {
+public:
+	int arr[10001];
+	int size_deq;
+
+	deq();
+	void push_back(int A);
+	int pop_back();
+	void push_front(int A);
+	int pop_front();
+
+	int front();
+	int back();
+	int size();
+	int empty();
+
+};
+
+deq::deq()
+{
+	size_deq = 0;
+}
+
+void deq::push_front(int A)
+{
+	size_deq++;
+
+	for (int i = size_deq - 1; i >0 ; i--)
+	{
+		arr[i] = arr[i-1];
+	}
+	
+	arr[0] = A;
+
+}
+
+int deq::pop_front()
+{
+	if (size_deq == 0)
+	{
+		return -1;
+	}
+	else
+	{
+		int num = arr[0];
+		for (int i = 0; i < size_deq-1; i++)
+		{
+			arr[i] = arr[i + 1];
+		}
+		size_deq--;
+
+		return num;
+	}
+}
+
+int deq::front()
+{
+	if (size_deq == 0)
+		return -1;
+	else
+		return arr[0];
+}
+
+
+void deq::push_back(int A)
+{
+	arr[size_deq++] = A;
+}
+
+int deq::pop_back()
+{
+	if (size_deq == 0)
+	{
+		return -1;
+	}
+	else
+	{
+		int num = arr[size_deq - 1];
+		size_deq--;
+		return num;
+	}
+}
+
+int deq::back()
+{
+	if (size_deq == 0)
+	{
+		return -1;
+	}
+	else
+	{
+		return arr[size_deq - 1];
+	}
+}
+
+int deq::size()
+{
+	return size_deq;
+}
+
+int deq::empty()
+{
+	if (size_deq == 0)
+		return 1;
+	else
+		return 0;
+}
+
+
+int main()
+{
+	deq my_deq;
+
+	my_deq.push_back(3);
+	my_deq.push_back(4);
+	my_deq.push_back(5);
+	my_deq.push_front(1);
+	my_deq.push_front(2);
+	
+	cout<<my_deq.pop_front()<<endl;
+	
+	cout << my_deq.size() << endl;
+	cout << my_deq.pop_back() << endl;
+	
+	cout << my_deq.front() << endl;
+	cout << my_deq.back() << endl;
+	cout << my_deq.size() << endl;
+
+	return 0;
+}
