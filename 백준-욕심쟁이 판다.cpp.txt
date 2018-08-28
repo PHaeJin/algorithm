@@ -1,0 +1,59 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+int N;
+int arr[501][501];
+int dp[501][501];
+int ret = -1;
+int dx[4] = { -1,1,0,0 };
+int dy[4] = { 0,0,-1,1 };
+
+
+int dfs(int x, int y, int depth, int now_num)
+{	
+	int ret = 1;
+
+	if (dp[x][y] != -1)
+	{
+		return dp[x][y];
+	}
+
+	for (int i = 0; i < 4; i++)
+	{
+		int gx = x + dx[i];
+		int gy = y + dy[i];
+		if (arr[gx][gy] > now_num)
+			ret=max(ret,dfs(gx, gy, depth + 1, arr[gx][gy])+1);
+	}
+
+	dp[x][y] = ret;
+
+	return ret;
+}
+
+int main(void)
+{
+	cin >> N;
+	
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			cin >> arr[i][j];
+			dp[i][j] = -1;
+		}
+	}
+
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			ret=max(ret,dfs(i, j, 1, arr[i][j]));
+		}
+	}
+
+	cout << ret << endl;
+
+	return 0;
+}
