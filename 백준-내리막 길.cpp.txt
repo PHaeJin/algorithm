@@ -1,0 +1,71 @@
+#include <string>
+#include<vector>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+int arr[501][501];
+bool visit[501][501];
+int dp[501][501];
+
+int M, N;
+int ret = 0;
+int dx[4] = { -1,1,0,0 };
+int dy[4] = {0,0,-1,1 };
+
+int dfs(int x, int y, int now_num)
+{
+	visit[x][y] = true;
+	
+	if (x == M - 1 && y == N - 1)
+	{
+		visit[x][y] = false;
+		return 1;
+	}
+	
+	if (dp[x][y] != -1)
+	{
+		visit[x][y] = false;
+		return dp[x][y];
+	}
+
+	int sol = 0;
+
+	for (int i = 0; i < 4; i++)
+	{
+		int gx = x + dx[i];
+		int gy = y + dy[i];
+
+		if (gx >= 0 && gx < M&&gy >= 0 && gy < N&&!visit[gx][gy]&&now_num>arr[gx][gy])
+		{
+			sol+=dfs(gx, gy, arr[gx][gy]);
+		}
+	}
+	
+	visit[x][y] = false;
+	
+	dp[x][y] = sol;
+
+	return dp[x][y];
+}
+
+int main()
+{
+	cin >> M >> N;
+
+	for (int i = 0; i < M; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			cin >> arr[i][j];
+			visit[i][j] = false;
+			dp[i][j] = -1;
+		}
+	}
+
+	
+
+	cout << dfs(0, 0, arr[0][0]) << endl;
+
+	return 0;
+}

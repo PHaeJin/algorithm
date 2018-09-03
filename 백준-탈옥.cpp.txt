@@ -1,0 +1,206 @@
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#include<queue>
+#include<utility>
+using namespace std;
+
+int H,W;
+
+int P1_x,P1_y,P2_x,P2_y;
+
+char arr[103][103];
+
+int cal_P1[103][103];
+int cal_P2[103][103];
+int cal_P3[103][103];
+int total[103][103];
+
+int dx[4] = { -1,1,0,0 };
+int dy[4] = { 0,0,-1,1 };
+
+int main(void)
+{
+	int testcase;
+	cin >> testcase;
+	while (testcase != 0)
+	{
+		int H, W;
+		cin >> H >> W;
+		P1_x = -1;
+
+		for (int i = 0; i <= H + 1; i++)
+		{
+			for (int j = 0; j <= W + 1; j++)
+			{
+				if (i == 0 || j == 0 || i == H + 1 || j == W + 1)
+				{
+					arr[i][j] = '.';
+				}
+				else
+				{
+					cin >> arr[i][j];
+				}
+				cal_P1[i][j] = -1;
+				cal_P2[i][j] = -1;
+				cal_P3[i][j] = -1;
+				total[i][j] = -1;
+				if (arr[i][j] == '$')
+				{
+					if (P1_x == -1)
+					{
+						P1_x = i;
+						P1_y = j;
+					}
+					else
+					{
+						P2_x = i;
+						P2_y = j;
+					}
+				}
+			}
+		}
+		queue<pair<int, int> > ex_q;
+		queue<pair<int, int> > q;
+		q.push(make_pair(0, 0));
+		cal_P3[0][0] = 0;
+
+		while (!q.empty())
+		{
+			int x = q.front().first;
+			int y = q.front().second;
+			int depth = cal_P3[x][y];
+			q.pop();
+
+			for (int i = 0; i < 4; i++)
+			{
+				int Gx = x + dx[i];
+				int Gy = y + dy[i];
+				if (Gx >= 0 && Gx <= H + 1 && Gy >= 0 && Gy <= W + 1)
+				{
+					if (arr[Gx][Gy] == '.' || arr[Gx][Gy] == '$')
+					{
+						if (cal_P3[Gx][Gy] == -1 || (cal_P3[Gx][Gy] > depth))
+						{
+							cal_P3[Gx][Gy] = depth;
+							q.push(make_pair(Gx, Gy));
+						}
+					}
+					else if (arr[Gx][Gy] == '#')
+					{
+						if (cal_P3[Gx][Gy] == -1 || (cal_P3[Gx][Gy] > depth + 1))
+						{
+							cal_P3[Gx][Gy] = depth + 1;
+							q.push(make_pair(Gx, Gy));
+						}
+					}
+
+				}
+			}
+		}
+
+		q = ex_q;
+		q.push(make_pair(P1_x, P1_y));
+		cal_P1[P1_x][P1_y] = 0;
+
+		while (!q.empty())
+		{
+			int x = q.front().first;
+			int y = q.front().second;
+			int depth = cal_P1[x][y];
+			q.pop();
+
+			for (int i = 0; i < 4; i++)
+			{
+				int Gx = x + dx[i];
+				int Gy = y + dy[i];
+				if (Gx >= 0 && Gx <= H + 1 && Gy >= 0 && Gy <= W + 1)
+				{
+					if (arr[Gx][Gy] == '.' || arr[Gx][Gy] == '$')
+					{
+						if (cal_P1[Gx][Gy] == -1 || (cal_P1[Gx][Gy] > depth))
+						{
+							cal_P1[Gx][Gy] = depth;
+							q.push(make_pair(Gx, Gy));
+						}
+					}
+					else if (arr[Gx][Gy] == '#')
+					{
+						if (cal_P1[Gx][Gy] == -1 || (cal_P1[Gx][Gy] > depth + 1))
+						{
+							cal_P1[Gx][Gy] = depth + 1;
+							q.push(make_pair(Gx, Gy));
+						}
+					}
+
+				}
+			}
+		}
+
+		q = ex_q;
+		q.push(make_pair(P2_x, P2_y));
+		cal_P2[P2_x][P2_y] = 0;
+
+		while (!q.empty())
+		{
+			int x = q.front().first;
+			int y = q.front().second;
+			int depth = cal_P2[x][y];
+			q.pop();
+
+			for (int i = 0; i < 4; i++)
+			{
+				int Gx = x + dx[i];
+				int Gy = y + dy[i];
+				if (Gx >= 0 && Gx <= H + 1 && Gy >= 0 && Gy <= W + 1)
+				{
+					if (arr[Gx][Gy] == '.' || arr[Gx][Gy] == '$')
+					{
+						if (cal_P2[Gx][Gy] == -1 || (cal_P2[Gx][Gy] > depth))
+						{
+							cal_P2[Gx][Gy] = depth;
+							q.push(make_pair(Gx, Gy));
+						}
+					}
+					else if (arr[Gx][Gy] == '#')
+					{
+						if (cal_P2[Gx][Gy] == -1 || (cal_P2[Gx][Gy] > depth + 1))
+						{
+							cal_P2[Gx][Gy] = depth + 1;
+							q.push(make_pair(Gx, Gy));
+						}
+					}
+
+				}
+			}
+		}
+
+		for (int i = 0; i <= H + 1; i++)
+		{
+			for (int j = 0; j <= W + 1; j++)
+			{
+				if (cal_P1[i][j] == -1 || cal_P2[i][j] == -1 || cal_P3[i][j] == -1)
+					continue;
+
+				total[i][j] = cal_P1[i][j] + cal_P2[i][j] + cal_P3[i][j];
+				if (arr[i][j] == '#')
+					total[i][j] -= 2;
+			}
+		}
+
+		int min_num = 100000000;
+
+		for (int i = 0; i <= H + 1; i++)
+		{
+			for (int j = 0; j <= W + 1; j++)
+			{
+				if (total[i][j] < min_num&&total[i][j] != -1)
+					min_num = total[i][j];
+			}
+		}
+		cout << min_num << endl;
+		testcase--;
+	}
+	
+	return 0;
+}

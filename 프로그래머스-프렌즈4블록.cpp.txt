@@ -1,0 +1,97 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+char board_c[31][31];
+bool del[31][31];
+
+int solution(int m, int n, vector<string> board) {
+	
+	for (int i = 0; i < m; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			board_c[i][j] = board[i][j];
+		}
+	}
+	int ret = 0;
+
+	while (true)
+	{
+		bool check_rotate = false;
+
+		for (int i = 0; i < m; i++)
+		{
+			for (int j = 0; j < n; j++)
+				del[i][j] = false;
+		}
+
+
+		for (int i = 0; i < m; i++)
+		{
+			for (int j = 0; j < n; j++)
+			{
+				if (i + 1 >= m || j + 1 >= n)
+					continue;
+
+				char c = board_c[i][j];
+				if (c != 'd'&&board_c[i + 1][j] == c && board_c[i][j + 1] == c && board_c[i + 1][j + 1] == c)
+				{
+					del[i][j] = true;
+					del[i + 1][j] = true;
+					del[i][j + 1] = true;
+					del[i + 1][j + 1] = true;
+					check_rotate = true;
+				}
+			}
+		}
+
+		for (int i = 0; i < m; i++)
+		{
+			for (int j = 0; j < n; j++)
+			{
+				if (del[i][j])
+				{
+					ret++;
+					board_c[i][j] = 'd';
+				}
+			}
+		}
+
+        if(check_rotate)
+        {
+            for (int j = 0; j < n; j++)
+		{
+			for (int i = m - 1; i >= 0; i--)
+			{
+				while (board_c[i][j] == 'd')
+				{
+					bool rotate = false;
+
+					for (int s = i - 1; s >= 0; s--)
+					{
+						if (board_c[s][j] != 'd')
+						{
+							board_c[i][j] = board_c[s][j];
+							board_c[s][j] = 'd';
+							rotate = true;
+							break;
+						}
+					}
+
+					if (!rotate)
+						break;
+				}
+			}
+		}
+        }
+		
+
+
+		if (!check_rotate)
+			break;
+	}
+
+
+	return ret;
+}

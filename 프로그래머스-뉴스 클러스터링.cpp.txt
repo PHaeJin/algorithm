@@ -1,0 +1,126 @@
+#include <string>
+#include<vector>
+#include<iostream>
+#include<ctype.h>
+using namespace std;
+
+bool check_alpha(string s)
+{
+	bool is_alpha = true;
+
+	if (!isalpha(s[0]) || !isalpha(s[1]))
+		is_alpha = false;
+	
+	return is_alpha;
+}
+int solution(string str1, string str2) {
+	
+	string st1;
+	string st2;
+
+	st1 = str1;
+	st2 = str2;
+
+	int st1_size = st1.size();
+	int st2_size = st2.size();
+
+
+	string st1_pair[1001];
+	string st2_pair[1001];
+
+	int st1_index = 0;
+	int st2_index = 0;
+
+	for (int i = 0; i < st1_size - 1; i++)
+	{
+		string s = "";
+		s += toupper(st1[i]);
+		s += toupper(st1[i + 1]);
+		if (check_alpha(s))
+		{
+			st1_pair[st1_index] = s;
+			st1_index++;
+		}
+	}
+
+	for (int i = 0; i < st2_size - 1; i++)
+	{
+		string s = "";
+		s += toupper(st2[i]);
+		s += toupper(st2[i + 1]);
+		if (check_alpha(s))
+		{
+			st2_pair[st2_index] = s;
+			st2_index++;
+		}
+	}
+
+	bool find_G1[1001];
+	bool find_G2[1001];
+
+	for (int i = 0; i < 1001; i++)
+	{
+		find_G1[i] = false;
+		find_G2[i] = false;
+	}
+
+	int div1 = 0;
+	int div2 = 0;
+
+	for (int i = 0; i < st1_index; i++)
+	{
+		for (int j = 0; j < st2_index; j++)
+		{
+			if (st1_pair[i].compare(st2_pair[j]) == 0 && !find_G2[j])
+			{
+				find_G2[j] = true;
+				div1++;
+				break;
+			}
+		}
+	}
+
+	for (int i = 0; i < 1001; i++)
+	{
+		find_G1[i] = false;
+		find_G2[i] = false;
+	}
+
+	for (int i = 0; i < st1_index; i++)
+	{
+		for (int j = 0; j < st2_index; j++)
+		{
+			if (st1_pair[i].compare(st2_pair[j]) == 0 && !find_G2[j] && !find_G1[i])
+			{
+				find_G1[i] = true;
+				find_G2[j] = true;
+				div2++;
+				break;
+			}
+		}
+	}
+
+	for (int i = 0; i < st1_index; i++)
+	{
+		if (!find_G1[i])
+			div2++;
+	}
+
+	for (int i = 0; i < st2_index; i++)
+	{
+		if (!find_G2[i])
+			div2++;
+	}
+    int ret;
+    if(div2==0)
+    {
+        ret=65536;
+    }
+    else
+    {
+    double sol = (double)div1 / div2;
+	sol = sol * 65536;
+	ret = (int)sol;
+    }
+	return ret;
+}

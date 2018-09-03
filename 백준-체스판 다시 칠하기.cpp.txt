@@ -1,0 +1,90 @@
+#include <string>
+#include<vector>
+#include<iostream>
+using namespace std;
+char chess[51][51];
+char chess_div[8][8];
+char sol1[8][8];
+char sol2[8][8];
+
+int N, M;
+int ret = 100000000;
+
+int main()
+{	
+	cin >> N >> M;
+
+	int temp = 1;
+	char W = 'W';
+	char B = 'B';
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			if (temp == 1)
+			{
+				sol1[i][j] = W;
+				sol2[i][j] = B;
+			}
+			else
+			{
+				sol1[i][j] = B;
+				sol2[i][j] = W;
+			}
+			temp = -temp;
+		}
+		temp = -temp;
+	}
+
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < M; j++)
+			cin >> chess[i][j];
+	}
+
+	for (int i = 0; i+7 < N; i++)
+	{
+		for (int j = 0; j+7 < M; j++)
+		{
+			for (int s = 0; s < 8; s++)
+			{
+				for(int k=0;k<8;k++)
+				{
+					chess_div[s][k] = chess[i + s][j + k];
+				}
+			}
+
+			int count_c = 0;
+
+			for (int s = 0; s < 8; s++)
+			{
+				for (int k = 0; k<8; k++)
+				{
+					if (chess_div[s][k] != sol1[s][k])
+						count_c++;
+				}
+			}
+
+			if (ret > count_c)
+				ret = count_c;
+		
+			count_c = 0;
+
+			for (int s = 0; s < 8; s++)
+			{
+				for (int k = 0; k<8; k++)
+				{
+					if (chess_div[s][k] != sol2[s][k])
+						count_c++;
+				}
+			}
+
+			if (ret > count_c)
+				ret = count_c;
+
+		}
+	}
+	cout << ret << endl;
+
+	return 0;
+}
