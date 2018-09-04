@@ -1,0 +1,122 @@
+#include<vector>
+#include<iostream>
+#include<algorithm>
+#include<queue>
+#include<utility>
+
+using namespace std;
+
+struct st {
+	int x, y, depth;
+};
+
+int W,H;
+char arr[1001][1001];
+bool visit[1001][1001];
+int dx[4] = { -1,1,0,0 };
+int dy[4] = {0,0,-1,1 };
+
+int main()
+{
+	int testcase;
+	cin >> testcase;
+	while (testcase != 0)
+	{
+		cin >> H >> W;
+
+		queue<pair<int, int>> fire;
+		queue<st> people;
+
+		for (int i = 0; i < W; i++)
+		{
+			for (int j = 0; j < H; j++)
+			{
+				cin >> arr[i][j];
+				visit[i][j] = false;
+
+				if (arr[i][j] == '*')
+				{
+					fire.push(make_pair(i, j));
+				}
+				else if (arr[i][j] == '@')
+				{
+					st my_st;
+					my_st.x = i;
+					my_st.y = j;
+					my_st.depth = 0;
+					people.push(my_st);
+					visit[i][j] = true;
+				}
+			}
+		}
+		bool check_end = false;
+
+		while (!fire.empty() || !people.empty())
+		{
+			if (check_end)
+				break;
+
+			int size = fire.size();
+			while (size != 0)
+			{
+				int x = fire.front().first;
+				int y = fire.front().second;
+				fire.pop();
+
+				for (int i = 0; i < 4; i++)
+				{
+					int gx = x + dx[i];
+					int gy = y + dy[i];
+					if (gx >= 0 && gx < W&&gy >= 0 && gy < H && (arr[gx][gy] == '.' || arr[gx][gy] == '@'))
+					{
+						arr[gx][gy] = '*';
+						fire.push(make_pair(gx, gy));
+					}
+				}
+				size--;
+			}
+
+			//매초 불 퍼트리기
+			size = people.size();
+			while (size != 0)
+			{
+				st my_st = people.front();
+				people.pop();
+				int x = my_st.x;
+				int y = my_st.y;
+				int depth = my_st.depth;
+
+				if (x == 0 || x == W - 1 || y == 0 || y == H - 1)
+				{
+					check_end = true;
+					cout << depth + 1 << endl;
+					break;
+				}
+
+				for (int i = 0; i < 4; i++)
+				{
+					int gx = x + dx[i];
+					int gy = y + dy[i];
+					if (gx >= 0 && gx < W&&gy >= 0 && gy < H && !visit[gx][gy] && arr[gx][gy] == '.')
+					{
+						visit[gx][gy] = true;
+						my_st.x = gx;
+						my_st.y = gy;
+						my_st.depth = depth + 1;
+						people.push(my_st);
+					}
+				}
+
+				size--;
+			}
+
+		}
+
+		if (!check_end)
+			cout << "IMPOSSIBLE" << endl;
+
+		testcase--;
+	}
+	
+	return 0;
+}

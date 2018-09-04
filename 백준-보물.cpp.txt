@@ -1,0 +1,40 @@
+#include <string>
+#include<vector>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+
+int main()
+{
+	int N;
+	cin >> N;
+	vector<int> A;
+	vector<int> B;
+
+	for (int i = 0; i < N; i++)
+	{
+		int num;
+		cin >> num;
+		A.push_back(num);
+	}
+
+	for (int i = 0; i < N; i++)
+	{
+		int num;
+		cin >> num;
+		B.push_back(num);
+	}
+
+	sort(A.begin(), A.end());
+	sort(B.begin(), B.end());
+	reverse(B.begin(), B.end());
+
+	int ret = 0;
+	for (int i = 0; i < N; i++)
+	{
+		ret += (A[i] * B[i]);
+	}
+	cout << ret << endl;
+	return 0;
+}
