@@ -1,0 +1,56 @@
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+int arr[1001][256];
+vector<int> length;
+
+int main()
+{
+	int testcase = 10;
+	int CountT = 1;
+	while (testcase != 0)
+	{
+		length.clear();
+		int N;
+		int ret = 0;
+		cin >> N;
+
+		for (int i = 0; i < 1001; i++)
+		{
+			for (int j = 0; j < 256; j++)
+				arr[i][j] = 0;
+		}
+
+		for (int i = 0; i < N; i++)
+		{
+			int num;
+			cin >> num;
+			length.push_back(num);
+		}
+
+
+		for (int i = 0; i < N; i++)
+		{
+			int size = length[i];
+			for (int j = 0; j < size; j++)
+				arr[i][j] = 1;
+		}
+
+		for (int i = 2; i < N - 2; i++)
+		{
+			int size = length[i];
+			for (int j = 0; j < size; j++)
+			{
+				if (arr[i][j] == 1 && arr[i - 1][j] == 0 && arr[i - 2][j] == 0 && arr[i + 1][j] == 0 && arr[i + 2][j] == 0)
+					ret++;
+			}
+		}
+		cout <<"#"<<CountT++<<" "<< ret << endl;
+		testcase--;
+	}
+	
+
+	return 0;
+}

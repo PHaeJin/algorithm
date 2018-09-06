@@ -1,0 +1,772 @@
+#include<vector>
+#include<iostream>
+#include<algorithm>
+#include<queue>
+#include<utility>
+
+using namespace std;
+
+char arr[11][11];
+bool visit[11][11][11][11];
+bool visit_ex[11][11];
+bool ok_R = false;
+bool ok_B = false;
+bool game_end = false;
+int N, M;
+
+struct my_st {
+	int R_x;
+	int R_y;
+	int B_x;
+	int B_y;
+	int depth;
+};
+
+void dfs(int x, int y, int depth)
+{
+	visit_ex[x][y] = true;
+	
+	if (game_end)
+		return;
+
+	if (depth >= 10)
+		return;
+	int gx = x;
+	int gy = y;
+
+	while (gy + 1<M&&arr[gx][gy + 1] != '#')
+	{
+		gy++;
+		if (arr[gx][gy] == 'O')
+		{
+			cout << depth + 1 << endl;
+			game_end = true;
+			return;
+		}
+	}
+	if(!visit_ex[gx][gy])
+	dfs(gx, gy, depth + 1);
+	
+
+	gx = x;
+	gy = y;
+
+	while (gy -1>=0&&arr[gx][gy - 1] != '#')
+	{
+		gy--;
+		if (arr[gx][gy] == 'O')
+		{
+			cout << depth + 1 << endl;
+			game_end = true;
+			return;
+		}
+	}
+	if (!visit_ex[gx][gy])
+		dfs(gx, gy, depth + 1);
+
+	gx = x;
+	gy = y;
+
+	while (gx - 1 >= 0 && arr[gx-1][gy] != '#')
+	{
+		gx--;
+		if (arr[gx][gy] == 'O')
+		{
+			cout << depth + 1 << endl;
+			game_end = true;
+			return;
+		}
+	}
+	if (!visit_ex[gx][gy])
+		dfs(gx, gy, depth + 1);
+
+	gx = x;
+	gy = y;
+
+	while (gx +1<N && arr[gx + 1][gy] != '#')
+	{
+		gx++;
+		if (arr[gx][gy] == 'O')
+		{
+			cout << depth + 1 << endl;
+			game_end = true;
+			return;
+		}
+	}
+	if (!visit_ex[gx][gy])
+		dfs(gx, gy, depth + 1);
+
+}
+
+int main()
+{
+	cin >> N >> M;
+	
+
+	my_st ms;
+
+	ms.depth = 0;
+
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < M; j++)
+		{
+			cin >> arr[i][j];
+			if (arr[i][j] == 'R')
+			{
+				ok_R = true;
+				ms.R_x = i;
+				ms.R_y = j;
+			}
+			if (arr[i][j] == 'B')
+			{
+				ok_B = true;
+				ms.B_x = i;
+				ms.B_y = j;
+			}
+			visit_ex[i][j]=false;
+			for (int s = 0; s < N; s++)
+			{
+				for (int k = 0; k < M; k++)
+				{
+					visit[i][j][s][k] = false;
+				}
+			}
+		}
+	}
+	
+	if (!ok_R&&ok_B)
+	{
+		cout << "-1" << endl;
+	}
+	else if (!ok_B&&ok_R)
+	{
+		dfs(ms.R_x, ms.R_y, 0);
+		if (!game_end)
+			cout << "-1" << endl;
+
+	}
+	else if (!ok_B && !ok_R)
+	{
+		cout << "-1" << endl;
+	}
+	else
+	{
+		queue<my_st> q;
+		q.push(ms);
+		visit[ms.R_x][ms.R_y][ms.B_x][ms.B_y] = true;
+		
+
+
+		while (!q.empty())
+		{
+			ms = q.front();
+			q.pop();
+
+			int	R_x = ms.R_x;
+			int	R_y = ms.R_y;
+
+			int	B_x = ms.B_x;
+			int	B_y = ms.B_y;
+
+			int depth = ms.depth;
+		
+			my_st n_st;
+
+			if (depth >= 10)
+			{
+				game_end = true;
+				cout << "-1" << endl;
+				break;
+			}
+
+			bool R_end = false;
+			bool B_end = false;
+
+			if (R_x == B_x)
+			{
+				if (R_y > B_y)
+				{
+					while (R_y + 1<M&&arr[R_x][R_y + 1] != '#')
+					{
+						R_y++;
+						if (arr[R_x][R_y] == 'O')
+						{
+							R_end = true;
+							break;
+						}
+
+					}//R이동
+
+					while (B_y + 1<M&&arr[B_x][B_y + 1] != '#')
+					{
+						if (arr[B_x][B_y + 1] == 'O')
+						{
+							B_end = true;
+							break;
+						}
+						if (R_y == B_y + 1)
+						{
+							break;
+						}
+						B_y++;
+					}//B이동
+					if (R_end && !B_end)
+					{	game_end = true;
+						cout << depth + 1 << endl;
+						break;
+					}
+					else if (!R_end && !B_end)
+					{
+						if (!visit[R_x][R_y][B_x][B_y])
+						{
+							visit[R_x][R_y][B_x][B_y] = true;
+							n_st.R_x = R_x;
+							n_st.R_y = R_y;
+							n_st.B_x = B_x;
+							n_st.B_y = B_y;
+							n_st.depth = depth + 1;
+							q.push(n_st);
+						}
+					}
+				}
+				else
+				{
+					while (B_y + 1<M&&arr[B_x][B_y + 1] != '#')
+					{
+						B_y++;
+						if (arr[B_x][B_y] == 'O')
+						{
+							B_end = true;
+							break;
+						}
+
+					}//B이동
+
+					while (R_y + 1<M&&arr[R_x][R_y + 1] != '#')
+					{
+						if (arr[R_x][R_y + 1] == 'O')
+						{
+							R_end = true;
+							break;
+						}
+						if (B_y == R_y + 1)
+						{
+							break;
+						}
+						R_y++;
+					}//R이동
+					if (R_end && !B_end)
+					{
+						game_end = true;
+						cout << depth + 1 << endl;
+						break;
+					}
+					else if (!R_end && !B_end)
+					{
+						if (!visit[R_x][R_y][B_x][B_y])
+						{
+							visit[R_x][R_y][B_x][B_y] = true;
+							n_st.R_x = R_x;
+							n_st.R_y = R_y;
+							n_st.B_x = B_x;
+							n_st.B_y = B_y;
+							n_st.depth = depth + 1;
+							q.push(n_st);
+						}
+					}
+				}
+			}
+			else
+			{
+				while (R_y + 1<M&&arr[R_x][R_y + 1] != '#')
+				{
+					R_y++;
+					if (arr[R_x][R_y] == 'O')
+					{
+						R_end = true;
+						break;
+					}
+
+				}//R이동
+
+				while (B_y + 1<M&&arr[B_x][B_y + 1] != '#')
+				{
+					B_y++;
+					if (arr[B_x][B_y] == 'O')
+					{
+						B_end = true;
+						break;
+					}
+				}//B이동
+				if (R_end && !B_end)
+				{
+					game_end = true;
+					cout << depth + 1 << endl;
+					break;
+				}
+				else if (!R_end && !B_end)
+				{
+					if (!visit[R_x][R_y][B_x][B_y])
+					{
+						visit[R_x][R_y][B_x][B_y] = true;
+						n_st.R_x = R_x;
+						n_st.R_y = R_y;
+						n_st.B_x = B_x;
+						n_st.B_y = B_y;
+						n_st.depth = depth + 1;
+						q.push(n_st);
+					}
+				}
+			}
+			//Right
+
+			R_x = ms.R_x;
+			R_y = ms.R_y;
+			B_x = ms.B_x;
+			B_y = ms.B_y;
+			depth = ms.depth;
+			R_end = false;
+			B_end = false;
+
+			if (R_x == B_x)
+			{
+				if (R_y < B_y)
+				{
+					while (R_y - 1 >= 0 && arr[R_x][R_y - 1] != '#')
+					{
+						R_y--;
+						if (arr[R_x][R_y] == 'O')
+						{
+							R_end = true;
+							break;
+						}
+
+					}//R이동
+
+					while (B_y - 1 >= 0 && arr[B_x][B_y - 1] != '#')
+					{
+						if (arr[B_x][B_y - 1] == 'O')
+						{
+							B_end = true;
+							break;
+						}
+						if (R_y == B_y - 1)
+						{
+							break;
+						}
+						B_y--;
+					}//B이동
+					if (R_end && !B_end)
+					{
+						game_end = true;
+						cout << depth + 1 << endl;
+						break;
+					}
+					else if (!R_end && !B_end)
+					{
+						if (!visit[R_x][R_y][B_x][B_y])
+						{
+							visit[R_x][R_y][B_x][B_y] = true;
+							n_st.R_x = R_x;
+							n_st.R_y = R_y;
+							n_st.B_x = B_x;
+							n_st.B_y = B_y;
+							n_st.depth = depth + 1;
+							q.push(n_st);
+						}
+					}
+				}
+				else
+				{
+					while (B_y - 1 >= 0 && arr[B_x][B_y - 1] != '#')
+					{
+						B_y--;
+						if (arr[B_x][B_y] == 'O')
+						{
+							B_end = true;
+							break;
+						}
+
+					}//B이동
+
+					while (R_y - 1 >= 0 && arr[R_x][R_y - 1] != '#')
+					{
+						if (arr[R_x][R_y - 1] == 'O')
+						{
+							R_end = true;
+							break;
+						}
+						if (B_y == R_y - 1)
+						{
+							break;
+						}
+						R_y--;
+					}//R이동
+					if (R_end && !B_end)
+					{
+						game_end = true;
+						cout << depth + 1 << endl;
+						break;
+					}
+					else if (!R_end && !B_end)
+					{
+						if (!visit[R_x][R_y][B_x][B_y])
+						{
+							visit[R_x][R_y][B_x][B_y] = true;
+							n_st.R_x = R_x;
+							n_st.R_y = R_y;
+							n_st.B_x = B_x;
+							n_st.B_y = B_y;
+							n_st.depth = depth + 1;
+							q.push(n_st);
+						}
+					}
+				}
+			}
+			else
+			{
+				while (R_y - 1 >= 0 && arr[R_x][R_y - 1] != '#')
+				{
+					R_y--;
+					if (arr[R_x][R_y] == 'O')
+					{
+						R_end = true;
+						break;
+					}
+
+				}//R이동
+
+				while (B_y - 1 >= 0 && arr[B_x][B_y - 1] != '#')
+				{
+					B_y--;
+					if (arr[B_x][B_y] == 'O')
+					{
+						B_end = true;
+						break;
+					}
+				}//B이동
+				if (R_end && !B_end)
+				{
+					game_end = true;
+					cout << depth + 1 << endl;
+					break;
+				}
+				else if (!R_end && !B_end)
+				{
+					if (!visit[R_x][R_y][B_x][B_y])
+					{
+						visit[R_x][R_y][B_x][B_y] = true;
+						n_st.R_x = R_x;
+						n_st.R_y = R_y;
+						n_st.B_x = B_x;
+						n_st.B_y = B_y;
+						n_st.depth = depth + 1;
+						q.push(n_st);
+					}
+				}
+			}
+			//Left
+			R_x = ms.R_x;
+			R_y = ms.R_y;
+			B_x = ms.B_x;
+			B_y = ms.B_y;
+			depth = ms.depth;
+			R_end = false;
+			B_end = false;
+
+			if (R_y == B_y)
+			{
+				if (R_x > B_x)
+				{
+					while (R_x + 1<N&&arr[R_x + 1][R_y] != '#')
+					{
+						R_x++;
+						if (arr[R_x][R_y] == 'O')
+						{
+							R_end = true;
+							break;
+						}
+
+					}//R이동
+
+					while (B_x + 1<N&&arr[B_x + 1][B_y] != '#')
+					{
+						if (arr[B_x + 1][B_y] == 'O')
+						{
+							B_end = true;
+							break;
+						}
+						if (R_x == B_x + 1)
+						{
+							break;
+						}
+						B_x++;
+					}//B이동
+					if (R_end && !B_end)
+					{
+						game_end = true;
+						cout << depth + 1 << endl;
+						break;
+					}
+					else if (!R_end && !B_end)
+					{
+						if (!visit[R_x][R_y][B_x][B_y])
+						{
+							visit[R_x][R_y][B_x][B_y] = true;
+							n_st.R_x = R_x;
+							n_st.R_y = R_y;
+							n_st.B_x = B_x;
+							n_st.B_y = B_y;
+							n_st.depth = depth + 1;
+							q.push(n_st);
+						}
+					}
+				}
+				else
+				{
+					while (B_x + 1<N&&arr[B_x + 1][B_y] != '#')
+					{
+						B_x++;
+						if (arr[B_x][B_y] == 'O')
+						{
+							B_end = true;
+							break;
+						}
+
+					}//B이동
+
+					while (R_x + 1<N&&arr[R_x + 1][R_y] != '#')
+					{
+						if (arr[R_x + 1][R_y] == 'O')
+						{
+							R_end = true;
+							break;
+						}
+						if (B_x == R_x + 1)
+						{
+							break;
+						}
+						R_x++;
+					}//R이동
+					if (R_end && !B_end)
+					{
+						game_end = true;
+						cout << depth + 1 << endl;
+						break;
+					}
+					else if (!R_end && !B_end)
+					{
+						if (!visit[R_x][R_y][B_x][B_y])
+						{
+							visit[R_x][R_y][B_x][B_y] = true;
+							n_st.R_x = R_x;
+							n_st.R_y = R_y;
+							n_st.B_x = B_x;
+							n_st.B_y = B_y;
+							n_st.depth = depth + 1;
+							q.push(n_st);
+						}
+					}
+				}
+			}
+			else
+			{
+				while (R_x + 1<N&&arr[R_x + 1][R_y] != '#')
+				{
+					R_x++;
+					if (arr[R_x][R_y] == 'O')
+					{
+						R_end = true;
+						break;
+					}
+
+				}//R이동
+
+				while (B_x + 1<N&&arr[B_x + 1][B_y] != '#')
+				{
+					B_x++;
+					if (arr[B_x][B_y] == 'O')
+					{
+						B_end = true;
+						break;
+					}
+				}//B이동
+				if (R_end && !B_end)
+				{
+					game_end = true;
+					cout << depth + 1 << endl;
+					break;
+				}
+				else if (!R_end && !B_end)
+				{
+					if (!visit[R_x][R_y][B_x][B_y])
+					{
+						visit[R_x][R_y][B_x][B_y] = true;
+						n_st.R_x = R_x;
+						n_st.R_y = R_y;
+						n_st.B_x = B_x;
+						n_st.B_y = B_y;
+						n_st.depth = depth + 1;
+						q.push(n_st);
+					}
+				}
+			}
+			//Down
+
+			R_x = ms.R_x;
+			R_y = ms.R_y;
+			B_x = ms.B_x;
+			B_y = ms.B_y;
+			depth = ms.depth;
+			R_end = false;
+			B_end = false;
+
+			if (R_y == B_y)
+			{
+				if (R_x < B_x)
+				{
+					while (R_x - 1 >= 0 && arr[R_x - 1][R_y] != '#')
+					{
+						R_x--;
+						if (arr[R_x][R_y] == 'O')
+						{
+							R_end = true;
+							break;
+						}
+
+					}//R이동
+
+					while (B_x - 1 >= 0 && arr[B_x - 1][B_y] != '#')
+					{
+						if (arr[B_x - 1][B_y] == 'O')
+						{
+							B_end = true;
+							break;
+						}
+						if (R_x == B_x - 1)
+						{
+							break;
+						}
+						B_x--;
+					}//B이동
+					if (R_end && !B_end)
+					{
+						game_end = true;
+						cout << depth + 1 << endl;
+						break;
+					}
+					else if (!R_end && !B_end)
+					{
+						if (!visit[R_x][R_y][B_x][B_y])
+						{
+							visit[R_x][R_y][B_x][B_y] = true;
+							n_st.R_x = R_x;
+							n_st.R_y = R_y;
+							n_st.B_x = B_x;
+							n_st.B_y = B_y;
+							n_st.depth = depth + 1;
+							q.push(n_st);
+						}
+					}
+				}
+				else
+				{
+					while (B_x - 1 >= 0 && arr[B_x - 1][B_y] != '#')
+					{
+						B_x--;
+						if (arr[B_x][B_y] == 'O')
+						{
+							B_end = true;
+							break;
+						}
+
+					}//B이동
+
+					while (R_x - 1 >= 0 && arr[R_x - 1][R_y] != '#')
+					{
+						if (arr[R_x - 1][R_y] == 'O')
+						{
+							R_end = true;
+							break;
+						}
+						if (B_x == R_x - 1)
+						{
+							break;
+						}
+						R_x--;
+					}//R이동
+					if (R_end && !B_end)
+					{
+
+						game_end = true;
+						cout << depth + 1 << endl;
+						break;
+					}
+					else if (!R_end && !B_end)
+					{
+						if (!visit[R_x][R_y][B_x][B_y])
+						{
+							visit[R_x][R_y][B_x][B_y] = true;
+							n_st.R_x = R_x;
+							n_st.R_y = R_y;
+							n_st.B_x = B_x;
+							n_st.B_y = B_y;
+							n_st.depth = depth + 1;
+							q.push(n_st);
+						}
+					}
+				}
+			}
+			else
+			{
+				while (R_x - 1 >= 0 && arr[R_x - 1][R_y] != '#')
+				{
+					R_x--;
+					if (arr[R_x][R_y] == 'O')
+					{
+						R_end = true;
+						break;
+					}
+
+				}//R이동
+
+				while (B_x - 1 >= 0 && arr[B_x - 1][B_y] != '#')
+				{
+					B_x--;
+					if (arr[B_x][B_y] == 'O')
+					{
+						B_end = true;
+						break;
+					}
+				}//B이동
+				if (R_end && !B_end)
+				{
+
+					game_end = true;
+					cout << depth + 1 << endl;
+					break;
+				}
+				else if (!R_end && !B_end)
+				{
+					if (!visit[R_x][R_y][B_x][B_y])
+					{
+						visit[R_x][R_y][B_x][B_y] = true;
+						n_st.R_x = R_x;
+						n_st.R_y = R_y;
+						n_st.B_x = B_x;
+						n_st.B_y = B_y;
+						n_st.depth = depth + 1;
+						q.push(n_st);
+					}
+				}
+			}
+			//Up
+		}
+		if (!game_end)
+			cout << "-1" << endl;
+	}
+	
+
+	return 0;
+}
