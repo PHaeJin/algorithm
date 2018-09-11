@@ -1,0 +1,75 @@
+#include<iostream>
+#include<vector>
+#include<fstream>
+#include<string>
+#include<queue>
+#include<cstdio>
+#include<functional>
+
+using namespace std;
+int arr[101][101];
+bool visit[101][101];
+int dx[4] = { -1,1,0,0 };
+int dy[4] = { 0,0,-1,1 };
+
+struct my_struct {
+	int x, y, depth;
+};
+int main()
+{
+	int testCase,countT;
+	countT = 1;
+	cin >> testCase;
+	while (testCase != 0)
+	{
+		priority_queue < pair<int, int>, vector<pair<int, int> >, greater<pair<int, int >>> pq;
+		int N;
+		cin >> N;
+
+		for (int i = 0; i < N; i++)
+		{
+			for (int j = 0; j < N; j++)
+			{
+				int num;
+				scanf_s("%1d", &num);
+				arr[i][j] = num;
+				visit[i][j] = false;
+			}
+		}
+
+
+		pq.push(make_pair(0, 0));
+		visit[0][0] = true;
+
+		
+		while (!pq.empty())
+		{
+			int depth = pq.top().first;
+			int x = pq.top().second/N;
+			int y = pq.top().second % N;
+			pq.pop();
+
+			if (x == N-1 && y == N-1)
+			{
+				cout << "#" << countT++ << " " << depth << endl;
+				break;
+			}
+
+				for (int i = 0; i < 4; i++)
+				{
+					int Gx = x + dx[i];
+					int Gy = y + dy[i];
+					if (Gx >= 0 && Gx < N&&Gy >= 0 && Gy < N && !visit[Gx][Gy])
+					{
+						visit[Gx][Gy] = true;
+						pq.push(make_pair(depth + arr[Gx][Gy],(Gx*N+Gy)));
+					}
+				}
+			
+		}
+		
+		testCase--;
+	}
+
+	return 0;
+}

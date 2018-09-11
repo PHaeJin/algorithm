@@ -1,0 +1,62 @@
+#include<iostream>
+#include<vector>
+#include<fstream>
+#include<cmath>
+using namespace std;
+bool game_end = false;
+
+void devide(int N, int x, int y,int r,int c,long long index)
+{
+	if (N == 1)
+	{
+		if (x == r && y == c)
+		{
+			cout << index << endl;
+		}
+		else if (x == r && y + 1 == c)
+		{
+			cout << index + 1 << endl;
+		}
+		else if (x+1 == r && y == c)
+		{
+			cout << index + 2 << endl;
+		}
+		else if (x+1 == r && y + 1 == c)
+		{
+			cout << index + 3 << endl;
+		}
+		return;
+	}
+	
+	
+	
+	if (r < x + pow(2, N - 1) && c < y + pow(2, N - 1))
+	{
+		devide(N - 1, x, y, r, c, index);
+	}
+	else if (r >= x + pow(2, N - 1) && c < y + pow(2, N - 1))
+	{
+		devide(N - 1, x + pow(2, N - 1), y, r, c, index+2* pow(2, N - 1)* pow(2, N - 1));
+	}
+	else if (r < x + pow(2, N - 1) && c >= y + pow(2, N - 1))
+	{
+		devide(N - 1, x, y + pow(2, N - 1), r, c, index +pow(2,N-1)* pow(2, N - 1));
+	}
+	else
+	{
+		devide(N - 1, x + pow(2, N - 1), y + pow(2, N - 1), r, c, index + 3 * pow(2, N - 1)* pow(2, N - 1));
+	}	
+}
+
+int main()
+{
+	int N, r, c;
+
+	while (cin>>N>>r>>c)
+	{
+		devide(N, 0, 0, r, c,0);
+	
+	}
+	
+	return 0;
+}
