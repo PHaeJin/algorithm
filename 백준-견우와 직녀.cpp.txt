@@ -1,0 +1,138 @@
+#include<iostream>
+#include<vector>
+#include<fstream>
+#include<queue>
+
+using namespace std;
+
+struct my_struct {	
+	int x, y, depth;
+	bool double_check;
+};
+int arr[11][11];
+bool visit[11][11];
+int dx[4] = { -1,1,0,0 };
+int dy[4] = { 0,0,-1,1 };
+
+int main()
+{
+	int N,M;
+	cin >> N>>M;
+
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+			cin >> arr[i][j];
+	}
+
+	int ret = 1000000000;
+
+
+
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			bool check_insert = false;
+
+			if (arr[i][j] == 0)
+			{
+				if (i - 1 >= 0 && i + 1 < N&&j - 1 >= 0 && j + 1 < N&&arr[i - 1] == 0 && arr[i + 1] == 0 && arr[j - 1] == 0 && arr[j + 1] == 0)
+					continue;
+				
+				arr[i][j] = M;
+				check_insert = true;
+			}
+				
+				for (int k = 0; k < N; k++)
+				{
+					for (int t = 0; t < N; t++)
+					{
+						visit[k][t] = false;
+					}
+				}
+				
+				
+				my_struct ms;
+				ms.x = 0;
+				ms.y = 0;
+				ms.depth = 0;
+				ms.double_check = false;
+				visit[0][0] = true;
+
+				queue<my_struct> q;
+				q.push(ms);
+
+				while (!q.empty())
+				{
+
+					ms = q.front();
+					q.pop();
+					int x = ms.x;
+					int y = ms.y;
+					int depth = ms.depth;
+					bool doble_check = ms.double_check;
+
+					if (x == N - 1 && y == N - 1)
+					{
+						if (depth < ret)
+							ret = depth;
+						break;
+					}
+
+					for (int s = 0; s < 4; s++)
+					{
+						int Gx = x + dx[s];
+						int Gy = y + dy[s];
+
+						if (Gx >= 0 && Gx < N&&Gy >= 0 && Gy < N && !visit[Gx][Gy]&&arr[Gx][Gy]!=0)
+						{
+							if (arr[Gx][Gy] == 1)
+							{
+								visit[Gx][Gy] = true;
+								ms.x = Gx;
+								ms.y = Gy;
+								ms.depth = depth+1;
+								ms.double_check = false;
+								q.push(ms);
+							}
+							else
+							{
+								if (!doble_check)
+								{
+									if (((depth + 1) % arr[Gx][Gy]) == 0)
+									{
+										visit[Gx][Gy] = true;
+										ms.x = Gx;
+										ms.y = Gy;
+										ms.depth = depth + 1;
+										ms.double_check = true;
+										q.push(ms);
+									}
+									else
+									{
+										ms.x = x;
+										ms.y = y;
+										ms.depth = depth + 1;
+										q.push(ms);
+									}
+								}
+								
+							}
+						}
+
+					}
+					
+				}
+
+				if (check_insert)
+					arr[i][j] = 0;
+		}
+	}
+	
+	cout << ret << endl;
+
+
+	
+	return 0;
+}
