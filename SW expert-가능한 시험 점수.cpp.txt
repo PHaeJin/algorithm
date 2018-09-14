@@ -1,0 +1,70 @@
+#include<iostream>
+#include<vector>
+#include<fstream>
+#include<queue>
+
+using namespace std;
+int num[101];
+bool score[10001];
+int ret = 0;
+bool dp[101][10001];
+int N;
+
+void go(int index, int n_num)
+{
+	
+	if (index == N)
+	{
+		if (!score[n_num])
+		{
+			ret++;
+			score[n_num] = true;
+		}
+		return;
+	}
+
+	if (dp[index][n_num])
+	{
+			return;
+	}
+
+	go(index + 1, n_num);
+	go(index+1, n_num + num[index]);
+	
+	dp[index][n_num] = true;
+
+	return ;
+}
+
+int main()
+{
+	int testcase,countT;
+	cin >> testcase;
+	countT = 1;
+	while (testcase != 0)
+	{
+		for (int i = 0; i < 101; i++)
+		{
+			for (int j = 0; j < 10001; j++)
+				dp[i][j] = false;
+		}
+		for (int i = 0; i < 10001; i++)
+		{
+			score[i] = false;
+		}
+		ret = 0;
+
+		cin >> N;
+
+		for (int i = 0; i < N; i++)
+			cin >> num[i];
+
+		go(0, 0);
+
+		cout <<"#"<<countT++<<" "<< ret << endl;
+		testcase--;
+	}
+	
+
+	return 0;
+}
