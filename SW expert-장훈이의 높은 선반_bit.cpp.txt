@@ -1,0 +1,31 @@
+#include<iostream>
+using namespace std;
+int height[10001];
+int main()
+{
+    int T,N,B,countT;
+    countT = 1;
+    cin >> T;
+    while (T != 0)
+    {
+        cin>>N >> B;
+        int ret = 1000000000;
+        int Max_i = (1 << N);
+        for (int i = 0; i < N; i++)
+            cin >> height[i];
+        for (int i = 0; i < Max_i; i++)
+        {
+            int num = 0;
+            for (int j = 0; j < N; j++)
+            {
+                if ((i&(1 << j)) != 0)
+                    num += height[j];
+            }
+            if (num - B >= 0 && num - B < ret)
+                ret = num - B;
+        }
+        cout <<"#"<<countT++<<" "<< ret << endl;
+        T--;
+    }   
+    return 0;
+}

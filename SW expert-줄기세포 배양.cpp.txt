@@ -1,0 +1,106 @@
+#include <iostream>
+#include<map>
+#include<queue>
+#include<utility>
+#include<functional>
+#include<tuple>
+
+using namespace std;
+int dx[4] = { -1,1,0,0 };
+int dy[4] = { 0,0,-1,1 };
+int arr[700][700];
+int depth[700][700];
+int die[700][700];
+
+int main()
+{
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+
+	int Testcase, countT;
+	cin >> Testcase;
+	countT = 1;
+	
+	while (Testcase!=0)
+	{
+		int N, M, K;
+		int ret = 0;
+		priority_queue < tuple<int,int, int>, vector<tuple<int, int, int>>, greater<tuple<int, int, int>>> pq;
+		
+		cin >> N >> M >> K;
+		
+		for (int i = 0; i < 700; i++)
+		{
+			for (int j = 0; j < 700; j++)
+			{
+				arr[i][j] = 0;
+				depth[i][j] = 0;
+				die[i][j] = -1;
+			}		
+		}
+		for (int i = 0; i < N; i++)
+		{
+			for (int j = 0; j < M; j++)
+			{
+				int num;
+				cin >> num;
+				arr[i + 300][j + 300] = num;
+				if (num != 0)
+				{
+					pq.push(make_tuple(1,11-num, (i+300) * 700 + j+300));
+					depth[i + 300][j + 300] = 1;
+					ret++;
+				}
+			}
+		}
+		while (!pq.empty())
+		{
+				int x = get<2>(pq.top()) / 700;
+				int y = get<2>(pq.top()) % 700;
+				int dep = get<0>(pq.top());
+				pq.pop();
+				if (dep >= K + 1)
+				{					
+					for (int i = 0; i < 700; i++)
+					{
+						for (int j = 0; j < 700; j++)
+						{
+							if (die[i][j] != -1)
+							{
+								if (K + 1 - die[i][j] >= arr[i][j])
+									ret--;
+							}
+						}
+					}
+					cout << "#" << countT++ << " " << ret << "\n";				
+					break;
+				}	
+
+				if (depth[x][y] == arr[x][y] + 1)
+				{
+					for (int i = 0; i < 4; i++)
+					{
+						int Gx = x + dx[i];
+						int Gy = y + dy[i];
+						if (arr[Gx][Gy] == 0)
+						{
+							arr[Gx][Gy] = arr[x][y];
+							depth[Gx][Gy] = arr[x][y] + 1;
+							pq.push(make_tuple(dep + arr[x][y] + 1,11-arr[x][y], Gx * 700 + Gy));
+							ret++;
+						}
+					}
+					die[x][y] = dep;
+				}
+				else
+				{
+					dep += (arr[x][y] + 1 - depth[x][y]);
+					depth[x][y] = arr[x][y] + 1;
+					pq.push(make_tuple(dep, 11 - arr[x][y], x * 700 + y));
+				}
+		}
+		Testcase--;
+	}
+    return 0;
+}
+

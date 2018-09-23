@@ -1,0 +1,108 @@
+#include <iostream>
+#include<map>
+#include<vector>
+#include<algorithm>
+using namespace std;
+map<int, int> m;
+char arr[29];
+vector<int> v;
+int N, K;
+int ssize;
+
+void Calculate()
+{
+
+	for (int i = 0; i < N; i += ssize)
+	{
+		int num = 0;
+
+		for (int j = 0; j < ssize; j++)
+		{
+			int mul = pow(16, (ssize - (j + 1)));
+
+			if (arr[i + j] == 'A')
+			{
+				num += mul * 10;
+			}
+			else if (arr[i + j] == 'B')
+			{
+				num += mul * 11;
+			}
+			else if (arr[i + j] == 'C')
+			{
+
+				num += mul * 12;
+			}
+			else if (arr[i + j] == 'D')
+			{
+				num += mul * 13;
+
+			}
+			else if (arr[i + j] == 'E')
+			{
+				num += mul * 14;
+			}
+			else if (arr[i + j] == 'F')
+			{
+				num += mul * 15;
+			}
+			else
+			{
+				int cont = arr[i + j] - '0';
+				num += mul * cont;	
+			}
+		}
+		if (m.count(num) == 0)
+		{
+			v.push_back(num);
+			m[num] = 1;
+		}
+	}
+}
+int main()
+{
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	
+	int testcase, countT;
+	cin >> testcase;
+	countT = 1;
+	while (testcase!=0)
+	{
+		v.clear();
+		m.clear();
+
+		cin >> N >> K;
+
+		ssize = N / 4;
+
+		for (int i = 0; i < N; i++)
+		{
+			cin >> arr[i];
+		}
+
+		Calculate();
+
+		for (int i = 1; i < ssize; i++)
+		{
+			char temp = arr[N - 1];
+			for (int s = N - 2; s >= 0; s--)
+			{
+				arr[s + 1] = arr[s];
+			}
+			arr[0] = temp;
+
+			Calculate();
+		}
+
+		sort(v.begin(), v.end());
+		reverse(v.begin(), v.end());
+
+		cout <<"#"<<countT++<<" "<< v[K - 1] << endl;
+		testcase--;
+	}
+	
+
+    return 0;
+}
+
