@@ -1,0 +1,594 @@
+#include <iostream>
+
+using namespace std;
+
+struct my_warm {
+	int P1_x,P1_y;
+	int P2_x, P2_y;
+	bool pair;
+};
+int N;
+int arr[101][101];
+int ret;
+int dx[4] = { -1,1,0,0 };
+int dy[4] = { 0,0,-1,1 };
+
+my_warm warm6;
+my_warm warm7;
+my_warm warm8;
+my_warm warm9;
+my_warm warm10;
+
+int startX, startY;
+bool start;
+
+void dfs(int x, int y, int rotate,int score)
+{
+
+	int Gx, Gy;
+
+	if (x == startX && y == startY && !start)
+	{
+		if (ret < score)
+			ret = score;
+		return;
+	}
+	
+	start = false;
+
+	if (arr[x][y] == 0)
+	{
+		Gx = x + dx[rotate];
+		Gy = y + dy[rotate];
+
+		if (Gx >= 0 && Gx < N&&Gy >= 0 && Gy < N)
+		{
+			dfs(Gx, Gy, rotate,score);
+		}
+		else
+		{
+			if (rotate == 0)
+			{
+				rotate = 1;
+			}
+			else if (rotate == 1)
+			{
+				rotate = 0;
+			}
+			else if (rotate == 2)
+			{
+				rotate = 3;
+			}
+			else
+			{
+				rotate = 2;
+			}
+			dfs(x, y, rotate, score + 1);
+		}
+	}
+	else if (arr[x][y] == 1)
+	{
+		
+		if (rotate == 0)
+		{
+			rotate = 1;
+		}
+		else if (rotate == 1)
+		{
+			rotate = 3;
+		}
+		else if (rotate == 2)
+		{
+			rotate = 0;
+		}
+		else
+		{
+			rotate = 2;
+		}
+
+		Gx = x + dx[rotate];
+		Gy = y + dy[rotate];
+		
+		if (Gx >= 0 && Gx < N&&Gy >= 0 && Gy < N)
+		{
+			dfs(Gx, Gy, rotate, score+1);
+		}
+		else
+		{
+			if (rotate == 3)
+			{
+				rotate = 0;
+			}
+			else if (rotate == 0)
+			{
+				rotate = 3;
+			}
+
+			Gx = x +dx[rotate];
+			Gy = y + dy[rotate];
+			dfs(Gx, Gy, rotate, score + 3);
+		}
+	}
+	else if (arr[x][y] == 2)
+	{
+		if (rotate == 0)
+		{
+			rotate = 3;
+		}
+		else if (rotate == 1)
+		{
+			rotate = 0;
+		}
+		else if (rotate == 2)
+		{
+			rotate = 1;
+		}
+		else
+		{
+			rotate = 2;
+		}
+
+		Gx = x + dx[rotate];
+		Gy = y + dy[rotate];
+
+		if (Gx >= 0 && Gx < N&&Gy >= 0 && Gy < N)
+		{
+			dfs(Gx, Gy, rotate, score + 1);
+		}
+		else
+		{
+			if (rotate == 1)
+			{
+				rotate = 3;
+			}
+			else if (rotate == 3)
+			{
+				rotate = 1;
+			}
+
+			Gx = x + dx[rotate];
+			Gy = y + dy[rotate];
+			dfs(Gx, Gy, rotate, score + 3);
+		}
+	}
+	else if (arr[x][y] == 3)
+	{
+		if (rotate == 0)
+		{
+			rotate = 2;
+		}
+		else if (rotate == 1)
+		{
+			rotate = 0;
+		}
+		else if (rotate == 2)
+		{
+			rotate = 3;
+		}
+		else
+		{
+			rotate = 1;
+		}
+
+		Gx = x + dx[rotate];
+		Gy = y + dy[rotate];
+
+		if (Gx >= 0 && Gx < N&&Gy >= 0 && Gy < N)
+		{
+			dfs(Gx, Gy, rotate, score + 1);
+		}
+		else
+		{
+			if (rotate == 2)
+			{
+				rotate = 1;
+			}
+			else if (rotate ==1)
+			{
+				rotate = 2;
+			}
+
+			Gx = x + dx[rotate];
+			Gy = y + dy[rotate];
+			dfs(Gx, Gy, rotate, score + 3);
+		}
+	}
+	else if (arr[x][y] == 4)
+	{
+		if (rotate == 0)
+		{
+			rotate = 1;
+		}
+		else if (rotate == 1)
+		{
+			rotate = 2;
+		}
+		else if (rotate == 2)
+		{
+			rotate = 3;
+		}
+		else
+		{
+			rotate = 0;
+		}
+
+		Gx = x + dx[rotate];
+		Gy = y + dy[rotate];
+
+		if (Gx >= 0 && Gx < N&&Gy >= 0 && Gy < N)
+		{
+			dfs(Gx, Gy, rotate, score + 1);
+		}
+		else
+		{
+			if (rotate == 0)
+			{
+				rotate = 2;
+			}
+			else if (rotate == 2)
+			{
+				rotate = 0;
+			}
+
+			Gx = x + dx[rotate];
+			Gy = y + dy[rotate];
+			dfs(Gx, Gy, rotate, score + 3);
+		}
+	}
+	else if (arr[x][y] == 5)
+	{
+		if (rotate == 0)
+		{
+			rotate = 1;
+		}
+		else if (rotate == 1)
+		{
+			rotate = 0;
+		}
+		else if (rotate == 2)
+		{
+			rotate = 3;
+		}
+		else
+		{
+			rotate = 2;
+		}
+
+		Gx = x + dx[rotate];
+		Gy = y + dy[rotate];
+
+		dfs(Gx,Gy, rotate, score + 1);
+		
+	}
+	else if (arr[x][y] == 6)
+	{
+		if (x == warm6.P1_x&&y == warm6.P1_y)
+		{
+			Gx = warm6.P2_x + dx[rotate];
+			Gy = warm6.P2_y + dy[rotate];
+		}
+		else
+		{
+			Gx = warm6.P1_x + dx[rotate];
+			Gy = warm6.P1_y + dy[rotate];
+		}
+			if(Gx >= 0 && Gx < N&&Gy >= 0 && Gy < N)
+			dfs(Gx, Gy, rotate, score);
+			else
+			{
+				if (rotate == 0)
+				{
+					rotate = 1;
+				}
+				else if (rotate == 1)
+				{
+					rotate = 0;
+				}
+				else if (rotate == 2)
+				{
+					rotate = 3;
+				}
+				else
+				{
+					rotate = 2;
+				}
+
+				Gx = x + dx[rotate];
+				Gy = y + dy[rotate];
+				dfs(Gx, Gy, rotate, score+1);
+			}
+				
+	}
+	else if (arr[x][y] == 7)
+	{
+		if (x == warm7.P1_x&&y == warm7.P1_y)
+		{
+			Gx = warm7.P2_x + dx[rotate];
+			Gy = warm7.P2_y + dy[rotate];
+		}
+		else
+		{
+			Gx = warm7.P1_x + dx[rotate];
+			Gy = warm7.P1_y + dy[rotate];
+		}
+		if (Gx >= 0 && Gx < N&&Gy >= 0 && Gy < N)
+			dfs(Gx, Gy, rotate, score);
+		else
+		{
+			if (rotate == 0)
+			{
+				rotate = 1;
+			}
+			else if (rotate == 1)
+			{
+				rotate = 0;
+			}
+			else if (rotate == 2)
+			{
+				rotate = 3;
+			}
+			else
+			{
+				rotate = 2;
+			}
+
+			Gx = x + dx[rotate];
+			Gy = y + dy[rotate];
+			dfs(Gx, Gy, rotate, score + 1);
+		}
+
+	}
+	else if (arr[x][y] == 8)
+	{
+		if (x == warm8.P1_x&&y == warm8.P1_y)
+		{
+			Gx = warm8.P2_x + dx[rotate];
+			Gy = warm8.P2_y + dy[rotate];
+		}
+		else
+		{
+			Gx = warm8.P1_x + dx[rotate];
+			Gy = warm8.P1_y + dy[rotate];
+		}
+		if (Gx >= 0 && Gx < N&&Gy >= 0 && Gy < N)
+			dfs(Gx, Gy, rotate, score);
+		else
+		{
+			if (rotate == 0)
+			{
+				rotate = 1;
+			}
+			else if (rotate == 1)
+			{
+				rotate = 0;
+			}
+			else if (rotate == 2)
+			{
+				rotate = 3;
+			}
+			else
+			{
+				rotate = 2;
+			}
+
+			Gx = x + dx[rotate];
+			Gy = y + dy[rotate];
+			dfs(Gx, Gy, rotate, score + 1);
+		}
+
+	}
+	else if (arr[x][y] == 9)
+	{
+		if (x == warm9.P1_x&&y == warm9.P1_y)
+		{
+			Gx = warm9.P2_x + dx[rotate];
+			Gy = warm9.P2_y + dy[rotate];
+		}
+		else
+		{
+			Gx = warm9.P1_x + dx[rotate];
+			Gy = warm9.P1_y + dy[rotate];
+		}
+		if (Gx >= 0 && Gx < N&&Gy >= 0 && Gy < N)
+			dfs(Gx, Gy, rotate, score);
+		else
+		{
+			if (rotate == 0)
+			{
+				rotate = 1;
+			}
+			else if (rotate == 1)
+			{
+				rotate = 0;
+			}
+			else if (rotate == 2)
+			{
+				rotate = 3;
+			}
+			else
+			{
+				rotate = 2;
+			}
+
+			Gx = x + dx[rotate];
+			Gy = y + dy[rotate];
+			dfs(Gx, Gy, rotate, score + 1);
+		}
+
+	}
+	else if (arr[x][y] == 10)
+	{
+		if (x == warm10.P1_x&&y == warm10.P1_y)
+		{
+			Gx = warm10.P2_x + dx[rotate];
+			Gy = warm10.P2_y + dy[rotate];
+		}
+		else
+		{
+			Gx = warm10.P1_x + dx[rotate];
+			Gy = warm10.P1_y + dy[rotate];
+		}
+		if (Gx >= 0 && Gx < N&&Gy >= 0 && Gy < N)
+			dfs(Gx, Gy, rotate, score);
+		else
+		{
+			if (rotate == 0)
+			{
+				rotate = 1;
+			}
+			else if (rotate == 1)
+			{
+				rotate = 0;
+			}
+			else if (rotate == 2)
+			{
+				rotate = 3;
+			}
+			else
+			{
+				rotate = 2;
+			}
+
+			Gx = x + dx[rotate];
+			Gy = y + dy[rotate];
+			dfs(Gx, Gy, rotate, score + 1);
+		}
+
+	}
+	else if (arr[x][y] == -1)
+	{
+		if (ret < score)
+			ret = score;
+
+		return;
+	}
+}
+
+int main()
+{
+	ios::sync_with_stdio(false);
+	int Testcase, countT;
+	cin >> Testcase;
+	countT = 1;
+	while (Testcase != 0)
+	{
+		ret = 0;
+		warm6.pair = false;
+		warm7.pair = false;
+		warm8.pair = false;
+		warm9.pair = false;
+		warm10.pair = false;
+
+		cin >> N;
+
+		for (int i = 0; i < N; i++)
+		{
+			for (int j = 0; j < N; j++)
+			{
+				cin >> arr[i][j];
+				if (arr[i][j] == 6)
+				{
+					if (!warm6.pair)
+					{
+						warm6.P1_x = i;
+						warm6.P1_y = j;
+						warm6.pair = true;
+					}
+					else
+					{
+						warm6.P2_x = i;
+						warm6.P2_y = j;
+					}
+				}
+				else if (arr[i][j] == 7)
+				{
+					if (!warm7.pair)
+					{
+						warm7.P1_x = i;
+						warm7.P1_y = j;
+						warm7.pair = true;
+					}
+					else
+					{
+						warm7.P2_x = i;
+						warm7.P2_y = j;
+					}
+
+				}
+				else if (arr[i][j] == 8)
+				{
+					if (!warm8.pair)
+					{
+						warm8.P1_x = i;
+						warm8.P1_y = j;
+						warm8.pair = true;
+					}
+					else
+					{
+						warm8.P2_x = i;
+						warm8.P2_y = j;
+					}
+				}
+				else if (arr[i][j] == 9)
+				{
+					if (!warm9.pair)
+					{
+						warm9.P1_x = i;
+						warm9.P1_y = j;
+						warm9.pair = true;
+					}
+					else
+					{
+						warm9.P2_x = i;
+						warm9.P2_y = j;
+					}
+				}
+				else if (arr[i][j] == 10)
+				{
+					if (!warm10.pair)
+					{
+						warm10.P1_x = i;
+						warm10.P1_y = j;
+						warm10.pair = true;
+					}
+					else
+					{
+						warm10.P2_x = i;
+						warm10.P2_y = j;
+					}
+				}
+			}
+		}
+		
+		for (int i = 0; i < N; i++)
+		{
+			for (int j = 0; j < N; j++)
+			{
+				if (arr[i][j] == 0)
+				{
+					startX = i;
+					startY = j;
+
+					start = true;
+					dfs(i, j, 0, 0);
+
+					start = true;
+					dfs(i, j, 1, 0);
+
+					start = true;
+					dfs(i, j, 2, 0);
+
+					start = true;
+					dfs(i, j, 3, 0);
+
+				}
+			}
+		}
+
+		cout <<"#"<<countT++<<" "<< ret << endl;
+		Testcase--;
+	}
+	
+	return 0;
+}
+

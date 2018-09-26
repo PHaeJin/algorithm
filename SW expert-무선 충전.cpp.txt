@@ -1,0 +1,196 @@
+#include <iostream>
+#include <queue>
+#include <algorithm>
+
+using namespace std;
+
+struct my_Struct {
+	int A_x,A_y,B_x,B_y;
+	int depth;
+};
+
+struct my_Bc
+{
+	bool Range[11][11];
+	int Bc_x,Bc_y;
+	int C,P;
+};
+int main()
+{
+	int Testcase, countT;
+	countT = 1;
+	cin >> Testcase;
+	while (Testcase!=0)
+	{
+		int M, A;
+
+		my_Struct ms;
+
+		my_Bc BC[11];
+		ms.A_x = 1;
+		ms.A_y = 1;
+		ms.B_x = 10;
+		ms.B_y = 10;
+		ms.depth = 0;
+
+		queue<my_Struct> q;
+		q.push(ms);
+
+		vector<int> A_move;
+		vector<int> B_move;
+
+		cin >> M >> A;
+
+		for (int i = 0; i < M; i++)
+		{
+			int num;
+			cin >> num;
+			A_move.push_back(num);
+		}
+		for (int i = 0; i < M; i++)
+		{
+			int num;
+			cin >> num;
+			B_move.push_back(num);
+		}
+
+		for (int i = 0; i < A; i++)
+		{
+			cin >> BC[i].Bc_x >> BC[i].Bc_y >> BC[i].C >> BC[i].P;
+			for (int s = 1; s < 11; s++)
+			{
+				for (int t = 1; t < 11; t++)
+				{
+					if (abs(s - BC[i].Bc_x) + abs(t - BC[i].Bc_y) <= BC[i].C)
+						BC[i].Range[s][t] = true;
+					else
+						BC[i].Range[s][t] = false;
+				}
+			}
+		}
+
+		int ret = 0;
+
+		while (!q.empty())
+		{
+			ms = q.front();
+			q.pop();
+
+			vector<int> A_ok;
+			vector<int> B_ok;
+
+			for (int i = 0; i < A; i++)
+			{
+				if (BC[i].Range[ms.A_x][ms.A_y])
+					A_ok.push_back(i);
+			}
+
+			for (int i = 0; i < A; i++)
+			{
+				if (BC[i].Range[ms.B_x][ms.B_y])
+					B_ok.push_back(i);
+			}
+
+			int size_A = A_ok.size();
+			int size_B = B_ok.size();
+
+			int ex_ret = 0;
+
+			if (size_A >= 1 && size_B == 0)
+			{
+				for (int i = 0; i < size_A; i++)
+				{
+					if (ex_ret < BC[A_ok[i]].P)
+						ex_ret = BC[A_ok[i]].P;
+				}
+			}
+			else if (size_B >= 1 && size_A == 0)
+			{
+				for (int i = 0; i < size_B; i++)
+				{
+					if (ex_ret < BC[B_ok[i]].P)
+						ex_ret = BC[B_ok[i]].P;
+				}
+			}
+			else if (size_A >= 1 && size_B >= 1)
+			{
+				for (int i = 0; i < size_A; i++)
+				{
+					for (int j = 0; j < size_B; j++)
+					{
+						if (A_ok[i] == B_ok[j])
+						{
+							if (ex_ret < BC[A_ok[i]].P)
+								ex_ret = BC[A_ok[i]].P;
+						}
+						else
+						{
+							if (ex_ret < BC[A_ok[i]].P + BC[B_ok[j]].P)
+								ex_ret = BC[A_ok[i]].P + BC[B_ok[j]].P;
+						}
+					}
+				}
+			}
+			else
+			{
+				;
+			}
+
+			ret += ex_ret;
+
+			if (ms.depth == M)
+			{
+				break;
+			}
+			if (A_move[ms.depth] == 0)
+			{
+				;
+			}
+			else if (A_move[ms.depth] == 1)
+			{
+				ms.A_y--;
+			}
+			else if (A_move[ms.depth] == 2)
+			{
+				ms.A_x++;
+			}
+			else if (A_move[ms.depth] == 3)
+			{
+				ms.A_y++;
+			}
+			else if (A_move[ms.depth] == 4)
+			{
+				ms.A_x--;
+			}
+
+			if (B_move[ms.depth] == 0)
+			{
+				;
+			}
+			else if (B_move[ms.depth] == 1)
+			{
+				ms.B_y--;
+			}
+			else if (B_move[ms.depth] == 2)
+			{
+				ms.B_x++;
+			}
+			else if (B_move[ms.depth] == 3)
+			{
+				ms.B_y++;
+			}
+			else if (B_move[ms.depth] == 4)
+			{
+				ms.B_x--;
+			}
+			ms.depth++;
+			q.push(ms);
+		}
+
+		cout <<"#"<<countT++<<" "<< ret << endl;
+		Testcase--;
+	}
+	
+    return 0;
+}
+

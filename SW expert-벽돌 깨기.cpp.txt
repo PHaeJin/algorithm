@@ -1,0 +1,141 @@
+#include <iostream>
+#include<map>
+#include<vector>
+#include<algorithm>
+#include<queue>
+
+using namespace std;
+int N, W, H;
+struct my_struct {	
+	vector<vector<int>> arr;
+	int depth = 0;
+};
+int dx[4] = { -1,1,0,0 };
+int dy[4] = { 0,0,-1,1 };
+
+void Simulate(int x, int y,my_struct* ms)
+{
+	int size = ms->arr[x][y];
+	ms->arr[x][y] = 0;
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 1; j < size; j++)
+		{
+			int gx = x + dx[i]*j;
+			int gy = y + dy[i]*j;
+			if (gx >= 0 && gx < H&&gy >= 0 && gy < W)
+			{
+				Simulate(gx, gy, ms);
+			}
+		}		
+	}	
+}
+
+int main()
+{
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	int TestCase, countT;
+	countT = 1;
+	cin >> TestCase;
+	
+	while (TestCase != 0)
+	{
+		my_struct ms;
+
+		cin >> N >> W >> H;
+
+		for (int i = 0; i < H; i++)
+		{
+			vector<int> v;
+			for (int j = 0; j < W; j++)
+			{
+				int num;
+				cin >> num;
+				v.push_back(num);
+			}
+			ms.arr.push_back(v);
+		}
+		ms.depth = 0;
+
+		queue<my_struct> q;
+		q.push(ms);
+		int ret = numeric_limits<int>::max();
+	
+		while (!q.empty())
+		{
+			ms = q.front();
+			int depth = ms.depth;
+			q.pop();
+
+			if (depth == N)
+			{
+				int num = 0;
+				for (int i = 0; i < H; i++)
+				{
+					for (int j = 0; j < W; j++)
+					{
+						if (ms.arr[i][j] != 0)
+							num++;
+					}
+				}
+				if (ret > num)
+					ret = num;
+				continue;
+			}
+
+
+			for (int i = 0; i < W; i++)
+			{
+				my_struct ex_ms = ms;
+
+				for (int j = 0; j < H; j++)
+				{
+					if (ex_ms.arr[j][i] != 0)
+					{
+						Simulate(j, i, &ex_ms);
+
+						for (int s = 0; s < W; s++)
+						{
+							for (int t = H - 1; t >= 0; t--)
+							{
+								if (ex_ms.arr[t][s] == 0)
+								{
+									for (int k = t - 1; k >= 0; k--)
+									{
+										if (ex_ms.arr[k][s] != 0)
+										{
+											ex_ms.arr[t][s] = ex_ms.arr[k][s];
+											ex_ms.arr[k][s] = 0;
+											break;
+										}
+									}
+								}
+							}
+						}
+
+							ex_ms.depth = depth + 1;
+							q.push(ex_ms);
+						
+						break;
+					}
+				}
+				
+			}
+
+		}
+
+		if (ret == numeric_limits<int>::max())
+		{
+			ret = 0;
+		}
+
+		cout <<"#"<<countT++ <<" "<<ret<< endl;
+
+		TestCase--;
+
+	}
+	
+    return 0;
+}
+
