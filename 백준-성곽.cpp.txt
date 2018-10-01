@@ -1,0 +1,233 @@
+#include <iostream>
+#include<vector>
+#include<queue>
+#include<utility>
+using namespace std;
+
+int arr[51][51];
+bool visit[51][51];
+int dx[4] = { -1,1,0,0 };
+int dy[4] = { 0,0,-1,1 };
+int ret = 0;
+int big_room = 0;
+int N, M;
+int ex_room;
+int Wbig_room = 0;
+
+void simulate(int x, int y)
+{
+	visit[x][y] = true;
+	ex_room++;
+	
+	for (int s = 0; s < 4; s++)
+	{
+			int Gx = x + dx[s];
+			int Gy = y + dy[s];
+			if (Gx >= 0 && Gx<N&&Gy >= 0 && Gy<M && !visit[Gx][Gy])
+			{
+				if (s == 0)
+				{
+					if ((arr[x][y] & (1 << 1)) == 0)
+					{
+						simulate(Gx, Gy);
+					}
+				}
+				else if (s == 1)
+				{
+					if ((arr[x][y] & (1 << 3)) == 0)
+					{
+						simulate(Gx, Gy);
+					}
+				}
+				else if (s == 2)
+				{
+					if ((arr[x][y] & (1 << 0)) == 0)
+					{
+						simulate(Gx, Gy);
+					}
+				}
+				else
+				{
+					if ((arr[x][y] & (1 << 2)) == 0)
+					{
+						simulate(Gx, Gy);
+					}
+				}
+			}
+	}
+
+}
+
+int main() {
+
+	cin >> M >> N;
+
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < M; j++)
+		{
+			cin >> arr[i][j];
+			visit[i][j] = false;
+		}
+	}
+
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < M; j++)
+		{
+			if (!visit[i][j])
+			{
+				ex_room = 0;
+				ret++;
+				simulate(i, j);
+				if (big_room < ex_room)
+					big_room = ex_room;
+			}
+		}
+	}
+	
+	cout << ret << endl;
+	cout << big_room << endl;
+	
+	
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < M; j++)
+		{
+			for (int s = 0; s < 4; s++)
+			{
+				if ((arr[i][j] & (1 << s)) != 0)
+				{
+					if (s == 0)
+					{
+						if (j - 1 >= 0)
+						{
+							arr[i][j] &= ~(1 << s);
+							arr[i][j - 1] &= ~(1 << 2);
+							for (int t = 0; t < N; t++)
+							{
+								for (int k = 0; k < M; k++)
+								{
+									visit[t][k] = false;
+								}
+							}
+							for (int t = 0; t < N; t++)
+							{
+								for (int k = 0; k < M; k++)
+								{
+									if (!visit[t][k])
+									{
+										ex_room = 0;										
+										simulate(t, k);
+										if (Wbig_room < ex_room)
+											Wbig_room = ex_room;
+									}
+								}
+							}
+							arr[i][j] |= (1 << s);
+							arr[i][j - 1] |= (1 << 2);
+						}
+					}
+					else if (s == 1)
+					{
+						if (i - 1 >= 0)
+						{
+							arr[i][j] &= ~(1 << s);
+							arr[i-1][j] &= ~(1 << 3);
+							for (int t = 0; t < N; t++)
+							{
+								for (int k = 0; k < M; k++)
+								{
+									visit[t][k] = false;
+								}
+							}
+							for (int t = 0; t < N; t++)
+							{
+								for (int k = 0; k < M; k++)
+								{
+									if (!visit[t][k])
+									{
+										ex_room = 0;
+										simulate(t, k);
+										if (Wbig_room < ex_room)
+											Wbig_room = ex_room;
+									}
+								}
+							}
+							arr[i][j] |= (1 << s);
+							arr[i-1][j] |= (1 << 3);
+						}
+					}
+					else if (s == 2)
+					{
+						if (j + 1 < M)
+						{
+							arr[i][j] &= ~(1 << s);
+							arr[i][j+1] &= ~(1 << 0);
+							for (int t = 0; t < N; t++)
+							{
+								for (int k = 0; k < M; k++)
+								{
+									visit[t][k] = false;
+								}
+							}
+							for (int t = 0; t < N; t++)
+							{
+								for (int k = 0; k < M; k++)
+								{
+									if (!visit[t][k])
+									{
+										ex_room = 0;
+										simulate(t, k);
+										if (Wbig_room < ex_room)
+											Wbig_room = ex_room;
+									}
+								}
+							}
+							arr[i][j] |= (1 << s);
+							arr[i][j+1] |= (1 << 0);
+						}
+
+					}
+					else
+					{
+						if (i + 1 < N)
+						{
+							arr[i][j] &= ~(1 << s);
+							arr[i+1][j] &= ~(1 << 1);
+							for (int t = 0; t < N; t++)
+							{
+								for (int k = 0; k < M; k++)
+								{
+									visit[t][k] = false;
+								}
+							}
+							for (int t = 0; t < N; t++)
+							{
+								for (int k = 0; k < M; k++)
+								{
+									if (!visit[t][k])
+									{
+										ex_room = 0;
+										simulate(t, k);
+										if (Wbig_room < ex_room)
+											Wbig_room = ex_room;
+									}
+								}
+							}
+							arr[i][j] |= (1 << s);
+							arr[i+1][j] |= (1 << 1);
+						}
+					}
+				
+				
+				
+				}
+			}
+		}
+	}
+
+	cout << Wbig_room << endl;
+
+	return 0;
+}
