@@ -1,0 +1,106 @@
+#include <iostream>
+#include<vector>
+#include<queue>
+#include<string>
+using namespace std;
+
+char arr[5][9];
+char sol[12];
+bool check[12];
+bool alpha[12];
+bool end_check = false;
+void dfs(int index)
+{
+	if (end_check)
+		return;
+
+	if (index == 12)
+	{
+	
+		if ((sol[0] - 'A') + (sol[2] - 'A') + (sol[5] - 'A') + (sol[7] - 'A') + 4 != 26)
+			return;
+		if ((sol[7] - 'A') + (sol[8] - 'A') + (sol[9] - 'A') + (sol[10] - 'A') + 4 != 26)
+			return;
+		if ((sol[10] - 'A') + (sol[6] - 'A') + (sol[3] - 'A') + (sol[0] - 'A') + 4 != 26)
+			return;
+		if ((sol[1] - 'A') + (sol[5] - 'A') + (sol[8] - 'A') + (sol[11] - 'A') + 4 != 26)
+			return;
+		if ((sol[11] - 'A') + (sol[9] - 'A') + (sol[6] - 'A') + (sol[4] - 'A') + 4 != 26)
+			return;
+		if ((sol[4] - 'A') + (sol[3] - 'A') + (sol[2] - 'A') + (sol[1] - 'A') + 4 != 26)
+			return;
+
+		end_check = true;
+		int index = 0;
+		for (int i = 0; i <5; i++)
+		{
+			for (int j = 0; j < 9; j++)
+			{
+				if (arr[i][j] != '.')
+					arr[i][j] = sol[index++];
+			}
+		}
+
+		for (int i = 0; i <5; i++)
+		{
+			for (int j = 0; j < 9; j++)
+			{
+				cout << arr[i][j];
+			}
+			cout << endl;
+		}
+		return;
+	}
+	else
+	{
+		if (!check[index])
+		{
+			for (int i = 0; i < 12; i++)
+			{
+				if (!alpha[i])
+				{
+					sol[index] = i + 'A';
+					alpha[i] = true;
+					dfs(index + 1);
+					alpha[i] = false;
+				}
+			}
+		}
+		else
+		dfs(index + 1);		
+	}
+}
+
+int main() 
+{
+	int index = 0;
+	
+	for (int i = 0; i < 12; i++)
+	{
+		alpha[i] = false;
+	}
+
+	for (int i = 0; i <5; i++)
+	{
+		for (int j = 0; j < 9; j++)
+		{
+			cin >> arr[i][j];
+			if (arr[i][j] !='.')
+			{
+				if (arr[i][j] != 'x')
+				{
+					check[index] = true;
+					alpha[arr[i][j] - 'A'] = true;
+				}
+				else
+				{
+					check[index] = false;
+				}
+				sol[index++] = arr[i][j];
+			}
+		}
+	}
+	dfs(0);
+
+	return 0;
+}

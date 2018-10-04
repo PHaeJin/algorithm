@@ -1,0 +1,164 @@
+#include <iostream>
+#include<vector>
+
+using namespace std;
+int arr[11][11];
+int N;
+int ret = 0;
+int dx[4] = { -1,-1,1,1 };
+int dy[4] = { -1,1,-1,1 };
+
+bool promising(int x,int y)
+{
+	int Gx = x;
+	int Gy = y;
+	while(true)
+	{	
+		Gx += dx[0];
+		Gy += dy[0];
+		if (Gx >= 0 && Gx < N&&Gy >= 0 && Gy < N)
+		{
+			if (arr[Gx][Gy] == 2)
+				return false;
+		}
+		else
+			break;
+	}
+	
+	Gx = x;
+	Gy = y;
+	while (true)
+	{
+		Gx += dx[1];
+		Gy += dy[1];
+		if (Gx >= 0 && Gx < N&&Gy >= 0 && Gy < N)
+		{
+			if (arr[Gx][Gy] == 2)
+				return false;
+		}
+		else
+			break;
+	}
+	Gx = x;
+	Gy = y;
+	while (true)
+	{
+		Gx += dx[2];
+		Gy += dy[2];
+		if (Gx >= 0 && Gx < N&&Gy >= 0 && Gy < N)
+		{
+			if (arr[Gx][Gy] == 2)
+				return false;
+		}
+		else
+			break;
+	}
+	Gx = x;
+	Gy = y;
+	while (true)
+	{
+		Gx += dx[3];
+		Gy += dy[3];
+		if (Gx >= 0 && Gx < N&&Gy >= 0 && Gy < N)
+		{
+			if (arr[Gx][Gy] == 2)
+				return false;
+		}
+		else
+			break;
+	}
+	
+	return true;
+}
+
+void dfs_first(int x,int y,int depth,int rotate)
+{
+	if (x==N)
+	{
+		if (depth > ret)
+			ret = depth;
+		return;
+	}
+	
+	if (arr[x][y] == 0)
+	{
+		if (rotate == 1)
+		{
+			if (y + 2 <= N - 1)
+				dfs_first(x, y+2, depth, rotate);
+			else
+				dfs_first(x+1, 0, depth, -rotate);
+		}
+		else if (rotate == -1)
+		{
+			if (y + 2 <= N - 1)
+				dfs_first(x, y + 2, depth, rotate);
+			else
+				dfs_first(x + 1, 1, depth, -rotate);
+		}
+	}
+	else if (arr[x][y] == 1)
+	{
+		arr[x][y] = 2;
+
+		if (promising(x, y))
+		{
+			if (rotate == 1)
+			{
+				if (y + 2 <= N - 1)
+					dfs_first(x, y + 2, depth+1, rotate);
+				else
+					dfs_first(x + 1, 0, depth+1, -rotate);
+			}
+			else if (rotate == -1)
+			{
+				if (y + 2 <= N - 1)
+					dfs_first(x, y + 2, depth+1, rotate);
+				else
+					dfs_first(x + 1, 1, depth+1, -rotate);
+			}
+		}
+			
+		arr[x][y] = 1;
+
+		if (rotate == 1)
+		{
+			if (y + 2 <= N - 1)
+				dfs_first(x, y + 2, depth, rotate);
+			else
+				dfs_first(x + 1, 0, depth, -rotate);
+		}
+		else if (rotate == -1)
+		{
+			if (y + 2 <= N - 1)
+				dfs_first(x, y + 2, depth, rotate);
+			else
+				dfs_first(x + 1, 1, depth, -rotate);
+		}
+	
+	}
+}
+int main() 
+{
+	cin >> N;
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			cin >> arr[i][j];
+		}
+	}
+
+	int sol;
+	
+	dfs_first(0,0,0,-1);
+	sol = ret;
+	ret = 0;
+
+	dfs_first(0,1,0,1);
+	sol += ret;
+
+	cout << sol << endl;
+	
+	return 0;
+}
