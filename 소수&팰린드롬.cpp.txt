@@ -1,0 +1,53 @@
+#include <iostream>
+#include<stack>
+#include<string>
+#include<algorithm>
+#include<cmath>
+using namespace std;
+bool Sosu[1005001];
+
+int main() 
+{
+	Sosu[1] = false;
+
+	for (int i = 2; i < 1005001; i++)
+	{
+		Sosu[i] = true;
+	}
+	
+	int size = sqrt(1005000);
+	for (int i = 2; i <= size; i++)
+	{
+		if (!Sosu[i])
+			continue;
+
+		for (int j = i * i; j < 1005001; j += i)
+		{
+			Sosu[j] = false;
+		}
+	}
+
+	int N;
+	cin >> N;
+	
+	for (int i = N; i < 1005001; i++)
+	{
+		if (Sosu[i])
+		{
+			string s = to_string(i);
+			int size = s.size();
+			bool Pal = true;
+			for (int j = 0; j < size / 2; j++)
+			{
+				if (s[j] != s[size - 1 - j])
+					Pal = false;
+			}
+			if (Pal)
+			{
+				cout << i << endl;
+				break;
+			}
+		}
+	}
+	return 0;
+}

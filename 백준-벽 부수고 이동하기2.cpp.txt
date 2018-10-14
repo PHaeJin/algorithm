@@ -1,0 +1,109 @@
+#include <iostream>
+#include<stack>
+#include<string>
+#include<algorithm>
+#include<queue>
+#include<functional>
+#include<cstdio>
+using namespace std;
+
+int arr[1001][1001];
+int visit[1001][1001][11];
+int dx[4] = { -1,1,0,0 };
+int dy[4] = { 0,0,-1,1 };
+
+struct People {
+	int x, y, depth, crash;
+};
+int K;
+int N,M;
+
+int main() 
+{
+	for (int i = 0; i < 1001; i++)
+	{
+		for (int j = 0; j < 1001; j++)
+		{			
+			for (int t = 0; t < 11; t++)
+			{
+				visit[i][j][t] = false;
+			}
+		}
+	}
+
+	cin >> N >> M>>K;
+
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < M; j++)
+		{
+			int num;
+			scanf_s("%1d", &num);
+			arr[i][j] = num;
+		}
+	}
+
+	People p;
+	p.x = 0;
+	p.y = 0;
+	p.depth = 1;
+	p.crash = 0;
+	
+	queue<People> q;
+	q.push(p);
+
+	visit[0][0][0] = true;
+
+	bool game_end = false;
+
+	while (!q.empty())
+	{
+		p = q.front();
+		q.pop();
+
+		int x = p.x;
+		int y = p.y;
+		int depth = p.depth;
+		int crash = p.crash;
+
+		if (x == N - 1 && y == M - 1)
+		{
+			game_end = true;
+			cout << depth << endl;
+			break;
+		}
+
+		for (int i = 0; i < 4; i++)
+		{
+			int Gx = x + dx[i];
+			int Gy = y + dy[i];
+			if (Gx >= 0 && Gx < N&&Gy >= 0 && Gy < M&&arr[Gx][Gy] != 1 && !visit[Gx][Gy][crash])
+			{
+				visit[Gx][Gy][crash] = true;
+				p.x = Gx;
+				p.y = Gy;
+				p.depth = depth+1;
+				p.crash = crash;
+				q.push(p);
+			}
+		}
+		for (int i = 0; i < 4; i++)
+		{
+			int Gx = x + dx[i];
+			int Gy = y + dy[i];
+			if (Gx >= 0 && Gx < N&&Gy >= 0 && Gy < M&&arr[Gx][Gy] == 1&& crash<K && !visit[Gx][Gy][crash+1])
+			{
+				visit[Gx][Gy][crash +1] = true;
+				p.x = Gx;
+				p.y = Gy;
+				p.depth = depth + 1;
+				p.crash = crash +1;
+				q.push(p);
+			}
+		}
+	}
+
+	if (!game_end)
+		cout << "-1" << endl;
+	return 0;
+}

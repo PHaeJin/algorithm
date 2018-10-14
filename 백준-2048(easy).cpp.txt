@@ -1,377 +1,242 @@
-// ConsoleApplication3.cpp: 콘솔 응용 프로그램의 진입점을 정의합니다.
-//
-#include<iostream>
-#include<string.h>
+#include <iostream>
 #include<string>
+#include<vector>
 #include<queue>
-#include<utility>
-
 using namespace std;
+int N;
 
-int arr[21][21];
-int ex_arr[21][21];
-bool connect[21][21];
-int result = 0;
-int main()
+struct my_struct
 {
-	ios::sync_with_stdio(false);
-	int N;
+	int arr[21][21];
+	int depth;
+};
+
+int main() 
+{
 	cin >> N;
+	my_struct ms;
 
 	for (int i = 0; i < N; i++)
 	{
 		for (int j = 0; j < N; j++)
 		{
-			cin >> arr[i][j];
+			cin>>ms.arr[i][j];
 		}
 	}
+	ms.depth = 0;
 	
-	int size = N * N;
-
-	queue<int> q;
-
-	for (int i = 0; i < N; i++)
-	{
-		for (int j = 0; j < N; j++)
-		{
-			q.push(arr[i][j]);
-		}
-	}
-
-	int rotate = 0;
+	queue<my_struct> q;
+	
+	q.push(ms);
+	int ret = 0;
 	while (!q.empty())
 	{
-		rotate++;
-		int cnt = q.size() / size;
-		while (cnt > 0)
+		ms = q.front();
+		q.pop();
+		
+		int depth = ms.depth;
+
+		if (depth == 5)
 		{
 			for (int i = 0; i < N; i++)
 			{
 				for (int j = 0; j < N; j++)
 				{
-					arr[i][j] = q.front();
-					q.pop();
-					ex_arr[i][j] = arr[i][j];
-				}
-			}//배열 복구
-
-			for (int i = 0; i < N; i++)
-			{
-				for (int j = 0; j < N; j++)
-				{
-					connect[i][j] = false;
+					if (ms.arr[i][j] > ret)
+						ret = ms.arr[i][j];
 				}
 			}
-
-
-			for (int i = 0; i < N; i++)
-			{
-				for (int j = 0; j < N; j++)
-				{
-					int kt = j;
-					bool combine = true;
-					if (arr[i][j] == 0)
-						continue;
-					while (j - 1 >= 0&&combine)
-					{
-
-						if (arr[i][j - 1] == 0)
-						{
-							arr[i][j - 1] = arr[i][j];
-							arr[i][j] = 0;
-						}
-						else
-						{
-							if (arr[i][j - 1] == arr[i][j] && connect[i][j - 1] == false)
-							{
-								arr[i][j - 1] = 2 * arr[i][j - 1];
-								arr[i][j] = 0;
-								connect[i][j - 1] = true;
-								combine = false;
-							}
-							else
-							{
-								if (connect[i][j - 1] == true)
-									combine = false;
-							}
-						}
-						j--;
-					}
-					j = kt;
-				}
-			}
-			for (int i = 0; i < N; i++)
-			{
-				for (int j = 0; j < N; j++)
-				{
-					q.push(arr[i][j]);
-				}
-			}
-			
-			if (rotate == 5)
-			{
-				for (int i = 0; i < N; i++)
-				{
-					for (int j = 0; j < N; j++)
-					{
-						if (arr[i][j] > result)
-							result = arr[i][j];
-					}
-				}
-			}
-			
-			for (int i = 0; i < N; i++)
-			{
-				for (int j = 0; j < N; j++)
-				{
-					arr[i][j] = ex_arr[i][j];
-				}
-			}
-			for (int i = 0; i < N; i++)
-			{
-				for (int j = 0; j < N; j++)
-				{
-					connect[i][j] = false;
-				}
-			}
-
-			//왼쪽끝----------------------다시 초기화
-
-			for (int i = 0; i < N; i++)
-			{
-				for (int j = N - 1; j >= 0; j--)
-				{
-					bool combine = true;
-					int kt = j;
-					if (arr[i][j] == 0)
-						continue;
-					while (j + 1 < N&&combine)
-					{
-
-						if (arr[i][j + 1] == 0)
-						{
-							arr[i][j + 1] = arr[i][j];
-							arr[i][j] = 0;
-						}
-						else
-						{
-							if (arr[i][j + 1] == arr[i][j] && connect[i][j + 1] == false)
-							{
-								arr[i][j + 1] = 2 * arr[i][j + 1];
-								arr[i][j] = 0;
-								connect[i][j + 1] = true;
-								combine = false;
-							}
-							else
-							{
-								if (connect[i][j + 1] == true)
-									combine = false;
-							}
-						}
-						j++;
-					}
-					j = kt;
-				}
-			}
-
-			for (int i = 0; i < N; i++)
-			{
-				for (int j = 0; j < N; j++)
-				{
-					q.push(arr[i][j]);
-				}
-			}
-			if (rotate == 5)
-			{
-				for (int i = 0; i < N; i++)
-				{
-					for (int j = 0; j < N; j++)
-					{
-						if (arr[i][j] > result)
-							result = arr[i][j];
-					}
-				}
-			}
-
-
-			for (int i = 0; i < N; i++)
-			{
-				for (int j = 0; j < N; j++)
-				{
-					arr[i][j] = ex_arr[i][j];
-				}
-			}
-			for (int i = 0; i < N; i++)
-			{
-				for (int j = 0; j < N; j++)
-				{
-					connect[i][j] = false;
-				}
-			}
-
-			//오른쪽끝----------------------다시 초기화
-
-			for (int j = 0; j < N; j++)
-			{
-				for (int i = 0; i< N; i++)
-				{
-					bool combine = true;
-					int kt = i;
-					if (arr[i][j] == 0)
-						continue;
-					while (i - 1 >= 0&&combine)
-					{
-
-						if (arr[i - 1][j] == 0)
-						{
-							arr[i - 1][j] = arr[i][j];
-							arr[i][j] = 0;
-						}
-						else
-						{
-							if (arr[i - 1][j] == arr[i][j] && connect[i - 1][j] == false)
-							{
-								arr[i - 1][j] = 2 * arr[i - 1][j];
-								arr[i][j] = 0;
-								connect[i - 1][j] = true;
-								combine = false;
-							}
-							else
-							{
-								if (connect[i-1][j] == true)
-									combine = false;
-							}
-						}
-						i--;
-					}
-					i = kt;
-				}
-			}
-
-			for (int i = 0; i < N; i++)
-			{
-				for (int j = 0; j < N; j++)
-				{
-					q.push(arr[i][j]);
-				}
-			}
-			if (rotate == 5)
-			{
-				for (int i = 0; i < N; i++)
-				{
-					for (int j = 0; j < N; j++)
-					{
-						if (arr[i][j] > result)
-							result = arr[i][j];
-					}
-				}
-			}
-
-			for (int i = 0; i < N; i++)
-			{
-				for (int j = 0; j < N; j++)
-				{
-					arr[i][j] = ex_arr[i][j];
-				}
-			}
-			for (int i = 0; i < N; i++)
-			{
-				for (int j = 0; j < N; j++)
-				{
-					connect[i][j] = false;
-				}
-			}
-
-			//위쪽끝----------------------다시 초기화
-
-			for (int j = 0; j < N; j++)
-			{
-				for (int i = N - 1; i >= 0; i--)
-				{
-					bool combine = true;
-					int kt = i;
-					if (arr[i][j] == 0)
-						continue;
-					while (i + 1 < N&&combine)
-					{
-
-						if (arr[i + 1][j] == 0)
-						{
-							arr[i + 1][j] = arr[i][j];
-							arr[i][j] = 0;
-						}
-						else
-						{
-							if (arr[i + 1][j] == arr[i][j] && connect[i + 1][j] == false)
-							{
-								arr[i + 1][j] = 2 * arr[i + 1][j];
-								arr[i][j] = 0;
-								connect[i + 1][j] = true;
-								combine = false;
-							}
-							else
-							{
-								if (connect[i+1][j] == true)
-									combine = false;
-							}
-						}
-						i++;
-					}
-					i = kt;
-				}
-			}
-			for (int i = 0; i < N; i++)
-			{
-				for (int j = 0; j < N; j++)
-				{
-					q.push(arr[i][j]);
-				}
-			}
-			
-			if (rotate == 5)
-			{
-				for (int i = 0; i < N; i++)
-				{
-					for (int j = 0; j < N; j++)
-					{
-						if (arr[i][j] > result)
-							result = arr[i][j];
-					}
-				}
-			}
-
-
-
-			for (int i = 0; i < N; i++)
-			{
-				for (int j = 0; j < N; j++)
-				{
-					arr[i][j] = ex_arr[i][j];
-				}
-			}
-			for (int i = 0; i < N; i++)
-			{
-				for (int j = 0; j < N; j++)
-				{
-					connect[i][j] = false;
-				}
-			}
-
-
-			
-			cnt--;
+			continue;
 		}
-		if (rotate == 5)
-			break;
-		
 
+		int arr[21][21];
+		bool check[21][21];
+
+		for (int i = 0; i < N; i++)
+		{
+			for (int j = 0; j < N; j++)
+			{
+				arr[i][j] = ms.arr[i][j];
+				check[i][j] = false;
+			}
+		}
+
+
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			if (ms.arr[i][j] == 0)
+				continue;
+			else
+			{
+				int index = j;
+				
+				while (index - 1 >= 0 && ms.arr[i][index-1]==0)
+				{
+					index--;
+				}
+				if (index != j)
+				{
+					ms.arr[i][index] = ms.arr[i][j];
+					ms.arr[i][j] = 0;
+				}
+
+				if (index - 1 >= 0 && ms.arr[i][index - 1] == ms.arr[i][index])
+				{
+					if (!check[i][index - 1])
+					{
+						check[i][index - 1] = true;
+						ms.arr[i][index - 1] *= 2;
+						ms.arr[i][index] = 0;
+					}
+				}
+			}
+		}
 	}
+	ms.depth = depth + 1;
+	q.push(ms);	
+	//left
+
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			ms.arr[i][j] = arr[i][j];
+			check[i][j] = false;
+		}
+	}
+
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = N-1; j >=0; j--)
+		{
+			if (ms.arr[i][j] == 0)
+				continue;
+			else
+			{
+				int index = j;
+
+				while (index + 1 <N && ms.arr[i][index + 1] == 0)
+				{
+					index++;
+				}
+				if (index != j)
+				{
+					ms.arr[i][index] = ms.arr[i][j];
+					ms.arr[i][j] = 0;
+				}
+
+				if (index + 1 <N  && ms.arr[i][index + 1] == ms.arr[i][index])
+				{
+					if (!check[i][index + 1])
+					{
+						check[i][index + 1] = true;
+						ms.arr[i][index + 1] *= 2;
+						ms.arr[i][index] = 0;
+					}
+				}
+			}
+		}
+	}
+	ms.depth = depth + 1;
+	q.push(ms);
+	//right
+
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			ms.arr[i][j] = arr[i][j];
+			check[i][j] = false;
+		}
+	}
+
+	for (int j = 0; j < N; j++)
+	{
+		for (int i = 0; i<N; i++)
+		{
+			if (ms.arr[i][j] == 0)
+				continue;
+			else
+			{
+				int index = i;
+
+				while (index -1>=0 && ms.arr[index-1][j] == 0)
+				{
+					index--;
+				}
+				if (index != i)
+				{
+					ms.arr[index][j] = ms.arr[i][j];
+					ms.arr[i][j] = 0;
+				}
+
+				if (index - 1 >= 0 && ms.arr[index - 1][j] == ms.arr[index][j])
+				{
+					if (!check[index-1][j])
+					{
+						check[index-1][j] = true;
+						ms.arr[index-1][j] *= 2;
+						ms.arr[index][j] = 0;
+					}
+				}
+			}
+		}
+	}
+	ms.depth = depth + 1;
+	q.push(ms);
+	//up
+
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			ms.arr[i][j] = arr[i][j];
+			check[i][j] = false;
+		}
+	}
+
+	for (int j = 0; j < N; j++)
+	{
+		for (int i = N-1; i>=0; i--)
+		{
+			if (ms.arr[i][j] == 0)
+				continue;
+			else
+			{
+				int index = i;
+
+				while (index +1 <N && ms.arr[index + 1][j] == 0)
+				{
+					index++;
+				}
+				
+				if (index != i)
+				{
+					ms.arr[index][j] = ms.arr[i][j];
+					ms.arr[i][j] = 0;
+				}
+
+				if (index + 1 <N && ms.arr[index + 1][j] == ms.arr[index][j])
+				{
+					if (!check[index + 1][j])
+					{
+						check[index + 1][j] = true;
+						ms.arr[index + 1][j] *= 2;
+						ms.arr[index][j] = 0;
+					}
+				}
+			}
+		}
+	}
+	ms.depth = depth + 1;
+	q.push(ms);
+	//down
 		
-		
+	}
+
+	cout << ret << endl;
 	
-	cout << result << endl;
-
-
 	return 0;
 }
-

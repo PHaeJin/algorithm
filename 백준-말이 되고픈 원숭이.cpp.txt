@@ -1,0 +1,106 @@
+#include iostream
+#includestack
+#includestring
+#includealgorithm
+#includequeue
+#includefunctional
+using namespace std;
+
+int K,W, H;
+int arr[201][201];
+int visit[201][201][31];
+int dx[4] = { -1,1,0,0 };
+int dy[4] = { 0,0,-1,1 };
+int Hx[8] = { -2,-1,1,2,2,1,-1,-2 };
+int Hy[8] = { 1,2,2,1,-1,-2,-2,-1 };
+
+struct Monkey {
+	int x, y, depth, like_horse;
+};
+
+int main() 
+{
+	for (int i = 0; i  201; i++)
+	{
+		for (int j = 0; j  201; j++)
+		{			
+			for (int t = 0; t  31; t++)
+			{
+				visit[i][j][t] = false;
+			}
+		}
+	}
+
+	cin  K;
+	cin  W  H;
+	for (int i = 0; i  H; i++)
+	{
+		for (int j = 0; j  W; j++)
+		{
+			cin  arr[i][j];
+		}
+	}
+
+	queueMonkey q;
+	
+	Monkey mon;
+	mon.x = 0;
+	mon.y = 0;
+	mon.depth = 0;
+	mon.like_horse = 0;
+	visit[0][0][0] = true;
+	bool game_end = false;
+	q.push(mon);
+
+	while (!q.empty())
+	{
+		mon = q.front();
+		q.pop();
+		int x = mon.x;
+		int y = mon.y;
+		int depth = mon.depth;
+		int like_horse = mon.like_horse;
+		
+		if (x == H - 1 && y == W - 1)
+		{
+			game_end = true;
+			cout  depth  endl;
+			break;
+		}
+
+		for (int i = 0; i  4; i++)
+		{
+			int Gx = x + dx[i];
+			int Gy = y + dy[i];
+			if (Gx = 0 && Gx  H&&Gy = 0 && Gy  W&&!visit[Gx][Gy][like_horse]&&arr[Gx][Gy]!=1)
+			{
+				visit[Gx][Gy][like_horse] = true;
+				mon.x = Gx;
+				mon.y = Gy;
+				mon.depth = depth + 1;
+				mon.like_horse = like_horse;
+				q.push(mon);
+			}
+		}
+
+		for (int i = 0; i  8; i++)
+		{
+			int Gx = x + Hx[i];
+			int Gy = y + Hy[i];
+			if (Gx = 0 && Gx  H&&Gy = 0 && Gy  W &&like_horseK&& !visit[Gx][Gy][like_horse+1] && arr[Gx][Gy] != 1)
+			{
+				visit[Gx][Gy][like_horse+1] = true;
+				mon.x = Gx;
+				mon.y = Gy;
+				mon.depth = depth + 1;
+				mon.like_horse = like_horse+1;
+				q.push(mon);
+			}
+		}
+	}
+	
+	if (!game_end)
+		cout  -1  endl;
+
+	return 0;
+}
