@@ -1,0 +1,85 @@
+#include <iostream>
+#include<string>
+#include<vector>
+#include<queue>
+#include<map>
+using namespace std;
+
+int arr[101];
+int C, P;
+int Calculate(string s,int start, int size)
+{
+	if (start + size > C)
+		return 0;	
+	
+	bool check_ok = true;
+	vector<int> Tet;
+	
+	for (int i = 0; i < size; i++)
+	{
+		Tet.push_back(s[i] - '0');
+	}
+	int distance = arr[start] - Tet[0];
+
+	int index = 0;
+	for (int i = start; i < start + size; i++)
+	{
+		if (arr[i] - Tet[index++] != distance)
+		{
+			check_ok = false;
+		}
+	}
+	if (check_ok)
+		return 1;
+	else
+		return 0;
+}
+int main() 
+{
+	cin >> C >> P;
+
+	for (int i = 0; i < C; i++)
+	{
+		cin >> arr[i];
+	}
+	int ret = 0;
+
+	if(P==1)
+	{	
+		for (int i = 0; i < C; i++)
+		ret += Calculate("0",i,1)+ Calculate("0000", i, 4);		
+	}
+	else if (P == 2)
+	{
+		for (int i = 0; i < C; i++)
+			ret += Calculate("00", i, 2);
+	}
+	else if (P == 3)
+	{
+		for (int i = 0; i < C; i++)
+			ret += Calculate("001", i, 3)+ Calculate("10", i,2);
+	}
+	else if (P == 4)
+	{
+		for (int i = 0; i < C; i++)
+			ret += Calculate("100", i, 3)+ Calculate("01", i, 2);
+	}
+	else if (P == 5)
+	{
+		for (int i = 0; i < C; i++)
+			ret += Calculate("000", i, 3)+ Calculate("01", i, 2)+ Calculate("101", i, 3)+ Calculate("10", i, 2);
+	}
+	else if (P == 6)
+	{
+		for (int i = 0; i < C; i++)
+			ret += Calculate("000", i, 3)+ Calculate("00", i, 2)+ Calculate("011", i, 3)+ Calculate("20", i, 2);
+	}
+	else if (P == 7)
+	{
+		for (int i = 0; i < C; i++)
+			ret += Calculate("000", i, 3)+ Calculate("02", i, 2)+ Calculate("110", i, 3)+ Calculate("00", i, 2);
+	}
+	cout << ret << endl;
+
+	return 0;
+}

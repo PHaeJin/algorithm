@@ -1,0 +1,48 @@
+#include <iostream>
+#include<string>
+#include<vector>
+#include<queue>
+#include<map>
+#include<sstream>
+using namespace std;
+
+int main() 
+{
+	int N;
+	
+	int ret = 0;
+
+	cin >> N;
+
+	for (int i = 1; i <= N; i++)
+	{
+		int num = i;
+		vector<int> v;
+		while (num != 0)
+		{
+			v.push_back(num % 10);
+			num /= 10;
+		}
+		
+		int size = v.size();
+		if (size == 1 || size == 2)
+		{
+			ret++; 
+			continue;
+		}
+
+		int distance = v[0] - v[1];
+		bool check = true;
+		for (int j = 0; j < size-1; j++)
+		{
+			if (v[j] - v[j + 1] != distance)
+				check = false;
+		}
+		if (check)
+			ret++;
+	}
+
+	cout << ret << endl;
+
+	return 0;
+}

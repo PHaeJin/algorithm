@@ -1,0 +1,53 @@
+#include <iostream>
+#include<string>
+#include<vector>
+#include<queue>
+#include<map>
+using namespace std;
+
+int arr[5][5];
+int ret=0;
+int dx[4] = { -1,1,0,0 };
+int dy[4] = { 0,0,-1,1 };
+map<int, int> m;
+
+void Calculate(int x, int y, int depth, int num)
+{
+	if (depth == 6)
+	{
+		if (m.count(num) == 0)
+		{
+			m[num] = 1;
+			ret++;
+		}
+		return;
+	}
+
+	for (int i = 0; i < 4; i++)
+	{
+		int Gx = x + dx[i];
+		int Gy = y + dy[i];
+		if (Gx >= 0 && Gx < 5 && Gy >= 0 && Gy < 5)
+		{
+			Calculate(Gx, Gy, depth + 1, num * 10 + arr[Gx][Gy]);
+		}
+	}
+}
+
+int main() 
+{
+	for (int i = 0; i < 5; i++)
+	{
+		for (int j = 0; j < 5; j++)
+			cin >> arr[i][j];
+	}
+
+	for (int i = 0; i < 5; i++)
+	{
+		for (int j = 0; j < 5; j++)
+			Calculate(i, j, 1, arr[i][j]);
+	}
+
+	cout << ret << endl;
+	return 0;
+}
