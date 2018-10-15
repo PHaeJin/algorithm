@@ -1,0 +1,83 @@
+#include <iostream>
+#include<string>
+#include<vector>
+#include<queue>
+#include<map>
+using namespace std;
+char arr[251][251];
+bool visit[251][251];
+int Y_count = 0;
+int W_count = 0;
+int dx[4] = { -1,1,0,0 };
+int dy[4] = { 0,0,-1,1 };
+int R, C;
+
+void dfs(int x, int y)
+{
+	visit[x][y] = true;
+
+	if (arr[x][y] == 'o')
+	{
+		Y_count++;
+	}
+	else if (arr[x][y] == 'v')
+	{
+		W_count++;
+	}
+
+	for (int i = 0; i < 4; i++)
+	{
+		int Gx = x + dx[i];
+		int Gy = y + dy[i];
+		if (Gx >= 0 && Gx < R&&Gy >= 0 && Gy < C && !visit[Gx][Gy] && arr[Gx][Gy] != '#')
+		{
+			dfs(Gx, Gy);
+		}
+	}
+}
+int main() 
+{
+	
+	int Y = 0;
+	int W = 0;
+
+	cin >> R >> C;
+	
+	for (int i = 0; i < R; i++)
+	{
+		for (int j = 0; j < C; j++)
+		{
+			cin >> arr[i][j];
+			visit[i][j] = false;
+			if (arr[i][j] == 'o')
+				Y++;
+			else if (arr[i][j] == 'v')
+				W++;
+		}
+	}
+
+	for (int i = 0; i < R; i++)
+	{
+		for (int j = 0; j < C; j++)
+		{
+			if (!visit[i][j])
+			{
+				Y_count = 0;
+				W_count = 0;
+				dfs(i, j);
+				if (Y_count > W_count)
+				{
+					W -= W_count;
+				}
+				else
+				{
+					Y -= Y_count;
+				}
+			}
+		}
+	}
+	
+	cout << Y << " " << W << endl;
+
+	return 0;
+}
