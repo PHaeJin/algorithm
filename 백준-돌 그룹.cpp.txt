@@ -1,0 +1,90 @@
+#include <iostream>
+#include<queue>
+#include<utility>
+#include<map>
+using namespace std;
+
+map<tuple<int, int, int>, int> m;
+
+int main()
+{
+	int A, B, C;
+	cin >> A >> B >> C;
+	
+	m[make_tuple(A, B, C)] = 1;
+	queue<tuple<int, int, int>> q;
+	q.push(make_tuple(A, B, C));
+	bool game_end = false;
+	tuple<int, int, int> t;
+
+	while (!q.empty())
+	{
+		t = q.front();
+		q.pop();
+		A = get<0>(t);
+		B = get<1>(t);
+		C = get<2>(t);
+		//cout << A << " " << B << " " << C << endl;
+		if (A == B && B == C)
+		{
+			cout << "1" << endl;
+			game_end = true;
+			break;
+		}
+
+		if (A < B)
+		{
+			if (m.count(make_tuple(A + A, B - A, C)) == 0)
+			{
+				m[make_tuple(A + A, B - A, C)] = 1;
+				q.push(make_tuple(A + A, B - A, C));
+			}
+		}
+		else if(B<A)
+		{
+			if (m.count(make_tuple(A -B, B +B, C)) == 0)
+			{
+				m[make_tuple(A -B, B+B, C)] = 1;
+				q.push(make_tuple(A - B, B + B, C));
+			}
+		}
+
+		if (A < C)
+		{
+			if (m.count(make_tuple(A + A, B, C-A)) == 0)
+			{
+				m[make_tuple(A + A, B, C - A)] = 1;
+				q.push(make_tuple(A + A, B, C - A));
+			}
+		}
+		else if(C<A)
+		{
+			if (m.count(make_tuple(A - C, B, C+C)) == 0)
+			{
+				m[make_tuple(A - C, B, C + C)] = 1;
+				q.push(make_tuple(A - C, B, C + C));
+			}
+		}
+
+		if (B < C)
+		{
+			if (m.count(make_tuple(A, B +B, C-B)) == 0)
+			{
+				m[make_tuple(A, B + B, C - B)] = 1;
+				q.push(make_tuple(A, B + B, C - B));
+			}
+		}
+		else if(B>C)
+		{
+			if (m.count(make_tuple(A, B -C, C +C)) == 0)
+			{
+				m[make_tuple(A, B - C, C + C)] = 1;
+				q.push(make_tuple(A, B - C, C + C));
+			}
+		}
+	}
+	if (!game_end)
+		cout << "0" << endl;
+
+	return 0;
+}

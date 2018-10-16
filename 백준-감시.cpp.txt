@@ -1,464 +1,239 @@
-#include<iostream>
+#include <iostream>
 #include<vector>
-#include<algorithm>
-#include<utility>
-#include<queue>
 using namespace std;
-int N, M;
+vector<int> cctv_locate;
 int arr[9][9];
-int op[9][9];
-int visit[9][9];
-vector<vector <int> > st_arr;
-
-int result = numeric_limits<int>::max();
-
-void dfs(vector<int> CT)
+int cctv_state[8];
+int simulate_arr[9][9];
+int N,M;
+int ret = 10000;
+int cctv_size;
+void playing_cctv(int x, int y,int H)
 {
-
-
-	bool check_end=true;
-	int CT_num;
-	int X, Y;
-	
-	for (int i = 0; i < 5; i++)
+	if (H == 1)
 	{
-		if (CT[i] != 0)
+		while (x - 1 >= 0 && simulate_arr[x - 1][y] != 6)
 		{
-			check_end = false;
-			CT_num = i;
-			CT[i]--;
-			break;
+			if (simulate_arr[x - 1][y] == 0)
+				simulate_arr[x - 1][y] = -1;
+			x--;
 		}
-	}
-	if (check_end)
+	}//up
+	else if (H == 2)
 	{
-		vector<vector <int> > cal_arr = st_arr;
-
-		for (int i = 0; i < N; i++)
+		while (y + 1<M&&simulate_arr[x][y + 1] != 6)
 		{
-			for (int j = 0; j < M; j++)
+			if (simulate_arr[x][y + 1] == 0)
+				simulate_arr[x][y + 1] = -1;
+			y++;
+		}
+	}//right
+	else if (H == 3)
+	{
+		while (y - 1 >= 0 && simulate_arr[x][y - 1] != 6)
+		{
+			if (simulate_arr[x][y - 1] == 0)
+				simulate_arr[x][y - 1] = -1;
+			y--;
+		}
+	}//left
+	else if (H == 4)
+	{
+		while (x + 1<N&&simulate_arr[x + 1][y] != 6)
+		{
+			if (simulate_arr[x + 1][y] == 0)
+				simulate_arr[x + 1][y] = -1;
+			x++;
+		}
+
+	}//down
+}
+void simulate()
+{
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < M; j++)
+			simulate_arr[i][j] = arr[i][j];
+	}
+
+	for (int i = 0; i < cctv_size; i++)
+	{
+		int x = cctv_locate[i] / M;
+		int y = cctv_locate[i] % M;
+		if (simulate_arr[x][y] == 1)
+		{
+			if (cctv_state[i] == 0)
 			{
-				if (op[i][j] != 0)
-				{
-					if (arr[i][j] == 1)
-					{
-						if (op[i][j] == 1)
-						{
-							for (int y = j+1; y < M; y++)
-							{
-								if (cal_arr[i][y] == 0)
-									cal_arr[i][y] = -1;
-								else if (cal_arr[i][y] == 6)
-									break;
-							}
-						}
-						else if (op[i][j] == 2)
-						{
-							for (int x = i - 1; x >=0; x--)
-							{
-								if (cal_arr[x][j] == 0)
-									cal_arr[x][j] = -1;
-								else if (cal_arr[x][j] == 6)
-									break;
-							}
-						}
-						else if (op[i][j] == 3)
-						{
-							for (int y = j - 1; y >=0; y--)
-							{
-								if (cal_arr[i][y] == 0)
-									cal_arr[i][y] = -1;
-								else if (cal_arr[i][y] == 6)
-									break;
-							}
-						}
-						else if (op[i][j] == 4)
-						{
-							for (int x = i + 1; x <N; x++)
-							{
-								if (cal_arr[x][j] == 0)
-									cal_arr[x][j] = -1;
-								else if (cal_arr[x][j] == 6)
-									break;
-							}
-						}
-					}
-					else if (arr[i][j] == 2)
-					{
-						if (op[i][j] == 1)
-						{
-							for (int y = j - 1; y >= 0; y--)
-							{
-								if (cal_arr[i][y] == 0)
-									cal_arr[i][y] = -1;
-								else if (cal_arr[i][y] == 6)
-									break;
-							}
-							for (int y = j + 1; y < M; y++)
-							{
-								if (cal_arr[i][y] == 0)
-									cal_arr[i][y] = -1;
-								else if (cal_arr[i][y] == 6)
-									break;
-							}
-						}
-						else if (op[i][j] == 2)
-						{
-							for (int x = i + 1; x <N; x++)
-							{
-								if (cal_arr[x][j] == 0)
-									cal_arr[x][j] = -1;
-								else if (cal_arr[x][j] == 6)
-									break;
-							}
-							for (int x = i - 1; x >= 0; x--)
-							{
-								if (cal_arr[x][j] == 0)
-									cal_arr[x][j] = -1;
-								else if (cal_arr[x][j] == 6)
-									break;
-							}
-						}
-					}
-					else if (arr[i][j] == 3)
-					{
-						if (op[i][j] == 1)
-						{
-							for (int x = i - 1; x >= 0; x--)
-							{
-								if (cal_arr[x][j] == 0)
-									cal_arr[x][j] = -1;
-								else if (cal_arr[x][j] == 6)
-									break;
-							}
-							for (int y = j + 1; y < M; y++)
-							{
-								if (cal_arr[i][y] == 0)
-									cal_arr[i][y] = -1;
-								else if (cal_arr[i][y] == 6)
-									break;
-							}
-						}
-						else if (op[i][j] == 2)
-						{
-							for (int x = i - 1; x >= 0; x--)
-							{
-								if (cal_arr[x][j] == 0)
-									cal_arr[x][j] = -1;
-								else if (cal_arr[x][j] == 6)
-									break;
-							}
-							for (int y = j - 1; y >= 0; y--)
-							{
-								if (cal_arr[i][y] == 0)
-									cal_arr[i][y] = -1;
-								else if (cal_arr[i][y] == 6)
-									break;
-							}
-						}
-						else if (op[i][j] == 3)
-						{
-							for (int y = j - 1; y >= 0; y--)
-							{
-								if (cal_arr[i][y] == 0)
-									cal_arr[i][y] = -1;
-								else if (cal_arr[i][y] == 6)
-									break;
-							}
-							for (int x = i + 1; x <N; x++)
-							{
-								if (cal_arr[x][j] == 0)
-									cal_arr[x][j] = -1;
-								else if (cal_arr[x][j] == 6)
-									break;
-							}
-						}
-						else if (op[i][j] == 4)
-						{
-							for (int x = i + 1; x <N; x++)
-							{
-								if (cal_arr[x][j] == 0)
-									cal_arr[x][j] = -1;
-								else if (cal_arr[x][j] == 6)
-									break;
-							}
-							for (int y = j + 1; y < M; y++)
-							{
-								if (cal_arr[i][y] == 0)
-									cal_arr[i][y] = -1;
-								else if (cal_arr[i][y] == 6)
-									break;
-							}
-						}
-					}
-					else if (arr[i][j] == 4)
-					{
-						if (op[i][j] == 1)
-						{
-							for (int x = i - 1; x >= 0; x--)
-							{
-								if (cal_arr[x][j] == 0)
-									cal_arr[x][j] = -1;
-								else if (cal_arr[x][j] == 6)
-									break;
-							}
-							for (int y = j - 1; y >= 0; y--)
-							{
-								if (cal_arr[i][y] == 0)
-									cal_arr[i][y] = -1;
-								else if (cal_arr[i][y] == 6)
-									break;
-							}
-							for (int y = j + 1; y < M; y++)
-							{
-								if (cal_arr[i][y] == 0)
-									cal_arr[i][y] = -1;
-								else if (cal_arr[i][y] == 6)
-									break;
-							}
-						}
-						else if (op[i][j] == 2)
-						{
-							for (int x = i - 1; x >= 0; x--)
-							{
-								if (cal_arr[x][j] == 0)
-									cal_arr[x][j] = -1;
-								else if (cal_arr[x][j] == 6)
-									break;
-							}
-							for (int y = j - 1; y >= 0; y--)
-							{
-								if (cal_arr[i][y] == 0)
-									cal_arr[i][y] = -1;
-								else if (cal_arr[i][y] == 6)
-									break;
-							}
-							for (int x = i + 1; x <N; x++)
-							{
-								if (cal_arr[x][j] == 0)
-									cal_arr[x][j] = -1;
-								else if (cal_arr[x][j] == 6)
-									break;
-							}
-						}
-						else if (op[i][j] == 3)
-						{
-							for (int y = j - 1; y >= 0; y--)
-							{
-								if (cal_arr[i][y] == 0)
-									cal_arr[i][y] = -1;
-								else if (cal_arr[i][y] == 6)
-									break;
-							}
-							for (int x = i + 1; x <N; x++)
-							{
-								if (cal_arr[x][j] == 0)
-									cal_arr[x][j] = -1;
-								else if (cal_arr[x][j] == 6)
-									break;
-							}
-							for (int y = j + 1; y < M; y++)
-							{
-								if (cal_arr[i][y] == 0)
-									cal_arr[i][y] = -1;
-								else if (cal_arr[i][y] == 6)
-									break;
-							}
-						}
-						else if (op[i][j] == 4)
-						{
-							for (int x = i + 1; x <N; x++)
-							{
-								if (cal_arr[x][j] == 0)
-									cal_arr[x][j] = -1;
-								else if (cal_arr[x][j] == 6)
-									break;
-							}
-							for (int y = j + 1; y < M; y++)
-							{
-								if (cal_arr[i][y] == 0)
-									cal_arr[i][y] = -1;
-								else if (cal_arr[i][y] == 6)
-									break;
-							}
-							for (int x = i - 1; x >= 0; x--)
-							{
-								if (cal_arr[x][j] == 0)
-									cal_arr[x][j] = -1;
-								else if (cal_arr[x][j] == 6)
-									break;
-							}
-						}
-					}
-					else if (arr[i][j] == 5)
-					{
-						if (op[i][j] == 1)
-						{
-							for (int x = i + 1; x <N; x++)
-							{
-								if (cal_arr[x][j] == 0)
-									cal_arr[x][j] = -1;
-								else if (cal_arr[x][j] == 6)
-									break;
-							}
-							for (int y = j + 1; y < M; y++)
-							{
-								if (cal_arr[i][y] == 0)
-									cal_arr[i][y] = -1;
-								else if (cal_arr[i][y] == 6)
-									break;
-							}
-							for (int x = i - 1; x >= 0; x--)
-							{
-								if (cal_arr[x][j] == 0)
-									cal_arr[x][j] = -1;
-								else if (cal_arr[x][j] == 6)
-									break;
-							}
-							for (int y = j - 1; y >= 0; y--)
-							{
-								if (cal_arr[i][y] == 0)
-									cal_arr[i][y] = -1;
-								else if (cal_arr[i][y] == 6)
-									break;
-							}
-						}
-						
-						
-					}
-				}
+				playing_cctv(x, y, 2);
+				//right
+			}
+			else if (cctv_state[i] == 1)
+			{
+				playing_cctv(x, y, 4);
+				//down
+			}
+			else if (cctv_state[i] == 2)
+			{
+				playing_cctv(x, y, 3);
+				//left
+			}
+			else if (cctv_state[i] == 3)
+			{
+				playing_cctv(x, y, 1);
+				//up
 			}
 		}
-
-		int count_c = 0;
-	
-		for (int i = 0; i < N; i++)
+		else if (simulate_arr[x][y] == 2)
 		{
-			for (int j = 0; j < M; j++)
+			if (cctv_state[i] == 0)
 			{
-				if (cal_arr[i][j] == 0)
-					count_c++;
+				playing_cctv(x, y, 2);
+				playing_cctv(x, y, 3);
+			}
+			else if (cctv_state[i] == 1)
+			{
+				playing_cctv(x, y, 1);
+				playing_cctv(x, y, 4);
 			}
 		}
-
-		if (result > count_c)
-			result = count_c;
-
-		
-		return;
+		else if (simulate_arr[x][y] == 3)
+		{
+			if (cctv_state[i] == 0)
+			{
+				playing_cctv(x, y, 1);
+				playing_cctv(x, y, 2);
+			}
+			else if (cctv_state[i] == 1)
+			{
+				playing_cctv(x, y, 4);
+				playing_cctv(x, y, 2);
+			}
+			else if (cctv_state[i] == 2)
+			{
+				playing_cctv(x, y, 3);
+				playing_cctv(x, y, 4);
+			}
+			else if (cctv_state[i] == 3)
+			{
+				playing_cctv(x, y, 3);
+				playing_cctv(x, y, 1);
+			}
+		}
+		else if (simulate_arr[x][y] == 4)
+		{
+			if (cctv_state[i] == 0)
+			{
+				playing_cctv(x, y, 1);
+				playing_cctv(x, y, 2);
+				playing_cctv(x, y, 3);
+			}
+			else if (cctv_state[i] == 1)
+			{
+				playing_cctv(x, y, 1);
+				playing_cctv(x, y, 3);
+				playing_cctv(x, y, 4);
+			}
+			else if (cctv_state[i] == 2)
+			{
+				playing_cctv(x, y, 2);
+				playing_cctv(x, y, 3);
+				playing_cctv(x, y, 4);
+			}
+			else if (cctv_state[i] == 3)
+			{
+				playing_cctv(x, y, 1);
+				playing_cctv(x, y, 4);
+				playing_cctv(x, y, 2);
+			}
+		}
+		else if (simulate_arr[x][y] == 5)
+		{
+			playing_cctv(x, y, 1);
+			playing_cctv(x, y, 2);
+			playing_cctv(x, y, 3);
+			playing_cctv(x, y, 4);
+		}
 	}
-	
-	
-	bool check_b = false;
 
+	int count_c = 0;
 	for (int i = 0; i < N; i++)
 	{
 		for (int j = 0; j < M; j++)
 		{
-			if ((arr[i][j] == CT_num + 1&&!visit[i][j]))
-			{
-				
-				X = i;
-				Y = j;
-				check_b = true;
-				visit[i][j] = true;
-				break;
-			}
-		}
-		if (check_b)
-		{
-			break;
+			if (simulate_arr[i][j] == 0)
+				count_c++;
 		}
 	}
+	if (count_c < ret)
+		ret = count_c;
+}
 
-	
-		if (CT_num == 0)
+void make_cctv(int index)
+{
+	if (index == cctv_size)
+	{
+		simulate();
+		return;
+	}
+	int x = cctv_locate[index] / M;
+	int y = cctv_locate[index] % M;
+	int cctv_case = arr[x][y];
+	if (cctv_case == 1)
+	{
+		for (int i = 0; i < 4; i++)
 		{
-			op[X][Y] = 1;
-			dfs(CT);
-			op[X][Y] = 2;
-			dfs(CT);
-			op[X][Y] = 3;
-			dfs(CT);
-			op[X][Y] = 4;
-			dfs(CT);
+			cctv_state[index] = i;
+			make_cctv(index + 1);
+		}
+	}
+	else if (cctv_case == 2)
+	{
+		for (int i = 0; i < 2; i++)
+		{
+			cctv_state[index] = i;
+			make_cctv(index + 1);
+		}
+	}
+	else if (cctv_case == 3)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			cctv_state[index] = i;
+			make_cctv(index + 1);
+		}
+	}
+	else if (cctv_case == 4)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			cctv_state[index] = i;
+			make_cctv(index + 1);
+		}
 
-		}
-		else if (CT_num == 1)
-		{
-			op[X][Y] = 1;
-			dfs(CT);
-			op[X][Y] = 2;
-			dfs(CT);
-		}
-		else if (CT_num == 2)
-		{
-			op[X][Y] = 1;
-			dfs(CT);
-			op[X][Y] = 2;
-			dfs(CT);
-			op[X][Y] = 3;
-			dfs(CT);
-			op[X][Y] = 4;
-			dfs(CT);
-
-		}
-		else if (CT_num == 3)
-		{
-			op[X][Y] = 1;
-			dfs(CT);
-			op[X][Y] = 2;
-			dfs(CT);
-			op[X][Y] = 3;
-			dfs(CT);
-			op[X][Y] = 4;
-			dfs(CT);
-		}
-		else if (CT_num == 4)
-		{
-			op[X][Y] = 1;
-			dfs(CT);
-		}
-	
-		visit[X][Y] = false;
-
-	return;
+	}
+	else if (cctv_case == 5)
+	{
+			cctv_state[index] = 1;
+			make_cctv(index + 1);
+	}
 }
 
 int main()
 {
 	cin >> N >> M;
-	
-	vector<int> CT;
-	int visit[9][9];
-
-	for (int i = 0; i < 5; i++)
-	{
-		CT.push_back(0);
-	}
-	
-
 	for (int i = 0; i < N; i++)
 	{
-		vector<int> v;
 		for (int j = 0; j < M; j++)
 		{
 			cin >> arr[i][j];
 			if (arr[i][j] != 0 && arr[i][j] != 6)
 			{
-				CT[arr[i][j] - 1]++;
+				cctv_locate.push_back(i*M + j);
 			}
-			v.push_back(arr[i][j]);
-			op[i][j] = 0;
-			visit[i][j] = false;
 		}
-		st_arr.push_back(v);
-	}
-
-	dfs(CT);
-
-	cout << result << endl;
-
+	}	
+	cctv_size = cctv_locate.size();	
+	make_cctv(0);	
+	cout << ret << endl;
 	return 0;
 }
-
