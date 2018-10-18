@@ -1,0 +1,96 @@
+#include <iostream>
+#include<vector>
+using namespace std;
+char arr[12][6];
+bool visit[12][6];
+int cnt;
+int dx[4] = { -1,1,0,0 };
+int dy[4] = { 0,0,-1,1 };
+vector<int> v;
+bool crash = true;
+void simulate(int x,int y)
+{
+	cnt++;
+	visit[x][y] = true;
+	for (int i = 0; i < 4; i++)
+	{
+		int Gx = x + dx[i];
+		int Gy = y + dy[i];
+		if (Gx >= 0 && Gx < 12 && Gy >= 0 && Gy < 6 && !visit[Gx][Gy] && arr[Gx][Gy] == arr[x][y])
+		{
+			v.push_back(Gx * 6 + Gy);
+			simulate(Gx, Gy);
+		}
+	}
+}
+void remake_map()
+{
+	for (int j=0;j<6;j++)
+	{
+		for (int i = 11; i >= 0; i--)
+		{
+			int index = i;
+			char c = arr[i][j];
+			
+			while(index + 1 < 12 && arr[index + 1][j] == '.')
+				index++;
+
+			if (index != i)
+			{
+				arr[index][j] = c;
+				arr[i][j] = '.';
+			}			
+		}
+	}
+}
+int main()
+{
+	for (int i = 0; i < 12; i++)
+	{
+		for (int j = 0; j < 6; j++)
+			cin >> arr[i][j];
+	}
+	int ret = 0;
+	while (crash)
+	{
+		crash = false;
+		for (int i = 0; i < 12; i++)
+		{
+			for (int j = 0; j < 6; j++)
+				visit[i][j] = false;
+		}
+		for (int i = 11; i >= 0; i--)
+		{
+			for (int j = 0; j < 6; j++)
+			{
+				if (arr[i][j] != '.' && !visit[i][j])
+				{
+					cnt = 0;
+					v.push_back(i * 6 + j);
+					simulate(i, j);
+					if (cnt >= 4)
+					{
+						crash = true;
+						int size = v.size();
+						for (int i = 0; i < size; i++)
+						{
+							int x = v[i] / 6;
+							int y = v[i] % 6;
+							arr[x][y] = '.';
+						}
+					}
+					v.clear();
+				}
+			}
+		}
+		if (crash)
+		{
+			ret++;
+			remake_map();		
+		}
+	}
+
+	cout << ret << endl;
+
+	return 0;
+}

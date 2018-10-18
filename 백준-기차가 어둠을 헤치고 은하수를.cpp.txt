@@ -1,0 +1,60 @@
+#include <iostream>
+#include<vector>
+#include<map>
+using namespace std;
+int N,M;
+int Train[100001][20];
+map<vector<int>, int> m;
+void simulte(int C,int num, int seat)
+{
+	if (C == 1)
+		Train[num - 1][seat - 1] = 1;
+	else if (C == 2)
+		Train[num - 1][seat - 1] = 0;
+	else if(C==3)
+	{
+		for (int i = 19; i >0; i--)
+			Train[num - 1][i] = Train[num - 1][i - 1];
+		Train[num - 1][0] = 0;
+	}
+	else
+	{
+		for (int i = 0; i <19; i++)
+			Train[num - 1][i] = Train[num - 1][i + 1];
+		Train[num - 1][19] = 0;
+	}
+}
+int main()
+{
+	cin >> N >> M;
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < 20; j++)
+			Train[i][j] = 0;
+	}
+	for (int i = 0; i < M; i++)
+	{
+		int C,num;
+		int seat = 0;
+		cin >>C>> num;
+		if (C == 1 || C == 2)
+			cin >> seat;
+		simulte(C,num, seat);
+	}
+	vector<int> v;
+	int ret = 0;
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < 20; j++)
+			v.push_back(Train[i][j]);
+		if (m.count(v) == 0)
+		{
+			ret++;
+			m[v] = 1;
+		}
+		v.clear();
+	}
+	cout << ret << endl;
+	return 0;
+}
+

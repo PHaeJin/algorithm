@@ -1,0 +1,75 @@
+#include <iostream>
+#include<vector>
+#include<cstdio>
+using namespace std;
+int T,K;
+int Machine[1001][8];
+bool Machine_play[1001];
+void simulate(int Num, int rotate)
+{
+	bool left_rotate = false;
+	bool right_rotate = false;
+	Machine_play[Num] = true;
+	if (Num - 1 >= 0 && Machine[Num][6]!= Machine[Num-1][2]&&!Machine_play[Num-1])
+	{
+		left_rotate = true;
+	}
+	if (Num +1<T && Machine[Num][2] != Machine[Num+1][6] && !Machine_play[Num + 1])
+	{
+		right_rotate = true;
+	}
+	if (rotate == 1)
+	{
+		int temp = Machine[Num][7];
+		for (int i = 6; i >= 0; i--)
+		{
+			Machine[Num][i + 1] = Machine[Num][i];
+		}
+		Machine[Num][0] = temp;
+	}
+	else if (rotate == -1)
+	{
+		int temp = Machine[Num][0];
+		for (int i = 1; i < 8; i++)
+		{
+			Machine[Num][i - 1] = Machine[Num][i];
+		}
+		Machine[Num][7] = temp;
+	}
+	if (left_rotate)
+		simulate(Num - 1, -rotate);
+	if (right_rotate)
+		simulate(Num + 1, -rotate);
+}
+
+int main()
+{
+	cin >> T;
+	for (int i = 0; i < T; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			int num;
+			scanf_s("%1d", &num);
+			Machine[i][j] = num;
+		}
+	}
+	cin >> K;
+	for (int i = 0; i < K; i++)
+	{
+		for (int j = 0; j < T; j++)
+			Machine_play[j] = false;
+		int Num, rotate;
+		cin >> Num >> rotate;
+		simulate(Num-1, rotate);
+	}	
+	int ret = 0;
+	for (int i = 0; i < T; i++)
+	{
+		if (Machine[i][0] == 1)
+			ret++;
+	}
+	cout << ret << endl;
+	return 0;
+}
+
